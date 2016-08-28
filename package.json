@@ -1,0 +1,17 @@
+{
+  "name": "vue.ts",
+  "version": "0.0.1",
+  "description": "Vue2.0's TypeScript Binding",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Vue"
+  ],
+  "author": "Herrington Darkholme",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^2.0.0"
+  }
+}
