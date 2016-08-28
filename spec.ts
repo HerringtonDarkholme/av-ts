@@ -9,6 +9,10 @@ interface VueTS {
   'VueTS brand': never
 }
 
+declare var Vuex: any
+declare var getter: any
+declare var action: any
+
 @Component({})
 class MyMixin {
 }
@@ -64,6 +68,10 @@ class MyComponent extends VueTS.mix(MyMixin) {
   updated () {}
   activated() {}
   deactivated() {}
+
+  // extensibility, like vuex
+  @Vuex myVuexGetter = getter(s => s.whatEver)
+  @Vuex myAction = action(s => s.dispathc('myAction'))
 }
 
 var a = new MyComponent()
