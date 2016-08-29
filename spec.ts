@@ -1,20 +1,16 @@
-declare var Component: any
-declare var Prop: any
-declare function Watch<T>(...args)
-declare var Lifecycle: any
-declare var VueTS: {
-  mix: <T>(...args: {new(): T}[]) => {new(): T}
-}
-interface VueTS {
-  'VueTS brand': never
-}
+import {
+  Component, Prop, Watch,
+  Lifecycle
+} from './index'
+
+import {Vue} from './types/vue'
 
 declare var Vuex: any
 declare var getter: any
 declare var action: any
 
 @Component({})
-class MyMixin {
+class MyMixin extends Vue {
 }
 
 @Component({
@@ -26,9 +22,9 @@ class MyMixin {
   name: 'my-component',
   delimiter: ['{{', '}}'],
 })
-class MyComponent extends VueTS.mix(MyMixin) {
+class MyComponent extends Vue {
   myData: string
-  @Prop myProp: {nested: string}
+  @Prop() myProp: {nested: string}
 
   myMethod() {
   }
@@ -45,20 +41,12 @@ class MyComponent extends VueTS.mix(MyMixin) {
   // instance property reification
   $parent: MyMixin
   $refs: {
-    mychild: VueTS
+    mychild: Vue
   }
-  $el: HTMLElement
-
-  $on() {}
-  $off() {}
-  $once() {}
-  $emit() {}
-  $nextTick() {}
-  $mount() {}
-  $destroy() {}
+  $el: HTMLDivElement
 
   // lifecycle
-  beforeCreate() {}
+  @Lifecycle() beforeCreate() {}
   created() {}
   beforeDestroy() {}
   destroyed() {}

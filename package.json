@@ -12,6 +12,8 @@
   "author": "Herrington Darkholme",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.0.0"
+    "typescript": "^2.0.0",
+    "vue": "^2.0.0-rc.3",
+    "vue-loader": "^9.4.1"
   }
 }
