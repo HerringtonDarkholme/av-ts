@@ -2,7 +2,9 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
-        "noImplicitAny": false,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
         "sourceMap": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true

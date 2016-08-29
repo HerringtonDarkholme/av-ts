@@ -5,9 +5,9 @@ import {
 
 import {Vue} from './types/vue'
 
-declare var Vuex: any
-declare var getter: any
-declare var action: any
+import {
+  Vuex, getter, action
+} from './vuex'
 
 @Component({})
 class MyMixin extends Vue {
@@ -33,7 +33,7 @@ class MyComponent extends Vue {
     return this.myProp
   }
 
-  @Watch<MyComponent>(function() {
+  @Watch<MyComponent>(function(){
     console.log(this.myData)
   })
   myWatchee: string
@@ -46,7 +46,7 @@ class MyComponent extends Vue {
   $el: HTMLDivElement
 
   // lifecycle
-  @Lifecycle() beforeCreate() {}
+  @Lifecycle beforeCreate() {}
   created() {}
   beforeDestroy() {}
   destroyed() {}
@@ -58,8 +58,20 @@ class MyComponent extends Vue {
   deactivated() {}
 
   // extensibility, like vuex
-  @Vuex myVuexGetter = getter(s => s.whatEver)
-  @Vuex myAction = action(s => s.dispathc('myAction'))
+  $state: any
+  @Vuex
+  get myVuexGetter() {
+    return this.$state.whatever
+  }
+  @Vuex
+  readonly getter2 = getter(s => s.whatever)
+
+  @Vuex
+  myAction() {
+    this.$state.dispatch('myAction')
+  }
+  @Vuex
+  readonly action2 = action(s => s.dispatch('action2'))
 }
 
 var a = new MyComponent()
