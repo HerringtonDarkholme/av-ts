@@ -9,7 +9,7 @@ import {
   Vuex, getter, action
 } from './vuex'
 
-@Component({})
+@Component()
 class MyMixin extends Vue {
 }
 
@@ -17,13 +17,13 @@ class MyMixin extends Vue {
   directive: {},
   components: {},
   functionals: {},
-  transitions: {},
   filters: {},
   name: 'my-component',
   delimiter: ['{{', '}}'],
 })
 class MyComponent extends Vue {
   myData: string
+
   @Prop() myProp: {nested: string}
 
   myMethod() {

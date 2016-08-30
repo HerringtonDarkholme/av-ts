@@ -1,12 +1,14 @@
-export function Vuex(target: Object, key: string) {
+export function Vuex(target: Object, key: string): void {
 }
+
+type VuexKeys = 'getter' | 'action'
 
 type Getter<T> = (s: any) => T
 export function getter<T>(g: Getter<T>): T {
-  return null as any
+  return {type: 'getter', value: g} as any
 }
 
 type Action = (s: any, ...args: any[]) => void
 export function action<T>(a: Action): Function {
-  return null as any
+  return {type: 'action', value: a} as any
 }

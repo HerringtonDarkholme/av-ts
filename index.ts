@@ -7,13 +7,12 @@ interface ComponentMeta {
   directive?: Hash<string>,
   components?: Hash<VClass<Vue>>,
   functionals?: Hash<Function>,
-  transitions?: {},
   filters?: {},
   name?: string,
   delimiter?: [string, string],
 }
 
-export function Component(config: ComponentMeta): ClassDecorator {
+export function Component(config: ComponentMeta = {}): ClassDecorator {
   return null as any
 }
 
@@ -39,7 +38,11 @@ type Lifecycles =
   'beforeMount' | 'mounted' |
   'beforeUpdate' | 'updated'
 
-export function Lifecycle(target: Object, life: Lifecycles) {
+export function Lifecycle(target: Object, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
   return null as any
+}
+
+// for type checking only
+export function Transition(target: Object, key: string, _: TypedPropertyDescriptor<(e: HTMLElement, done?: Function) => void>) {
 }
 
