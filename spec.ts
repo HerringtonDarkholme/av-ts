@@ -33,7 +33,7 @@ class MyComponent extends Vue {
     return this.myProp
   }
 
-  @Watch<MyComponent>(function(){
+  @Watch<MyComponent, string>(function(){
     console.log(this.myData)
   })
   myWatchee: string

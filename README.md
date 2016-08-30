@@ -1,3 +1,6 @@
+Difference
+---
+
 **Added Feature:**
 
 * functional component has its own assets slot.
@@ -201,6 +204,7 @@ Annotation + transformer follows Vuex design principle, and it even looks like t
 =============
 
 Typed `Watch`
+------
 
 Short Answer: No
 
