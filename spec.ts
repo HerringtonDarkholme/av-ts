@@ -58,18 +58,8 @@ class MyComponent extends Vue {
   deactivated() {}
 
   // extensibility, like vuex
-  $state: any
-  @Vuex
-  get myVuexGetter() {
-    return this.$state.whatever
-  }
-  @Vuex
-  readonly getter2 = getter(s => s.whatever)
+  @Vuex readonly getter2 = getter(s => s.whatever)
 
-  @Vuex
-  myAction() {
-    this.$state.dispatch('myAction')
-  }
   @Vuex
   readonly action2 = action(s => s.dispatch('action2'))
 }
