@@ -1,0 +1,3 @@
+describe('vue component', () => {
+})
+

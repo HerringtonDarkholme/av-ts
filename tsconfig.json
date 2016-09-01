@@ -7,7 +7,8 @@
         "strictNullChecks": true,
         "sourceMap": false,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "outDir": "./dist"
     },
     "exclude": [
         "node_modules"

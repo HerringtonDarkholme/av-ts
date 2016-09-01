@@ -6,13 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "./dist/index.js"
+  ],
   "keywords": [
     "Vue"
   ],
   "author": "Herrington Darkholme",
   "license": "ISC",
   "devDependencies": {
+    "@types/mocha": "^2.2.31",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
     "typescript": "^2.0.2",
-    "vue": "^2.0.0-rc.3"
+    "vue": "git://github.com/HerringtonDarkholme/vue#94c75183b0905c271740277678acbf2a56a3abff"
   }
 }
