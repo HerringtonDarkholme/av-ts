@@ -21,6 +21,7 @@ import {
 } from './interface'
 
 interface Component {
+  (ctor: VClass<Vue>): VClass<Vue>
   (config?: ComponentMeta): ClassDecorator
   register(name: $$Prop, logic: DecoratorPorcessor): void
 }
@@ -56,9 +57,19 @@ function getKeys(proto: any) {
   }
 }
 
-// should continue
+type ProcessorEntries = {
+  [k: string]: DecoratorPorcessor|undefined
+}
+
+let registeredProcessors: ProcessorEntries = {}
+
+// delegate to processor
 function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, optionsToWrite: ComponentOptions) {
-  return false
+  let processor = registeredProcessors[propKey]
+  if (!processor) {
+    return
+  }
+  processor(proto, instance, optionsToWrite)
 }
 
 // un-annotated and undeleted methods/getters are handled as `methods` and `computed`
@@ -126,7 +137,13 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
   return decorate
 }
 
-export var Component: Component = Component_ as any
+export var Component: Component = (function(target: ComponentMeta | VClass<Vue>): any {
+  if (typeof target === 'function') {
+    return Component_()(target)
+  }
+  return Component_(target)
+} as any)
 
-// Component.register = function() {
-// }
+Component.register = function(key: $$Prop, logic: DecoratorPorcessor) {
+  registeredProcessors[key] = logic
+}
