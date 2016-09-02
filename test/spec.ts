@@ -1,7 +1,7 @@
 import {
   Component, Prop, Watch,
   Lifecycle
-} from './index'
+} from '../index'
 
 import Vue = require('vue')
 
@@ -43,15 +43,8 @@ export class MyComponent extends Vue {
 
   // lifecycle
   @Lifecycle beforeCreate() {}
+  // as method
   created() {}
-  beforeDestroy() {}
-  destroyed() {}
-  beforeMount() {}
-  mounted () {}
-  beforeUpdate() {}
-  updated () {}
-  activated() {}
-  deactivated() {}
 
   // extensibility, like vuex
 
