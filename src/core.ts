@@ -21,8 +21,8 @@ import {
 } from './interface'
 
 interface Component {
-  (ctor: VClass<Vue>): VClass<Vue>
-  (config?: ComponentMeta): ClassDecorator
+  <T extends VClass<Vue>>(ctor: T): T
+  (config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
   register(name: $$Prop, logic: DecoratorPorcessor): void
 }
 

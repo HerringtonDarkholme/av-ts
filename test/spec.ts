@@ -9,7 +9,7 @@ import {
 
 import Vue = require('vue')
 
-@Component()
+@Component
 class MyMixin extends Vue {
   private k: string
 }
@@ -25,7 +25,7 @@ class MyMixin extends Vue {
 export class MyComponent extends Vue {
   myData: string
 
-  @Prop() myProp: {nested: string}
+  @Prop myProp: {nested: string}
 
   myMethod() {
   }

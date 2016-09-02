@@ -2,6 +2,8 @@ import {ComponentOptions as ComponentOptions_} from 'vue/types/options'
 import {Vue} from 'vue/types/vue'
 import {VNode} from 'vue/types/vnode'
 
+export {PropOptions} from 'vue/types/options'
+
 export type Hash<V> = {[k: string]: V}
 export type VClass<T extends Vue> = {new(): T} & (typeof Vue)
 

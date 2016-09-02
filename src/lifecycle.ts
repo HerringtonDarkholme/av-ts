@@ -1,3 +1,5 @@
+import Vue = require('vue')
+
 import {Component} from './core'
 import {$$Prop} from './interface'
 
@@ -9,7 +11,8 @@ type Lifecycles =
   'beforeMount' | 'mounted' |
   'beforeUpdate' | 'updated'
 
-export function Lifecycle(target: any, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
+export function Lifecycle(vue: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
+  let target: any = vue
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || {}
   lifecycles[life] = true
 }
