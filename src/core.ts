@@ -1,3 +1,18 @@
+/**
+ * The basic idea behind Component is marking on prototype
+ * and then process these marks to collect options and modify class/instance.
+ *
+ * A decorator will mark `internalKey` on prototypes, storgin meta information
+ * Then register `DecoratorPorcessor` on Component, which will be called in `Component` decorator
+ * `DecoratorPorcessor` can execute custom logic based on meta information stored before
+ *
+ * For non-annotated fields, `Component` will treat them as `methods` and `computed` in `option`
+ * instance variable is treated as the return value of `data()` in `option`
+ *
+ * So a `DecoratorPorcessor` may delete fields on prototype and instance,
+ * preventing meta properties like lifecycle and prop to pollute `method` and `data`
+ */
+
 import Vue = require('vue')
 import {
   VClass, DecoratorPorcessor,
@@ -10,6 +25,8 @@ interface Component {
   register(name: $$Prop, logic: DecoratorPorcessor): void
 }
 
+// option is a full-blown Vue compatible option
+// meta is vue.ts specific type for annotation, a subset of option
 function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
   let options: ComponentOptions = meta
   options.props = {}
@@ -18,6 +35,9 @@ function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
   return options
 }
 
+// given a vue class' prototype, return its internalKeys and normalKeys
+// internalKeys are for decorators' use, like $$Prop, $$Lifecycle
+// normalKeys are for methods / computed property
 function getKeys(proto: any) {
   let protoKeys = Object.getOwnPropertyNames(proto)
   let internalKeys: $$Prop[] = []
@@ -37,10 +57,11 @@ function getKeys(proto: any) {
 }
 
 // should continue
-function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, optionsToWrite: ComponentOptions): boolean {
+function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, optionsToWrite: ComponentOptions) {
   return false
 }
 
+// un-annotated and undeleted methods/getters are handled as `methods` and `computed`
 function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: ComponentOptions) {
   let descriptor = Object.getOwnPropertyDescriptor(proto, propKey)
   if (!descriptor) { // in case original descriptor is deleted
@@ -56,6 +77,7 @@ function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: 
   }
 }
 
+// find all undeleted instance property as the return value of data()
 function collectData(instance: any, optionsToWrite: ComponentOptions) {
   let keys = Object.keys(instance)
   let ret: any = {}
@@ -68,9 +90,10 @@ function collectData(instance: any, optionsToWrite: ComponentOptions) {
   }
 }
 
-function getSuper(proto: any): VClass<Vue> {
-  // constructor: Vue -> Parent  -> Child
+// find proto's superclass' constructor to correctly extend
+function findSuper(proto: any): VClass<Vue> {
   // prototype:   {}  -> VueInst -> ParentInst, aka. proto
+  // constructor: Vue -> Parent  -> Child
   let superProto = Object.getPrototypeOf(proto)
   let Super = superProto instanceof Vue
     ? (superProto.constructor as VClass<Vue>) // TS does not setup constructor :(
@@ -97,7 +120,7 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
     // everything on instance is packed into data
     collectData(instance, options)
 
-    let Super = getSuper(proto)
+    let Super = findSuper(proto)
     return Super.extend(options)
   }
   return decorate

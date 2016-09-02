@@ -1,7 +1,7 @@
 import {Component} from './core'
 import {$$Prop} from './interface'
 
-const LIFECYCLE_KEY: $$Prop = '$$Lifecycle' as any
+const LIFECYCLE_KEY = '$$Lifecycle' as $$Prop
 
 type Lifecycles =
   'beforeCreate' | 'created' |
