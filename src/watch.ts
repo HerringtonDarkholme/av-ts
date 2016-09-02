@@ -6,5 +6,5 @@ interface WatchOption {
 }
 
 export function Watch<C, T>(func: WatchHandler<C, T>, option: WatchOption = {}): PropertyDecorator {
-  return null as any
+  return function() {} as any
 }

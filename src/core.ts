@@ -33,6 +33,7 @@ function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
   options.props = {}
   options.computed = {}
   options.watch = {}
+  options.methods = {}
   return options
 }
 

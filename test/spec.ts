@@ -3,6 +3,8 @@ import {
   Lifecycle
 } from '../index'
 
+import 'reflect-metadata'
+
 import {
   VClass
 } from '../src/interface'
