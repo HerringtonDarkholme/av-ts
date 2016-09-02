@@ -4,11 +4,18 @@ Difference
 **Added Feature:**
 
 * functional component has its own assets slot.
+
 * new decorator `@Transition` for typechecking transition hooks!
 
 **Removed Feature:**
 
 * transitions is no longer needed given `<transition>` wrapper component.
+
+**Todo Features:**
+
+* `mixin`
+
+* `extends`
 
 
 ============================

@@ -3,7 +3,7 @@ import {Vue} from 'vue/types/vue'
 import {VNode} from 'vue/types/vnode'
 
 export type Hash<V> = {[k: string]: V}
-export type VClass<T extends Vue> = {new(): T}
+export type VClass<T extends Vue> = {new(): T} & (typeof Vue)
 
 export interface DecoratorPorcessor {
   (proto: any, instance: Vue, options: ComponentOptions): void
@@ -13,6 +13,15 @@ export type $$Prop = string & {'$$Prop Brand': never}
 
 export interface ComponentOptions extends ComponentOptions_ {
   [k: string]: any
+}
+
+export interface ComponentMeta {
+  directive?: Hash<string>,
+  components?: Hash<VClass<Vue>>,
+  functionals?: Hash<RenderFunc>,
+  filters?: {},
+  name?: string,
+  delimiter?: [string, string],
 }
 
 interface ContextObject {

@@ -3,10 +3,15 @@ import {
   Lifecycle
 } from '../index'
 
+import {
+  VClass
+} from '../src/interface'
+
 import Vue = require('vue')
 
 @Component()
 class MyMixin extends Vue {
+  private k: string
 }
 
 @Component({
@@ -56,3 +61,5 @@ export class MyComponent extends Vue {
 }
 
 var a = new MyComponent()
+
+var testVClass: VClass<MyComponent> = MyComponent

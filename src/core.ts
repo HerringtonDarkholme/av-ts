@@ -1,17 +1,9 @@
 import Vue = require('vue')
 import {
-  Hash, VClass, DecoratorPorcessor,
-  ComponentOptions, $$Prop
+  VClass, DecoratorPorcessor,
+  ComponentOptions, $$Prop,
+  ComponentMeta,
 } from './interface'
-
-export interface ComponentMeta {
-  directive?: Hash<string>,
-  components?: Hash<VClass<Vue>>,
-  functionals?: Hash<Function>,
-  filters?: {},
-  name?: string,
-  delimiter?: [string, string],
-}
 
 interface Component {
   (config?: ComponentMeta): ClassDecorator
@@ -49,7 +41,11 @@ function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, options
   return false
 }
 
-function collectMethodsAndComputed(propKey: string, descriptor: PropertyDescriptor, optionsToWrite: ComponentOptions) {
+function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: ComponentOptions) {
+  let descriptor = Object.getOwnPropertyDescriptor(proto, propKey)
+  if (!descriptor) { // in case original descriptor is deleted
+    return
+  }
   if (typeof descriptor.value === 'function') {
     optionsToWrite.methods![propKey] = descriptor.value
   } else if (descriptor.get || descriptor.set) {
@@ -58,6 +54,28 @@ function collectMethodsAndComputed(propKey: string, descriptor: PropertyDescript
       set: descriptor.set,
     }
   }
+}
+
+function collectData(instance: any, optionsToWrite: ComponentOptions) {
+  let keys = Object.keys(instance)
+  let ret: any = {}
+  for (let key of keys) {
+    ret[key] = instance[key]
+  }
+  // what a closure! :(
+  optionsToWrite.data = function() {
+    return ret
+  }
+}
+
+function getSuper(proto: any): VClass<Vue> {
+  // constructor: Vue -> Parent  -> Child
+  // prototype:   {}  -> VueInst -> ParentInst, aka. proto
+  let superProto = Object.getPrototypeOf(proto)
+  let Super = superProto instanceof Vue
+    ? (superProto.constructor as VClass<Vue>) // TS does not setup constructor :(
+    : Vue
+  return Super
 }
 
 function Component_(meta: ComponentMeta = {}): ClassDecorator {
@@ -73,18 +91,14 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
     }
 
     for (let protoKey of normalKeys) {
-      let descriptor = Object.getOwnPropertyDescriptor(proto, protoKey)
-      if (descriptor) {
-        // handle builtin methods/getters
-        collectMethodsAndComputed(protoKey, descriptor, options)
-      } else {
-      }
+      collectMethodsAndComputed(protoKey, proto, options)
     }
 
-    // everything on instance is a
-    for (let propKey in instance) {
-    }
-    return Vue.extend(options)
+    // everything on instance is packed into data
+    collectData(instance, options)
+
+    let Super = getSuper(proto)
+    return Super.extend(options)
   }
   return decorate
 }
