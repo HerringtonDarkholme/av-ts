@@ -1,7 +1,7 @@
 import Vue = require('vue')
 import {
   Hash, VClass, DecoratorPorcessor,
-  ComponentOptions
+  ComponentOptions, $$Prop
 } from './interface'
 
 export interface ComponentMeta {
@@ -15,7 +15,7 @@ export interface ComponentMeta {
 
 interface Component {
   (config?: ComponentMeta): ClassDecorator
-  register(name: string, logic: DecoratorPorcessor): void
+  register(name: $$Prop, logic: DecoratorPorcessor): void
 }
 
 function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
@@ -26,8 +26,26 @@ function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
   return options
 }
 
+function getKeys(proto: any) {
+  let protoKeys = Object.getOwnPropertyNames(proto)
+  let internalKeys: $$Prop[] = []
+  let normalKeys: string[] = []
+  for (let key of protoKeys) {
+    if (key === 'constructor') {
+      continue
+    } else if (key.substr(0, 2) === '$$') {
+      internalKeys.push(<any>key)
+    } else {
+      normalKeys.push(key)
+    }
+  }
+  return {
+    internalKeys, normalKeys
+  }
+}
+
 // should continue
-function collectVueTSInternalProp(propKey: string, proto: any, instance: Vue, optionsToWrite: ComponentOptions): boolean {
+function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, optionsToWrite: ComponentOptions): boolean {
   return false
 }
 
@@ -48,20 +66,22 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
     let proto = cls.prototype
     let options = makeOptionsFromMeta(meta)
 
-    let protoKeys = Object.getOwnPropertyNames(proto)
+    let {internalKeys, normalKeys} = getKeys(proto)
 
-    for (let protoKey of protoKeys) {
-      if (protoKey.substr(0, 2) === '$$') {
-        collectVueTSInternalProp(protoKey, proto, instance, options)
-        continue
-      }
+    for (let protoKey of internalKeys) {
+      collectInternalProp(protoKey, proto, instance, options)
+    }
+
+    for (let protoKey of normalKeys) {
       let descriptor = Object.getOwnPropertyDescriptor(proto, protoKey)
       if (descriptor) {
         // handle builtin methods/getters
         collectMethodsAndComputed(protoKey, descriptor, options)
+      } else {
       }
     }
 
+    // everything on instance is a
     for (let propKey in instance) {
     }
     return Vue.extend(options)
