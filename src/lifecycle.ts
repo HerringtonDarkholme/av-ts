@@ -11,8 +11,7 @@ type Lifecycles =
   'beforeMount' | 'mounted' |
   'beforeUpdate' | 'updated'
 
-export function Lifecycle(vue: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
-  let target: any = vue
+export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || {}
   lifecycles[life] = true
 }

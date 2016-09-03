@@ -42,7 +42,7 @@ function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
 // given a vue class' prototype, return its internalKeys and normalKeys
 // internalKeys are for decorators' use, like $$Prop, $$Lifecycle
 // normalKeys are for methods / computed property
-function getKeys(proto: any) {
+function getKeys(proto: Vue) {
   let protoKeys = Object.getOwnPropertyNames(proto)
   let internalKeys: $$Prop[] = []
   let normalKeys: string[] = []
@@ -67,7 +67,7 @@ type ProcessorEntries = {
 let registeredProcessors: ProcessorEntries = {}
 
 // delegate to processor
-function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, optionsToWrite: ComponentOptions) {
+function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions) {
   let processor = registeredProcessors[propKey]
   if (!processor) {
     return
@@ -76,7 +76,7 @@ function collectInternalProp(propKey: $$Prop, proto: any, instance: Vue, options
 }
 
 // un-annotated and undeleted methods/getters are handled as `methods` and `computed`
-function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: ComponentOptions) {
+function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrite: ComponentOptions) {
   let descriptor = Object.getOwnPropertyDescriptor(proto, propKey)
   if (!descriptor) { // in case original descriptor is deleted
     return
@@ -93,7 +93,7 @@ function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: 
 
 // find all undeleted instance property as the return value of data()
 // we use a JSON hack, which is the best way to avoid deep clone
-function collectData(instance: any, optionsToWrite: ComponentOptions) {
+function collectData(instance: Object, optionsToWrite: ComponentOptions) {
   // what a closure! :(
   optionsToWrite.data = function() {
     return snapshot(instance)
@@ -101,7 +101,7 @@ function collectData(instance: any, optionsToWrite: ComponentOptions) {
 }
 
 // find proto's superclass' constructor to correctly extend
-function findSuper(proto: any): VClass<Vue> {
+function findSuper(proto: Object): VClass<Vue> {
   // prototype:   {}  -> VueInst -> ParentInst, aka. proto
   // constructor: Vue -> Parent  -> Child
   let superProto = Object.getPrototypeOf(proto)

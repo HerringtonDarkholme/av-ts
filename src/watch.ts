@@ -1,3 +1,5 @@
+import Vue = require('vue')
+
 type WatchHandler<C, T> = (this: C, newVal?: any, oldVal?: any) => void
 
 interface WatchOption {
@@ -5,6 +7,6 @@ interface WatchOption {
   immediate?: boolean
 }
 
-export function Watch<C, T>(func: WatchHandler<C, T>, option: WatchOption = {}): PropertyDecorator {
+export function Watch<C extends Vue, T>(func: WatchHandler<C, T>, option: WatchOption = {}): PropertyDecorator {
   return function() {} as any
 }

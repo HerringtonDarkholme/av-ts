@@ -8,6 +8,7 @@
         "sourceMap": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "suppressImplicitAnyIndexErrors": true,
         "outDir": "./dist"
     },
     "exclude": [
