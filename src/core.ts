@@ -20,6 +20,8 @@ import {
   ComponentMeta,
 } from './interface'
 
+import {snapshot} from './util'
+
 interface Component {
   <T extends VClass<Vue>>(ctor: T): T
   (config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
@@ -90,15 +92,11 @@ function collectMethodsAndComputed(propKey: string, proto: any, optionsToWrite: 
 }
 
 // find all undeleted instance property as the return value of data()
+// we use a JSON hack, which is the best way to avoid deep clone
 function collectData(instance: any, optionsToWrite: ComponentOptions) {
-  let keys = Object.keys(instance)
-  let ret: any = {}
-  for (let key of keys) {
-    ret[key] = instance[key]
-  }
   // what a closure! :(
   optionsToWrite.data = function() {
-    return ret
+    return snapshot(instance)
   }
 }
 

@@ -25,7 +25,8 @@ class MyMixin extends Vue {
   delimiter: ['{{', '}}'],
 })
 export class MyComponent extends Vue {
-  myData: string
+  myData = '123'
+  myNested = {a: 123, b: 444}
 
   @Prop myProp: {nested: string}
 
