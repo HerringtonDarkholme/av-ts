@@ -3,7 +3,7 @@ Awesome Vue.TS
 
 Example:
 
-```
+```typescript
 @Component({
   filters: {},
   name: 'my-component',
