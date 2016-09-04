@@ -1,3 +1,4 @@
+// TODO, sketch below is designed for Vuex1.0
 export function Vuex(target: Object, key: string): void {
 }
 

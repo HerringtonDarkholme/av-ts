@@ -1,5 +1,6 @@
 import {Vue} from 'vue/types/vue'
 import {VNode, VNodeData} from 'vue/types/vnode'
+export {VNode} from 'vue/types/vnode'
 
 export {PropOptions} from 'vue/types/options'
 import {ComponentOptions} from 'vue/types/options'
