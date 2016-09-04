@@ -48,6 +48,9 @@ interface FuncProp<T extends Function> {
   defaultFunc: T
 }
 
+// we cast arugment's config object type into plain data object type
+// say, p(Number) has a return type of `number`, but at runtime it is
+// {type: Number}. This is solely for API user's conciseness
 export function p<T>(tpe: NumberConstructor): number
 export function p<T>(tpe: StringConstructor): string
 export function p<T>(tpe: BooleanConstructor): boolean

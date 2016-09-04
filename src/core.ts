@@ -44,7 +44,7 @@ function getKeys(proto: Vue) {
     if (key === 'constructor') {
       continue
     } else if (key.substr(0, 2) === '$$') {
-      internalKeys.push(<any>key)
+      internalKeys.push(key as $$Prop)
     } else {
       normalKeys.push(key)
     }
