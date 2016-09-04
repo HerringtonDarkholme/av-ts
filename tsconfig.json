@@ -7,7 +7,7 @@
         "strictNullChecks": true,
         "sourceMap": false,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": false,
+        "emitDecoratorMetadata": true,
         "suppressImplicitAnyIndexErrors": true,
         "outDir": "./dist"
     },
