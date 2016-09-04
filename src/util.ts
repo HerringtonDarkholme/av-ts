@@ -3,7 +3,7 @@ export function snapshot(obj: any) {
     return obj
   }
   let temp: any = {}
-  for (let key in Object.keys(obj)) {
+  for (let key of Object.keys(obj)) {
     temp[key] = snapshot(obj[key])
   }
   return temp
