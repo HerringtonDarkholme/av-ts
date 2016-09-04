@@ -9,7 +9,7 @@ export function snapshot(obj: any) {
   return temp
 }
 
-export function getReflectType(target: any, key: string): any {
+export function getReflectType(target: Object, key: string): any {
     if (typeof Reflect === "object" && typeof Reflect.getMetadata === "function") {
       return Reflect.getMetadata('design:type', target, key)
     }
