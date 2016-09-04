@@ -22,12 +22,6 @@ import {
 
 import {snapshot} from './util'
 
-interface Component {
-  <T extends VClass<Vue>>(ctor: T): T
-  (config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
-  register(name: $$Prop, logic: DecoratorPorcessor): void
-}
-
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
 function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
@@ -136,13 +130,17 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
   return decorate
 }
 
-export var Component: Component = (function(target: ComponentMeta | VClass<Vue>): any {
+export function Component<T extends VClass<Vue>>(ctor: T): T
+export function Component(config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
+export function Component(target: ComponentMeta | VClass<Vue>): any {
   if (typeof target === 'function') {
     return Component_()(target)
   }
   return Component_(target)
-} as any)
+}
 
-Component.register = function(key: $$Prop, logic: DecoratorPorcessor) {
-  registeredProcessors[key] = logic
+export namespace Component {
+  export function register(key: $$Prop, logic: DecoratorPorcessor) {
+    registeredProcessors[key] = logic
+  }
 }
