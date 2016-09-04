@@ -1,6 +1,6 @@
 import {
   Component, Prop, Watch,
-  Lifecycle
+  Lifecycle, p
 } from '../index'
 
 import 'reflect-metadata'
@@ -26,9 +26,21 @@ class MyMixin extends Vue {
 })
 export class MyComponent extends Vue {
   myData = '123'
-  myNested = {a: 123, b: 444}
-
-  @Prop myProp: {nested: string}
+  @Prop myProp = p(Function)
+  @Prop complext = p({
+    type: Object,
+    required: true,
+    default() {
+      return {a: 123, b: 456}
+    }
+  })
+  @Prop screwed = p({
+    type: Function,
+    // bug: TS cannot infer return type
+    defaultFunc(a: number): boolean {
+      return false
+    }
+  })
 
   myMethod() {
   }

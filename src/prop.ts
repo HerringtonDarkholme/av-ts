@@ -35,18 +35,33 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 
 type Class<T> = {new (...args: {}[]): T}
 
-interface PropOption<T> {
+interface PlainProp<T> {
   type?: Class<T>
   required?: boolean
-  default?: T
-  defaultFactory?: () => T
+  default?: T | (() => T)
   validator?(value: T): boolean
 }
-export function p<T>(k: Class<T>): T
-export function p<T>(k :PropOption<T>): T
-export function p<T>(k: Class<T> | PropOption<T>): T {
-  if (typeof k === 'function') {
-    return {type: k} as any
+
+// FuncPropOption is solely for bad API
+interface FuncProp<T extends Function> {
+  type: FunctionConstructor,
+  defaultFunc: T
+}
+
+export function p<T>(tpe: NumberConstructor): number
+export function p<T>(tpe: StringConstructor): string
+export function p<T>(tpe: BooleanConstructor): boolean
+export function p<T>(tpe: Class<T>): T
+export function p<T>(conf: PlainProp<T>): T
+export function p<T extends Function>(conf: FuncProp<T>): T
+export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
+  if (typeof confOrType === 'function') {
+    let tpe = confOrType
+    return {type: tpe} as any
   }
-  return k as any
+  let conf: any = confOrType
+  if (conf.type === Function) {
+    conf.default = conf.defaultFunc
+  }
+  return conf
 }
