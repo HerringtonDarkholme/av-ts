@@ -90,7 +90,7 @@ const VUE_KEYS = Object.keys(new Vue)
 // need to remove Vue keys to avoid cyclic references
 function collectData(instance: Object, optionsToWrite: ComponentOptions) {
   let selfData = {}
-  for (let key in instance) {
+  for (let key of Object.keys(instance)) {
     if (VUE_KEYS.indexOf(key) === -1) {
       selfData[key] = instance[key]
     }
