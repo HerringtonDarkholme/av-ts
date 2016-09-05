@@ -37,25 +37,35 @@ type Class<T> = {new (...args: {}[]): T}
 
 interface PlainProp<T> {
   type?: Class<T>
-  required?: boolean
-  default?: T | (() => T)
   validator?(value: T): boolean
+}
+
+interface DefaultProp<T> extends PlainProp<T> {
+  default: T | (() => T)
+  required?: boolean
+}
+
+interface RequiredProp<T> extends PlainProp<T> {
+  required: true
+  default?: T | (() => T)
 }
 
 // FuncPropOption is solely for bad API
 interface FuncProp<T extends Function> {
   type: FunctionConstructor,
   defaultFunc: T
+  required?: boolean
 }
 
 // we cast arugment's config object type into plain data object type
 // say, p(Number) has a return type of `number`, but at runtime it is
 // {type: Number}. This is solely for API user's conciseness
-export function p<T>(tpe: NumberConstructor): number
-export function p<T>(tpe: StringConstructor): string
-export function p<T>(tpe: BooleanConstructor): boolean
-export function p<T>(tpe: Class<T>): T
-export function p<T>(conf: PlainProp<T>): T
+export function p<T>(tpe: NumberConstructor): number | undefined
+export function p<T>(tpe: StringConstructor): string | undefined
+export function p<T>(tpe: BooleanConstructor): boolean | undefined
+export function p<T>(tpe: Class<T>): T | undefined
+export function p<T>(conf: DefaultProp<T> | RequiredProp<T>): T
+export function p<T>(conf: PlainProp<T>): T | undefined
 export function p<T extends Function>(conf: FuncProp<T>): T
 export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
   if (typeof confOrType === 'function') {
