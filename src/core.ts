@@ -85,12 +85,19 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
   }
 }
 
+const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
-// we use a JSON hack, which is the best way to avoid deep clone
+// need to remove Vue keys to avoid cyclic references
 function collectData(instance: Object, optionsToWrite: ComponentOptions) {
+  let selfData = {}
+  for (let key in instance) {
+    if (VUE_KEYS.indexOf(key) === -1) {
+      selfData[key] = instance[key]
+    }
+  }
   // what a closure! :(
   optionsToWrite.data = function() {
-    return snapshot(instance)
+    return snapshot(selfData)
   }
 }
 
