@@ -37,16 +37,18 @@ describe('vue component', () => {
   it('should handle propOption declaration', () => {
     let props = MyComponent.options.props!
     expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
-    it('for complext prop', () => {
-      let complex = props['complex']
-      expect(complex['type']).to.equal(Object)
-      expect(complex['required']).to.equal(true)
-      expect(complex['default']).to.be.a('function')
-      let defaultProp = complex['default']()
-      expect(defaultProp).to.deep.equal({a: 123, b: 456})
-      defaultProp = complex['default']()
-      expect(defaultProp).to.deep.equal({a: 123, b: 456}, 'idempotency')
-    })
+  })
+
+  it('for complex prop', () => {
+    let props: any = MyComponent.options.props
+    let complex = props['complex']
+    expect(complex['type']).to.equal(Object)
+    expect(complex['required']).to.equal(true)
+    expect(complex['default']).to.be.a('function')
+    let defaultProp = complex['default']()
+    expect(defaultProp).to.deep.equal({a: 123, b: 456})
+    defaultProp = complex['default']()
+    expect(defaultProp).to.deep.equal({a: 123, b: 456}, 'idempotency')
   })
 
 })
