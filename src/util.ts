@@ -1,3 +1,5 @@
+declare var Reflect: any
+
 export function snapshot(obj: any) {
   if (obj == null || typeof obj !== 'object') {
     return obj
