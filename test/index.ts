@@ -34,21 +34,30 @@ describe('vue component', () => {
     expect(props).to.haveOwnProperty('screwed')
   })
 
-  it('should handle propOption declaration', () => {
+  it('should handle simple prop option', () => {
     let props = MyComponent.options.props!
     expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
   })
 
-  it('for complex prop', () => {
+  it('it should handle complex prop', () => {
     let props: any = MyComponent.options.props
     let complex = props['complex']
     expect(complex['type']).to.equal(Object)
     expect(complex['required']).to.equal(true)
     expect(complex['default']).to.be.a('function')
-    let defaultProp = complex['default']()
-    expect(defaultProp).to.deep.equal({a: 123, b: 456})
-    defaultProp = complex['default']()
-    expect(defaultProp).to.deep.equal({a: 123, b: 456}, 'idempotency')
+    let defaultProp1 = complex['default']()
+    expect(defaultProp1).to.deep.equal({a: 123, b: 456})
+    let defaultProp2 = complex['default']()
+    expect(defaultProp2).to.deep.equal({a: 123, b: 456}, 'idempotency')
+    expect(defaultProp1).to.not.equal(defaultProp2)
+  })
+
+  it('should handle prop for function', () => {
+    let props: any = MyComponent.options.props
+    let screwed = props['screwed']
+    expect(screwed['type']).to.equal(Function)
+    expect(screwed['default']).to.be.a('function')
+    expect(screwed['defaultFunc']).to.equal(undefined)
   })
 
 })

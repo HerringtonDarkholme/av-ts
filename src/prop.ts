@@ -65,6 +65,8 @@ export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
   let conf: any = confOrType
   if (conf.type === Function) {
     conf.default = conf.defaultFunc
+    // TODO: evaluate copying a config rather than delete prop
+    delete conf.defaultFunc
   }
   return conf
 }
