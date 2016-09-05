@@ -4,10 +4,10 @@
   "description": "Vue2.0's TypeScript Binding",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha dist/test"
   },
   "files": [
-    "./dist/index.js"
+    "./dist"
   ],
   "keywords": [
     "Vue"
@@ -15,6 +15,7 @@
   "author": "Herrington Darkholme",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^3.4.32",
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",

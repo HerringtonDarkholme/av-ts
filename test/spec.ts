@@ -3,7 +3,7 @@ import {
   Lifecycle, p
 } from '../index'
 
-import 'reflect-metadata'
+// import 'reflect-metadata'
 
 import {
   VClass
@@ -74,7 +74,3 @@ export class MyComponent extends Vue {
   // @Vuex
   // readonly action2 = action(s => s.dispatch('action2'))
 }
-
-var a = new MyComponent()
-
-var testVClass: VClass<MyComponent> = MyComponent
