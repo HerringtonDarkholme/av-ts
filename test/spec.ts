@@ -26,7 +26,9 @@ class MyMixin extends Vue {
 })
 export class MyComponent extends Vue {
   myData = '123'
+
   @Prop myProp = p(Function)
+
   @Prop complex = p({
     type: Object,
     required: true,
@@ -34,6 +36,18 @@ export class MyComponent extends Vue {
       return {a: 123, b: 456}
     }
   })
+
+  @Prop required = p({
+    type: Number,
+    required: true,
+  })
+
+  @Prop default = p({
+    default() {
+      return 123
+    }
+  })
+
   @Prop screwed = p({
     type: Function,
     // bug: TS cannot infer return type

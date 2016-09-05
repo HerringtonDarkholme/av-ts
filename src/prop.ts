@@ -38,11 +38,11 @@ type Class<T> = {new (...args: {}[]): T}
 interface PlainProp<T> {
   type?: Class<T>
   validator?(value: T): boolean
+  required?: boolean
 }
 
 interface DefaultProp<T> extends PlainProp<T> {
   default: T | (() => T)
-  required?: boolean
 }
 
 interface RequiredProp<T> extends PlainProp<T> {
@@ -52,8 +52,8 @@ interface RequiredProp<T> extends PlainProp<T> {
 
 // FuncPropOption is solely for bad API
 interface FuncProp<T extends Function> {
-  type: FunctionConstructor,
-  defaultFunc: T
+  type?: FunctionConstructor,
+  defaultFunc?: T
   required?: boolean
 }
 
@@ -64,7 +64,8 @@ export function p<T>(tpe: NumberConstructor): number | undefined
 export function p<T>(tpe: StringConstructor): string | undefined
 export function p<T>(tpe: BooleanConstructor): boolean | undefined
 export function p<T>(tpe: Class<T>): T | undefined
-export function p<T>(conf: DefaultProp<T> | RequiredProp<T>): T
+export function p<T>(conf: RequiredProp<T>): T
+export function p<T>(conf: DefaultProp<T>): T
 export function p<T>(conf: PlainProp<T>): T | undefined
 export function p<T extends Function>(conf: FuncProp<T>): T
 export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
