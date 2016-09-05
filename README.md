@@ -15,7 +15,7 @@ export class MyComponent extends Vue {
 
   // props declaration
   @Prop myProp = p(Function)
-  @Prop complext = p({
+  @Prop complex = p({
     type: Object,
     required: true,
     default() {

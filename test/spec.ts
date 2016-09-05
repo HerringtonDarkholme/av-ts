@@ -27,7 +27,7 @@ class MyMixin extends Vue {
 export class MyComponent extends Vue {
   myData = '123'
   @Prop myProp = p(Function)
-  @Prop complext = p({
+  @Prop complex = p({
     type: Object,
     required: true,
     default() {
