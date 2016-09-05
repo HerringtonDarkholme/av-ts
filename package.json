@@ -1,13 +1,14 @@
 {
-  "name": "vue.ts",
+  "name": "av.ts",
   "version": "0.0.1",
-  "description": "Vue2.0's TypeScript Binding",
-  "main": "index.js",
+  "description": "Awesome Vue2.0's for TypeScript2.0",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "mocha dist/test"
   },
   "files": [
-    "./dist"
+    "./dist/index.js",
+    "./dist/src"
   ],
   "keywords": [
     "Vue"
