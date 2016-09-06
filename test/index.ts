@@ -21,43 +21,34 @@ describe('vue component', () => {
     expect(options.data).to.be.a('function')
     let data = (options.data as any)()
     expect(data).to.be.a('object')
-    expect(data).to.deep.equal({myData: '123'})
+    expect(Object.keys(data)).to.be.eql(['myData', 'funcData', 'myWatchee'])
+    expect(data['myData']).to.equal('123')
+    expect(data['funcData']).to.be.a('function')
   })
 
-  it('should have prop suboptions in options', () => {
+
+  it('should have method in options', () => {
     let options = MyComponent.options
-    expect(options).to.haveOwnProperty('props')
-    let props = options.props!
-    expect(props).to.be.a('object')
-    expect(props).to.haveOwnProperty('myProp')
-    expect(props).to.haveOwnProperty('complex')
-    expect(props).to.haveOwnProperty('screwed')
+    expect(options).to.haveOwnProperty('methods')
+    expect(options.methods).to.have.ownProperty('myMethod')
+    expect(options.methods!['myMethod']).to.be.a('function')
+    expect(Object.keys(options.methods)).to.be.eql(['myMethod', 'created'])
   })
 
-  it('should handle simple prop option', () => {
-    let props = MyComponent.options.props!
-    expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
+  it('should not have function data in methods', () => {
+    let options = MyComponent.options
+    expect(options).to.haveOwnProperty('methods')
+    expect(options.methods).to.not.have.property('funcData')
   })
 
-  it('it should handle complex prop', () => {
-    let props: any = MyComponent.options.props
-    let complex = props['complex']
-    expect(complex['type']).to.equal(Object)
-    expect(complex['required']).to.equal(true)
-    expect(complex['default']).to.be.a('function')
-    let defaultProp1 = complex['default']()
-    expect(defaultProp1).to.deep.equal({a: 123, b: 456})
-    let defaultProp2 = complex['default']()
-    expect(defaultProp2).to.deep.equal({a: 123, b: 456}, 'idempotency')
-    expect(defaultProp1).to.not.equal(defaultProp2)
-  })
-
-  it('should handle prop for function', () => {
-    let props: any = MyComponent.options.props
-    let screwed = props['screwed']
-    expect(screwed['type']).to.equal(Function)
-    expect(screwed['default']).to.be.a('function')
-    expect(screwed['defaultFunc']).to.equal(undefined)
+  it('should have computed in options', () => {
+    let options = MyComponent.options
+    expect(options).to.haveOwnProperty('computed')
+    expect(options.computed).to.haveOwnProperty('myGetter')
+    let myGetter = options.computed!['myGetter']
+    expect(myGetter).to.be.a('object')
+    expect(myGetter).to.haveOwnProperty('get')
+    expect(myGetter.get).to.be.a('function')
   })
 
 })

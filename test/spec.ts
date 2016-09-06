@@ -1,6 +1,6 @@
 import {
   Component, Prop, Watch,
-  Lifecycle, p
+  Lifecycle, p, Render
 } from '../index'
 
 // import 'reflect-metadata'
@@ -26,6 +26,9 @@ class MyMixin extends Vue {
 })
 export class MyComponent extends Vue {
   myData = '123'
+  funcData = function() {
+    console.log('ひふみ')
+  }
 
   @Prop myProp = p(Function)
 
@@ -66,7 +69,7 @@ export class MyComponent extends Vue {
   @Watch<MyComponent, string>(function(){
     console.log(this.myData)
   })
-  myWatchee: string
+  myWatchee = 'watch me!'
 
   // instance property reification
   $parent: MyMixin
@@ -79,6 +82,10 @@ export class MyComponent extends Vue {
   @Lifecycle beforeCreate() {}
   // as method
   created() {}
+
+  @Render render(h: Function) {
+    return h('h1', 'Daisuke')
+  }
 
   // extensibility, like vuex
 

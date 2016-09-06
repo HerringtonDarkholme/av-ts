@@ -4,7 +4,7 @@
   "description": "Awesome Vue2.0's for TypeScript2.0",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "mocha dist/test"
+    "test": "mocha dist/test/*.js"
   },
   "files": [
     "./dist/index.js",
