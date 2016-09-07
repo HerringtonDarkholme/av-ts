@@ -129,14 +129,25 @@ Via our old friend npm.
 
 `npm install av.ts --save`
 
-And don't forget installing vue.
+And don't forget installing vue. and then in your vue file.
+
+```typescript
+import {Componet} from 'av.ts'
+
+@Componet
+class MyAwesomeComponent {
+  // ....
+}
+```
 
 
 ## API
 
-For full type signature, please refer to `av.ts.d.ts`.
+For full type signature, please refer to `av.ts.d.ts`. They are most up-to-date.
 
 ### `Component`
+
+Type: `ClassDecorator | (option) => ClassDecorator`
 
 It can be directly applied on component class as decorator, or take one option argument and return a decorator function.
 
@@ -144,8 +155,78 @@ It can be directly applied on component class as decorator, or take one option a
 @Component
 class VueComp extends Vue {}
 
-@Componet({})
+@Componet({
+  directive: {},
+  components: {},
+  functionals: {},
+  filters: {},
+  name: 'my-awesome-component',
+  delimiter: ['{{', '}}'],
+})
+class MyComponent extends Vue {}
 ```
+
+### `Prop`
+
+Type: `PropertyDecorator`
+
+Decorated properties should be the return value of utility function `p`. `p` is a function takes property option and return a fake type placeholder that will specify the property type. The fake type placeholder, at runtime, is just the config option object you feed to the argument.
+
+```typescript
+@Prop
+myProp = p({
+  type: Number,
+  default: 123
+})
+
+// p(option) returns a `number` type placeholder
+// so the following code compiles
+var num: number = p({
+  type: Number
+})
+
+// will print {type: Number}
+console.log(num)
+
+// you can also use a shorthand form of `p`
+@Prop shortHand = p(String)
+```
+
+### `Watch`
+
+Contrary to vue-typescript, `@Watch` is applied to a **watched property**.
+`Watch` takes handler as the first argument, and an optional config object as the second one.
+
+
+```typescript
+// ....
+
+@Watch(function(newVal, oldVal) {
+  console.log('the delta is ' + (newVal - oldVal))
+}, {deep: true})
+properyBeingWatched: number
+
+// ....
+```
+
+is equivalent to
+
+```typescript
+watch: {
+  properyBeingWatched: {
+    handler: function(newVal, oldVal) {
+      console.log('the delta is ' + (newVal - oldVal))
+    },
+    deep: true
+  }
+}
+```
+
+### `Lifecycle` and `Render`
+
+Type: TypedPropertyDecorator
+
+mark decorated methods as special hooks in vue. You cannot call them in methods.
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.

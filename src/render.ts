@@ -2,7 +2,7 @@ import Vue = require('vue')
 import {VNode, $$Prop} from './interface'
 import {Component} from './core'
 
-type RenderFunc = (createElement: typeof Vue.prototype.$createElement) => VNode
+export type RenderFunc = (createElement: typeof Vue.prototype.$createElement) => VNode
 
 const RENDER_KEY = '$$Render' as $$Prop
 const RENDER: 'render' = 'render'

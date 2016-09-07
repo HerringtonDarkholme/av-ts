@@ -12,7 +12,7 @@ import {
 import Vue = require('vue')
 
 @Component
-class MyMixin extends Vue {
+export class MyMixin extends Vue {
   private k: string
 }
 

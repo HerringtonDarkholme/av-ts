@@ -2,15 +2,15 @@ import Vue = require('vue')
 import {$$Prop} from './interface'
 import {Component} from './core'
 
-type WatchHandler<C, T> = (this: C, newVal?: any, oldVal?: any) => void
+export type WatchHandler<C, T> = (this: C, newVal?: any, oldVal?: any) => void
 
-interface WatchOption<C, T>{
+export interface WatchOption<C, T>{
   deep?: boolean
   immediate?: boolean
   handler?: WatchHandler<C, T>
 }
 
-type VuePropDecorator = (target: Vue, key: string) => void
+export type VuePropDecorator = (target: Vue, key: string) => void
 
 const WATCH_PROP = '$$Watch' as $$Prop
 
