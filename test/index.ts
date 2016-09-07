@@ -1,5 +1,6 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
+import {ComponentOptions} from 'vue/types/options'
 
 import Vue = require('vue')
 
@@ -7,7 +8,7 @@ describe('vue component', () => {
 
   it('should return a vue constructor', () => {
     expect(MyComponent).to.haveOwnProperty('options')
-    expect(MyComponent.options).to.be.a('object')
+    expect(MyComponent['options']).to.be.a('object')
   })
 
   it('should new to a vue instance', () => {
@@ -16,7 +17,7 @@ describe('vue component', () => {
   })
 
   it('should have data function in options', () => {
-    let options = MyComponent.options
+    let options = MyComponent['options']
     expect(options).to.haveOwnProperty('data')
     expect(options.data).to.be.a('function')
     let data = (options.data as any)()
@@ -28,7 +29,7 @@ describe('vue component', () => {
 
 
   it('should have method in options', () => {
-    let options = MyComponent.options
+    let options = MyComponent['options']
     expect(options).to.haveOwnProperty('methods')
     expect(options.methods).to.have.ownProperty('myMethod')
     expect(options.methods!['myMethod']).to.be.a('function')
@@ -36,13 +37,13 @@ describe('vue component', () => {
   })
 
   it('should not have function data in methods', () => {
-    let options = MyComponent.options
+    let options = MyComponent['options']
     expect(options).to.haveOwnProperty('methods')
     expect(options.methods).to.not.have.property('funcData')
   })
 
   it('should have computed in options', () => {
-    let options = MyComponent.options
+    let options = MyComponent['options']
     expect(options).to.haveOwnProperty('computed')
     expect(options.computed).to.haveOwnProperty('myGetter')
     let myGetter = options.computed!['myGetter']
