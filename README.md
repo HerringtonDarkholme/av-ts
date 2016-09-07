@@ -6,6 +6,8 @@ Awesome Vue.TS
 Awesome Vue.TS aims at getting type safety as much as possible, while still keeping TypeScript concise and idiomatic.
 To achieve this, av.ts exploits many techniques, tricks and hacks in TypeScript, which makes av.ts a good tour of TypeScript features.
 
+Note: The target vue version is 2.0.
+
 The canonical [library](https://github.com/vuejs/vue-class-component) does not
 solve the problem that `this.propertyInDataOption` is not checked by compiler.
 
@@ -227,6 +229,13 @@ watch: {
 Type: TypedPropertyDecorator
 
 mark decorated methods as special hooks in vue. You cannot call them in methods.
+
+### `Transition`
+
+Type: TypedPropertyDecorator
+
+mark method as a callback of transition component. method is still called in other instance methods.
+This decorator is solely for type checking.
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
