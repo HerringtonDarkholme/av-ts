@@ -3,7 +3,8 @@ Awesome Vue.TS
 
 ## Why:
 
-Awesome Vue.TS aims at achieving type safety as much as possible, while still keeping TypeScript concise and idiomatic.
+Awesome Vue.TS aims at getting type safety as much as possible, while still keeping TypeScript concise and idiomatic.
+To achieve this, av.ts exploits many techniques, tricks and hacks in TypeScript, which makes av.ts a good tour of TypeScript features.
 
 The canonical [library](https://github.com/vuejs/vue-class-component) does not
 solve the problem that `this.propertyInDataOption` is not checked by compiler.
@@ -83,6 +84,9 @@ which is equivalent to
 ```typescript
 
 let MyComponent = Vue.extend({
+  filters: {},
+  name: 'my-component',
+  delimiter: ['{{', '}}'],
   data() {
     return {
       myData: '123',
@@ -119,9 +123,29 @@ let MyComponent = Vue.extend({
 })
 ```
 
+## install
+
+Via our old friend npm.
+
+`npm install av.ts --save`
+
+And don't forget installing vue.
+
+
 ## API
 
+For full type signature, please refer to `av.ts.d.ts`.
+
 ### `Component`
+
+It can be directly applied on component class as decorator, or take one option argument and return a decorator function.
+
+```typescript
+@Component
+class VueComp extends Vue {}
+
+@Componet({})
+```
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.

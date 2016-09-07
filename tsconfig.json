@@ -9,6 +9,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "suppressImplicitAnyIndexErrors": true,
+        "declaration": true,
         "outDir": "./dist"
     },
     "exclude": [

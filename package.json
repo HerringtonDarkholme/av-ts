@@ -8,6 +8,7 @@
   },
   "files": [
     "./dist/index.js",
+    "./dist/index.d.js",
     "./dist/src"
   ],
   "keywords": [

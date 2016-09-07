@@ -33,25 +33,25 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 })
 
 
-type Class<T> = {new (...args: {}[]): T}
+export type Class<T> = {new (...args: {}[]): T}
 
-interface PlainProp<T> {
+export interface PlainProp<T> {
   type?: Class<T>
   validator?(value: T): boolean
   required?: boolean
 }
 
-interface DefaultProp<T> extends PlainProp<T> {
+export interface DefaultProp<T> extends PlainProp<T> {
   default: T | (() => T)
 }
 
-interface RequiredProp<T> extends PlainProp<T> {
+export interface RequiredProp<T> extends PlainProp<T> {
   required: true
   default?: T | (() => T)
 }
 
 // FuncPropOption is solely for bad API
-interface FuncProp<T extends Function> {
+export interface FuncProp<T extends Function> {
   type?: FunctionConstructor,
   defaultFunc?: T
   required?: boolean

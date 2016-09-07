@@ -26,7 +26,7 @@ export interface ComponentMeta {
   delimiter?: [string, string],
 }
 
-interface ContextObject<T> {
+export interface ContextObject<T> {
   readonly props: T;
   readonly children: VNode[];
   readonly slots: Hash<VNode>;
@@ -39,7 +39,7 @@ export type RenderFunc<T> = (
   context: ContextObject<T>
 ) => VNode
 
-type Class = {new(...args: {}[]): {}}
+export type Class = {new(...args: {}[]): {}}
 
 export interface FunctionalProps<T> {
   props?: {[key: string]: PropOptions | Class | Class[] }

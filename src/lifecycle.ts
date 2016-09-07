@@ -5,7 +5,7 @@ import {$$Prop} from './interface'
 
 const LIFECYCLE_KEY = '$$Lifecycle' as $$Prop
 
-type Lifecycles =
+export type Lifecycles =
   'beforeCreate' | 'created' |
   'beforeDestroy' | 'destroyed' |
   'beforeMount' | 'mounted' |
