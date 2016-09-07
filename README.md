@@ -49,7 +49,7 @@ export class MyComponent extends Vue { // extends Vue or your own component
   myData = '123'
 
   // props declaration
-  @Prop complex = p({
+  @Prop myProp = p({
     type: Object,
     required: true,
     default() {
@@ -78,12 +78,55 @@ export class MyComponent extends Vue { // extends Vue or your own component
 }
 ```
 
+which is equivalent to
+
+```typescript
+
+let MyComponent = Vue.extend({
+  data() {
+    return {
+      myData: '123',
+      myWatchee: 'watch me!'
+    }
+  },
+  props: {
+    myProp: {
+      type: Object,
+      required: true,
+      default() {
+        return {a: 123, b: 456}
+      }
+    }
+  },
+  methods: {
+    myMethod() {
+      console.log('my method called!')
+    }
+  },
+  computed: {
+    myGetter: {
+      get() {
+        return this.myProp
+      }
+    }
+  },
+  watch: {
+    myWatchee() {
+      console.log(this.myWatchee + 'changed!')
+    }
+  },
+  beforeCreate() {}
+})
+```
+
 ## API
+
+### `Component`
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
 
-```
+```typescript
 class MyComponent extends Vue {
   // instance property reification
   $refs: {
