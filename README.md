@@ -1,10 +1,12 @@
-Awesome Vue.TS
+Awesome Vue TS
 -----
 
 ## Why:
 
 Awesome Vue.TS aims at getting type safety as much as possible, while still keeping TypeScript concise and idiomatic.
-To achieve this, av.ts exploits many techniques, tricks and hacks in TypeScript, which makes av.ts a good tour of TypeScript features.
+To achieve this, av-ts exploits many techniques, tricks and hacks in TypeScript, which makes av-ts a good tour of TypeScript features.
+
+Note: The target vue version is 2.0.
 
 The canonical [library](https://github.com/vuejs/vue-class-component) does not
 solve the problem that `this.propertyInDataOption` is not checked by compiler.
@@ -13,9 +15,9 @@ Another popular [library](https://github.com/itsFrank/vue-typescript) can provid
 decorators for different usages and more type-safety.
 
 None of the above two has taken extensibility into account.
-While av.ts pays attention how users can create their own decorators.
+While av-ts pays attention how users can create their own decorators.
 
-I believe av.ts have a good balance between safety, brevity, consistency and extensibility.
+I believe av-ts have a good balance between safety, brevity, consistency and extensibility.
 
 ## Usage:
 
@@ -37,7 +39,7 @@ I believe av.ts have a good balance between safety, brevity, consistency and ext
 ```typescript
 import {
   Component, Prop, Watch, Lifecycle,
-} from 'av.ts'
+} from 'av-ts'
 
 // meta info in `Component` decorator
 @Component({
@@ -127,12 +129,12 @@ let MyComponent = Vue.extend({
 
 Via our old friend npm.
 
-`npm install av.ts --save`
+`npm install av-ts --save`
 
 And don't forget installing vue. and then in your vue file.
 
 ```typescript
-import {Componet} from 'av.ts'
+import {Componet} from 'av-ts'
 
 @Componet
 class MyAwesomeComponent {
@@ -143,7 +145,7 @@ class MyAwesomeComponent {
 
 ## API
 
-For full type signature, please refer to `av.ts.d.ts`. They are most up-to-date.
+For full type signature, please refer to `av-ts.d.ts`. They are most up-to-date.
 
 ### `Component`
 
@@ -227,6 +229,13 @@ watch: {
 Type: TypedPropertyDecorator
 
 mark decorated methods as special hooks in vue. You cannot call them in methods.
+
+### `Transition`
+
+Type: TypedPropertyDecorator
+
+mark method as a callback of transition component. method is still called in other instance methods.
+This decorator is solely for type checking.
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
