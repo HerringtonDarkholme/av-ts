@@ -1,11 +1,12 @@
 {
   "name": "av-ts",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Awesome Vue2.0's for TypeScript2.0",
   "main": "./dist/index.js",
   "scripts": {
     "test": "mocha dist/test/*.js"
   },
+  "typings": "dist/index.d.ts",
   "files": [
     "dist/index.js",
     "dist/index.d.ts",
