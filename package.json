@@ -24,6 +24,7 @@
     "mocha": "^3.0.2",
     "reflect-metadata": "^0.1.8",
     "typescript": "^2.0.2",
-    "vue": "git://github.com/HerringtonDarkholme/vue#94c75183b0905c271740277678acbf2a56a3abff"
+    "vue": "^2.0.0-rc.5",
+    "vuex": "^2.0.0-rc.5"
   }
 }
