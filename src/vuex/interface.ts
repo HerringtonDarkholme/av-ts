@@ -38,3 +38,12 @@ export interface ActionHandler {
 export interface ActionCollection {
   [key: string]: ActionHandler[]
 }
+
+export interface Mutation {
+  type: string,
+  payload: _
+}
+
+export interface Subscriber<S> {
+  (mutation: Mutation, state: S): void
+}

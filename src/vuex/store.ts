@@ -5,6 +5,7 @@ import {
   StoreOption,
   MutationOption, MutationCollection,
   ActionCollection,
+  Subscriber,
 
 } from './interface'
 
@@ -18,7 +19,7 @@ export class Store<S> {
   /* @internal */ _mutations: MutationCollection = Object.create(null)
   /* @internal */ _wrappedGetters = Object.create(null)
   private _runtimeModules = Object.create(null)
-  private _subscribers = []
+  private _subscribers: Subscriber<S>[] = []
   private _watcherVM = new Vue()
 
   public strict: boolean
@@ -92,7 +93,7 @@ export class Store<S> {
       : entry[0](payload)
   }
 
-  subscribe (fn) {
+  subscribe (fn: Subscriber<S>) {
     const subs = this._subscribers
     if (subs.indexOf(fn) < 0) {
       subs.push(fn)
