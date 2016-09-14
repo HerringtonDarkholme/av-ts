@@ -235,7 +235,7 @@ function resetStoreVM (store, state) {
   }
 }
 
-function installModule (store, rootState, path, module, hot?) {
+function installModule<S>(store: Store<S>, rootState: S, path: string[], module: StoreOption, hot?) {
   const isRoot = !path.length
   const {
     state,
