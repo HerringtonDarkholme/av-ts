@@ -2,7 +2,10 @@ import devtoolPlugin from './devtool'
 import applyMixin from './mixin'
 
 import {
-  StoreOption, MutationOption
+  StoreOption,
+  MutationOption, MutationCollection,
+  ActionCollection,
+
 } from './interface'
 
 let Vue: any // bind on install
@@ -11,8 +14,9 @@ export class Store<S> {
 
   private _committing = false
   private _options: StoreOption
-  private _actions = Object.create(null)
-  private _mutations = Object.create(null)
+  /* @internal */ _actions: ActionCollection = Object.create(null)
+  /* @internal */ _mutations: MutationCollection = Object.create(null)
+  /* @internal */ _wrappedGetters = Object.create(null)
   private _runtimeModules = Object.create(null)
   private _subscribers = []
   private _watcherVM = new Vue()
@@ -21,7 +25,6 @@ export class Store<S> {
 
   /* @internal */ _devtoolHook: any
   /* @internal */ _vm: any
-  /* @internal */ _wrappedGetters = Object.create(null)
 
   constructor (options: StoreOption = {}) {
     assert(Vue, `must call Vue.use(Vuex) before creating a store instance.`)
@@ -60,7 +63,7 @@ export class Store<S> {
     assert(false, `Use store.replaceState() to explicit replace store state.`)
   }
 
-  commit = (type: string, payload: any, options: MutationOption) => {
+  commit = (type: string, payload: {}, options: MutationOption) => {
     // check object-style commit
     let mutation = { type, payload }
     const entry = this._mutations[type]
@@ -78,7 +81,7 @@ export class Store<S> {
     }
   }
 
-  dispatch = (type, payload) => {
+  dispatch = (type: string, payload: {}) => {
     const entry = this._actions[type]
     if (!entry) {
       console.error(`[vuex] unknown action type: ${type}`)
@@ -164,7 +167,7 @@ function assert (condition, msg) {
   if (!condition) throw new Error(`[vuex] ${msg}`)
 }
 
-function resetStore (store) {
+function resetStore<S>(store: Store<S>) {
   store._actions = Object.create(null)
   store._mutations = Object.create(null)
   store._wrappedGetters = Object.create(null)

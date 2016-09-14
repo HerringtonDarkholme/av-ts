@@ -11,10 +11,30 @@ export interface StoreOption {
   strict?: boolean
 }
 
-export interface Mutation {
-  type: string
-}
-
 export interface MutationOption {
   silent?: boolean
+}
+
+export interface  MutationHandler {
+  (state: any): void
+}
+
+export interface MutationCollection {
+  [key: string]: MutationHandler[]
+}
+
+export interface ActionContext<S, RS> {
+  dispatch<T>(type: string, payload: _): Promise<T>
+  commit(type: string, payload: _): void
+  state: S
+  getters: _
+  rootState: RS
+}
+
+export interface ActionHandler {
+  (payload: _, callback?: Function): Promise<_>
+}
+
+export interface ActionCollection {
+  [key: string]: ActionHandler[]
 }
