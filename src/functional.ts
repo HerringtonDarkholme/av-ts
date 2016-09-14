@@ -1,5 +1,4 @@
 // functional isn't decorator, but worth implementing here
-import Vue = require('vue')
 import {RenderFunc, FunctionalProps} from './interface'
 
 export function functional<T>(render: RenderFunc<T>, _props: T): FunctionalProps<T> {

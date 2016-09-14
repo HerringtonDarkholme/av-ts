@@ -1,6 +1,5 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
-import {ComponentOptions} from 'vue/types/options'
 
 import Vue = require('vue')
 

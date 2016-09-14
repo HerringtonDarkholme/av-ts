@@ -1,5 +1,5 @@
 import Vue = require('vue')
-import {ComponentOptions, PropOptions, VClass, $$Prop} from './interface'
+import {PropOptions, $$Prop} from './interface'
 import {Component} from './core'
 
 import {getReflectType} from './util'

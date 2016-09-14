@@ -5,15 +5,11 @@ import {
 
 // import 'reflect-metadata'
 
-import {
-  VClass
-} from '../src/interface'
-
 import Vue = require('vue')
 
 @Component
 export class MyMixin extends Vue {
-  private k: string
+  public k: string
 }
 
 @Component({
