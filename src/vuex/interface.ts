@@ -47,3 +47,7 @@ export interface Mutation {
 export interface Subscriber<S> {
   (mutation: Mutation, state: S): void
 }
+
+export interface Getter<S, R> {
+  (s: S): R
+}

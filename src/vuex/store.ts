@@ -2,12 +2,16 @@ import devtoolPlugin from './devtool'
 import applyMixin from './mixin'
 
 import {
+  _,
   StoreOption,
+  Getter,
   MutationOption, MutationCollection,
   ActionCollection,
   Subscriber,
 
 } from './interface'
+
+import {WatchHandler, WatchOption} from '../watch'
 
 let Vue: any // bind on install
 
@@ -64,7 +68,7 @@ export class Store<S> {
     assert(false, `Use store.replaceState() to explicit replace store state.`)
   }
 
-  commit = (type: string, payload: {}, options: MutationOption) => {
+  commit = (type: string, payload: _, options: MutationOption) => {
     // check object-style commit
     let mutation = { type, payload }
     const entry = this._mutations[type]
@@ -82,7 +86,7 @@ export class Store<S> {
     }
   }
 
-  dispatch = (type: string, payload: {}) => {
+  dispatch = (type: string, payload: _) => {
     const entry = this._actions[type]
     if (!entry) {
       console.error(`[vuex] unknown action type: ${type}`)
@@ -106,12 +110,12 @@ export class Store<S> {
     }
   }
 
-  watch (getter, cb, options) {
+  watch (getter: Getter<S, _>, cb: WatchHandler<never, _>, options: WatchOption<never, _>) {
     assert(typeof getter === 'function', `store.watch only accepts a function.`)
     return this._watcherVM.$watch(() => getter(this.state), cb, options)
   }
 
-  replaceState (state) {
+  replaceState (state: S) {
     this._withCommit(() => {
       this._vm.state = state
     })
@@ -156,7 +160,7 @@ export class Store<S> {
     resetStore(this)
   }
 
-  _withCommit (fn) {
+  _withCommit (fn: () => void) {
     const committing = this._committing
     this._committing = true
     fn()
