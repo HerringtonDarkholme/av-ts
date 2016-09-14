@@ -4,8 +4,12 @@ export interface VuexPlugin {
   (store: Store<{}>): void
 }
 
-export interface RawGetter {
-  [k: string]: Getter<any, any>
+export interface RawGetter<S, R> {
+  (s: S): R
+}
+
+export interface RawGetters {
+  [k: string]: RawGetter<any, any>
 }
 
 export  interface RawMutaionHandler {
@@ -26,7 +30,7 @@ export interface RawActionHandler<S, RS> {
 
 
 export interface ModuleGetters {
-  [k: string]: (state: any, getters: RawGetter, rootState: any) => any
+  [k: string]: (state: any, getters: RawGetters, rootState: any) => any
 }
 
 export interface StoreOption {
@@ -68,6 +72,6 @@ export interface Subscriber<S> {
   (mutation: Mutation, state: S): void
 }
 
-export interface Getter<S, R> {
-  (s: S): R
+export interface WrappedGetters<S> {
+  [key: string]: (store: Store<S>) => any
 }

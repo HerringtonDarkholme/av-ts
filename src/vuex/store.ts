@@ -4,7 +4,7 @@ import VueCtor = require('vue')
 
 import {
   StoreOption,
-  Getter, ModuleGetters,
+  RawGetter, ModuleGetters, WrappedGetters,
   MutationOption, MutationCollection, RawMutaionHandler,
   ActionCollection, RawActionHandler,
   Subscriber,
@@ -21,7 +21,7 @@ export class Store<S> {
   /* @internal */ _options: StoreOption
   /* @internal */ _actions: ActionCollection = Object.create(null)
   /* @internal */ _mutations: MutationCollection = Object.create(null)
-  /* @internal */ _wrappedGetters = Object.create(null)
+  /* @internal */ _wrappedGetters: WrappedGetters<S> = Object.create(null)
   /* @internal */ _runtimeModules: {[key: string]: StoreOption} = Object.create(null)
   /* @internal */ _subscribers: Subscriber<S>[] = []
   /* @internal */ _devtoolHook: any
@@ -91,7 +91,7 @@ export class Store<S> {
     const entry = this._actions[type]
     if (!entry) {
       console.error(`[vuex] unknown action type: ${type}`)
-      return
+      return Promise.resolve()
     }
     return entry.length > 1
       ? Promise.all(entry.map(handler => handler(payload)))
@@ -111,7 +111,7 @@ export class Store<S> {
     }
   }
 
-  watch<R>(getter: Getter<S, R>, cb: WatchHandler<never, R>, options: WatchOption<never, R>) {
+  watch<R>(getter: RawGetter<S, R>, cb: WatchHandler<never, R>, options: WatchOption<never, R>) {
     assert(typeof getter === 'function', `store.watch only accepts a function.`)
     return this._watcherVM.$watch(() => getter(this.state), cb, options)
   }
