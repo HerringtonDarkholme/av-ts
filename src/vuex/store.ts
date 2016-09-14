@@ -18,18 +18,19 @@ let Vue: any // bind on install
 export class Store<S> {
 
   private _committing = false
-  private _options: StoreOption
+  /* @internal */ _options: StoreOption
   /* @internal */ _actions: ActionCollection = Object.create(null)
   /* @internal */ _mutations: MutationCollection = Object.create(null)
   /* @internal */ _wrappedGetters = Object.create(null)
-  private _runtimeModules = Object.create(null)
-  private _subscribers: Subscriber<S>[] = []
+  /* @internal */ _runtimeModules = Object.create(null)
+  /* @internal */ _subscribers: Subscriber<S>[] = []
+  /* @internal */ _devtoolHook: any
+  /* @internal */ _vm: any
+
   private _watcherVM = new Vue()
 
   public strict: boolean
-
-  /* @internal */ _devtoolHook: any
-  /* @internal */ _vm: any
+  public getters: {}
 
   constructor (options: StoreOption = {}) {
     assert(Vue, `must call Vue.use(Vuex) before creating a store instance.`)
@@ -169,7 +170,7 @@ export class Store<S> {
   }
 }
 
-function assert (condition, msg) {
+function assert (condition: boolean, msg: string) {
   if (!condition) throw new Error(`[vuex] ${msg}`)
 }
 
@@ -188,7 +189,7 @@ function resetStore<S>(store: Store<S>) {
   resetStoreVM(store, state)
 }
 
-function resetStoreVM (store, state) {
+function resetStoreVM<S>(store: Store<S>, state: S) {
   const oldVm = store._vm
 
   // bind store public getters
@@ -230,7 +231,7 @@ function resetStoreVM (store, state) {
   }
 }
 
-function installModule<S>(store: Store<S>, rootState: S, path: string[], module: StoreOption, hot?) {
+function installModule<S>(store: Store<S>, rootState: S, path: string[], module: StoreOption, hot?: boolean) {
   const isRoot = !path.length
   const {
     state,
@@ -272,14 +273,14 @@ function installModule<S>(store: Store<S>, rootState: S, path: string[], module:
   }
 }
 
-function registerMutation (store, type, handler, path = []) {
+function registerMutation (store, type, handler, path: string[] = []) {
   const entry = store._mutations[type] || (store._mutations[type] = [])
   entry.push(function wrappedMutationHandler (payload) {
     handler(getNestedState(store.state, path), payload)
   })
 }
 
-function registerAction (store, type, handler, path = []) {
+function registerAction (store, type, handler, path: string[] = []) {
   const entry = store._actions[type] || (store._actions[type] = [])
   const { dispatch, commit } = store
   entry.push(function wrappedActionHandler (payload, cb) {
@@ -360,8 +361,4 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
   Store,
   install,
-  mapState,
-  mapMutations,
-  mapGetters,
-  mapActions
 }
