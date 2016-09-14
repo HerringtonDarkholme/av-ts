@@ -1,7 +1,9 @@
 import devtoolPlugin from './devtool'
 import applyMixin from './mixin'
 
-import { StoreOption } from './interface'
+import {
+  StoreOption, MutationOption
+} from './interface'
 
 let Vue: any // bind on install
 
@@ -11,7 +13,6 @@ export class Store<S> {
   private _options: StoreOption
   private _actions = Object.create(null)
   private _mutations = Object.create(null)
-  private _wrappedGetters = Object.create(null)
   private _runtimeModules = Object.create(null)
   private _subscribers = []
   private _watcherVM = new Vue()
@@ -19,6 +20,8 @@ export class Store<S> {
   public strict: boolean
 
   /* @internal */ _devtoolHook: any
+  /* @internal */ _vm: any
+  /* @internal */ _wrappedGetters = Object.create(null)
 
   constructor (options: StoreOption = {}) {
     assert(Vue, `must call Vue.use(Vuex) before creating a store instance.`)
@@ -32,16 +35,6 @@ export class Store<S> {
 
     // store internal state
     this._options = options
-
-    // bind commit and dispatch to self
-    const store = this
-    const { dispatch, commit } = this
-    this.dispatch = function boundDispatch (type, payload) {
-      return dispatch.call(store, type, payload)
-    }
-    this.commit = function boundCommit (type, payload, options) {
-      return commit.call(store, type, payload, options)
-    }
 
     // strict mode
     this.strict = strict
@@ -59,7 +52,7 @@ export class Store<S> {
     plugins.concat(devtoolPlugin).forEach(plugin => plugin(this))
   }
 
-  get state () {
+  get state (): S {
     return this._vm.state
   }
 
@@ -67,16 +60,9 @@ export class Store<S> {
     assert(false, `Use store.replaceState() to explicit replace store state.`)
   }
 
-  commit (type, payload, options) {
+  commit = (type: string, payload: any, options: MutationOption) => {
     // check object-style commit
-    let mutation
-    if (isObject(type) && type.type) {
-      options = payload
-      payload = mutation = type
-      type = type.type
-    } else {
-      mutation = { type, payload }
-    }
+    let mutation = { type, payload }
     const entry = this._mutations[type]
     if (!entry) {
       console.error(`[vuex] unknown mutation type: ${type}`)
@@ -92,7 +78,7 @@ export class Store<S> {
     }
   }
 
-  dispatch (type, payload) {
+  dispatch = (type, payload) => {
     const entry = this._actions[type]
     if (!entry) {
       console.error(`[vuex] unknown action type: ${type}`)
@@ -309,7 +295,7 @@ function registerAction (store, type, handler, path = []) {
   })
 }
 
-function wrapGetters (store, moduleGetters, modulePath) {
+function wrapGetters (store: Store, moduleGetters, modulePath) {
   Object.keys(moduleGetters).forEach(getterKey => {
     const rawGetter = moduleGetters[getterKey]
     if (store._wrappedGetters[getterKey]) {

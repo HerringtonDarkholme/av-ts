@@ -10,3 +10,11 @@ export interface StoreOption {
   plugins?: VuexPlugin[]
   strict?: boolean
 }
+
+export interface Mutation {
+  type: string
+}
+
+export interface MutationOption {
+  silent?: boolean
+}

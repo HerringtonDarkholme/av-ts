@@ -9,9 +9,10 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "suppressImplicitAnyIndexErrors": true,
+        "noUnusedLocals": true,
         "declaration": true,
         "outDir": "./dist",
-        "lib": ["es5", "es2015.promise"]
+        "lib": ["es5", "es2015.promise", "dom"]
     },
     "exclude": [
         "node_modules"
