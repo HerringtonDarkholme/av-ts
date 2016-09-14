@@ -273,14 +273,14 @@ function installModule<S>(store: Store<S>, rootState: S, path: string[], module:
   }
 }
 
-function registerMutation (store, type, handler, path: string[] = []) {
+function registerMutation<S>(store: Store<S>, type: string, handler: (s: any, payload: _) => void, path: string[] = []) {
   const entry = store._mutations[type] || (store._mutations[type] = [])
-  entry.push(function wrappedMutationHandler (payload) {
+  entry.push(function wrappedMutationHandler (payload: _) {
     handler(getNestedState(store.state, path), payload)
   })
 }
 
-function registerAction (store, type, handler, path: string[] = []) {
+function registerAction<S>(store: Store<S>, type: string, handler: Function, path: string[] = []) {
   const entry = store._actions[type] || (store._actions[type] = [])
   const { dispatch, commit } = store
   entry.push(function wrappedActionHandler (payload, cb) {
@@ -295,7 +295,7 @@ function registerAction (store, type, handler, path: string[] = []) {
       res = Promise.resolve(res)
     }
     if (store._devtoolHook) {
-      return res.catch(err => {
+      return res.catch((err: any) => {
         store._devtoolHook.emit('vuex:error', err)
         throw err
       })
@@ -305,14 +305,14 @@ function registerAction (store, type, handler, path: string[] = []) {
   })
 }
 
-function wrapGetters (store: Store, moduleGetters, modulePath) {
+function wrapGetters<S>(store: Store<S>, moduleGetters: {[k: string]: Getter<S, _>}, modulePath: string[]) {
   Object.keys(moduleGetters).forEach(getterKey => {
     const rawGetter = moduleGetters[getterKey]
     if (store._wrappedGetters[getterKey]) {
       console.error(`[vuex] duplicate getter key: ${getterKey}`)
       return
     }
-    store._wrappedGetters[getterKey] = function wrappedGetter (store) {
+    store._wrappedGetters[getterKey] = function wrappedGetter (store: Store<S>) {
       return rawGetter(
         getNestedState(store.state, modulePath), // local state
         store.getters, // getters
@@ -326,10 +326,6 @@ function enableStrictMode (store) {
   store._vm.$watch('state', () => {
     assert(store._committing, `Do not mutate vuex store state outside mutation handlers.`)
   }, { deep: true, sync: true })
-}
-
-function isObject (obj) {
-  return obj !== null && typeof obj === 'object'
 }
 
 function isPromise<T>(val: any): val is Promise<T> {

@@ -11,7 +11,7 @@ export interface StoreOption {
   strict?: boolean
   actions?: _[]
   mutations?: _[]
-  getters?: _[]
+  getters?: {[k: string]: _}
   modules?: {[key: string]: StoreOption}
 }
 
