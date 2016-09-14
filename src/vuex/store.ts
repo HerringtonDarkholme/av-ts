@@ -4,7 +4,7 @@ import applyMixin from './mixin'
 import {
   _,
   StoreOption,
-  Getter,
+  Getter, ModuleGetters,
   MutationOption, MutationCollection,
   ActionCollection,
   Subscriber,
@@ -17,7 +17,7 @@ let Vue: any // bind on install
 
 export class Store<S> {
 
-  private _committing = false
+  /* @internal */ _committing = false
   /* @internal */ _options: StoreOption
   /* @internal */ _actions: ActionCollection = Object.create(null)
   /* @internal */ _mutations: MutationCollection = Object.create(null)
@@ -131,7 +131,7 @@ export class Store<S> {
     resetStoreVM(this, this.state)
   }
 
-  unregisterModule (path: string | string[]) {
+  unregisterModule (path: string[]) {
     if (typeof path === 'string') path = [path]
     assert(Array.isArray(path), `module path must be a string or an Array.`)
     delete this._runtimeModules[path.join('.')]
@@ -305,7 +305,7 @@ function registerAction<S>(store: Store<S>, type: string, handler: Function, pat
   })
 }
 
-function wrapGetters<S>(store: Store<S>, moduleGetters: {[k: string]: Getter<S, _>}, modulePath: string[]) {
+function wrapGetters<S>(store: Store<S>, moduleGetters: ModuleGetters, modulePath: string[]) {
   Object.keys(moduleGetters).forEach(getterKey => {
     const rawGetter = moduleGetters[getterKey]
     if (store._wrappedGetters[getterKey]) {
@@ -322,7 +322,7 @@ function wrapGetters<S>(store: Store<S>, moduleGetters: {[k: string]: Getter<S, 
   })
 }
 
-function enableStrictMode (store) {
+function enableStrictMode<S>(store: Store<S>) {
   store._vm.$watch('state', () => {
     assert(store._committing, `Do not mutate vuex store state outside mutation handlers.`)
   }, { deep: true, sync: true })
@@ -332,13 +332,13 @@ function isPromise<T>(val: any): val is Promise<T> {
   return val && typeof val.then === 'function'
 }
 
-function getNestedState (state, path) {
+function getNestedState (state: any, path: string[]) {
   return path.length
     ? path.reduce((state, key) => state[key], state)
     : state
 }
 
-function install (_Vue) {
+function install (_Vue: any) {
   if (Vue) {
     console.error(
       '[vuex] already installed. Vue.use(Vuex) should be called only once.'

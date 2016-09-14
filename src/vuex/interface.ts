@@ -5,13 +5,18 @@ export type _ = never
 export interface VuexPlugin {
   (store: Store<{}>): void
 }
+
+export interface ModuleGetters {
+  [k: string]: (state: any,getters: {[k: string]: Getter<any, any>}, rootState: any) => any
+}
+
 export interface StoreOption {
   state?: {}
   plugins?: VuexPlugin[]
   strict?: boolean
   actions?: _[]
   mutations?: _[]
-  getters?: {[k: string]: _}
+  getters?: ModuleGetters
   modules?: {[key: string]: StoreOption}
 }
 
