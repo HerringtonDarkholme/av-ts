@@ -14,42 +14,40 @@ export type VStore<S, G, M, A> = {
   actions: A
 }
 
-export interface Stateable {
-  state<S>(s: S): Getterable<S>
-  toStore(): Store<{}>
-  toComponentHelper(): VStore<{}, {}, {}, {}>
-}
-
-export interface Getterable<S> {
-  getters<G>(g: G): Mutationable<S, G>
-  toComponentHelper(): VStore<S, {}, {}, {}>
-  toStore(): Store<S>
-}
-
-export interface Mutationable<S, G> {
-  mutations<M extends StateFuncs<S>>(m: M): Actionable<S, G, M>
-  toComponentHelper(): VStore<S, G, {}, {}>
-  toStore(): Store<S>
-}
-
-export interface Actionable<S, G, M> {
-  actions<A extends StoreFuncs<S, G, M, {}>>(a: A): Full<S, G, M, A>
-  toComponentHelper(): VStore<S, G, M, {}>
-  toStore(): Store<S>
-}
-
 export interface Full<S, G, M, A> {
-  actions<A_ extends StoreFuncs<S, G, M, A>>(a: A_): Full<S, G, M, A_ & A>
+  module<S_, G_, M_, A_>(name: string, m: Full<S_, G_, M_, A_>): Full<S, G_&G, M_&M, A_&A>
+  subState<Sub>(sub: Sub): Full<Sub&S, G, M, A>
+  state<S_>(s: S_): Full<S_&S, G, M, A>
+  getters<G_>(g: G_): Full<S, G_&G, M, A>
+  mutations<M_ extends StateFuncs<S>>(m: M_): Full<S, G, M_&M, A>
+  actions<A_ extends StoreFuncs<S, G, M, A>>(a: A_): Full<S, G, M, A_&A>
   toComponentHelper(): VStore<S, G, M, A>
   toStore(): Store<S>
+  toConfig: any
+  stateType: S
 }
 
-class StoreImpl implements
-  Stateable, Getterable<any>, Mutationable<any, any>,
-  Actionable<any, any, any>, Full<any, any, any, any> {
+class StoreImpl implements Full<any, any, any, any> {
 
-  private _config: any
+  private _config = {
+    module: {},
+    state: {},
+    getters: {},
+    mutations: {},
+    actions: {}
+  }
   private _store: Store<any> | undefined
+  stateType: any
+
+  module(name:string, m: any): this {
+    this._config.module[name] = m.toStore()
+    return this
+  }
+
+  // for typing only
+  subState(m: any): this {
+    return this
+  }
 
   state(s: any): this {
     this._config.state = s
@@ -110,7 +108,7 @@ class StoreImpl implements
   }
 }
 
-export function create(): Stateable {
+export function create(): Full<{}, {}, {}, {}> {
   return new StoreImpl()
 }
 

@@ -8,4 +8,6 @@ export {Transition} from './src/transition'
 export {Watch} from './src/watch'
 export {functional} from './src/functional'
 
+export * from './src/vuex'
+
 export type CreateElement = typeof Vue.prototype.$createElement

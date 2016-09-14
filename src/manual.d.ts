@@ -89,4 +89,3 @@ declare namespace vuejs {
 declare module 'vuex' {
   export = Vuex
 }
-
