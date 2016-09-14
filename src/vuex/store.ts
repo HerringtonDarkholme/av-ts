@@ -6,7 +6,7 @@ import {
   StoreOption,
   Getter, ModuleGetters,
   MutationOption, MutationCollection,
-  ActionCollection,
+  ActionCollection, RawActionHandler,
   Subscriber,
 
 } from './interface'
@@ -280,7 +280,7 @@ function registerMutation<S>(store: Store<S>, type: string, handler: (s: any, pa
   })
 }
 
-function registerAction<S>(store: Store<S>, type: string, handler: Function, path: string[] = []) {
+function registerAction<S, SubState>(store: Store<S>, type: string, handler: RawActionHandler<SubState, S>, path: string[] = []) {
   const entry = store._actions[type] || (store._actions[type] = [])
   const { dispatch, commit } = store
   entry.push(function wrappedActionHandler (payload, cb) {

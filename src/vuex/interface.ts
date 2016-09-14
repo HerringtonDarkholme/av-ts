@@ -6,15 +6,36 @@ export interface VuexPlugin {
   (store: Store<{}>): void
 }
 
+export interface RawGetter {
+  [k: string]: Getter<any, any>
+}
+
+export  interface RawMutaionHandler {
+  (state: any, payload: _): void
+}
+
+export interface ActionContext<S, RS> {
+  dispatch<T>(type: string, payload: _): Promise<T> | undefined
+  commit(type: string, payload: _, options?: MutationOption): void
+  state: S
+  getters: {}
+  rootState: RS
+}
+
+export interface RawActionHandler<S, RS> {
+  (ctx: ActionContext<S, RS>, payload: _, cb?: Function): Promise<_>
+}
+
+
 export interface ModuleGetters {
-  [k: string]: (state: any,getters: {[k: string]: Getter<any, any>}, rootState: any) => any
+  [k: string]: (state: any, getters: RawGetter, rootState: any) => any
 }
 
 export interface StoreOption {
   state?: {}
   plugins?: VuexPlugin[]
   strict?: boolean
-  actions?: _[]
+  actions?: {[key: string]: RawActionHandler<_, _>}
   mutations?: _[]
   getters?: ModuleGetters
   modules?: {[key: string]: StoreOption}
@@ -25,19 +46,11 @@ export interface MutationOption {
 }
 
 export interface  MutationHandler {
-  (state: any): void
+  (payload: any): void
 }
 
 export interface MutationCollection {
   [key: string]: MutationHandler[]
-}
-
-export interface ActionContext<S, RS> {
-  dispatch<T>(type: string, payload: _): Promise<T>
-  commit(type: string, payload: _): void
-  state: S
-  getters: _
-  rootState: RS
 }
 
 export interface ActionHandler {
