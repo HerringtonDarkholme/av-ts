@@ -1,14 +1,18 @@
 import {Store} from './store'
 
-export type _ = {}
+export type _ = never
 
 export interface VuexPlugin {
-  (store: Store<_>): void
+  (store: Store<{}>): void
 }
 export interface StoreOption {
   state?: {}
   plugins?: VuexPlugin[]
   strict?: boolean
+  actions?: _[]
+  mutations?: _[]
+  getters?: _[]
+  modules?: {[key: string]: StoreOption}
 }
 
 export interface MutationOption {

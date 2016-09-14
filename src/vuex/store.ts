@@ -121,7 +121,7 @@ export class Store<S> {
     })
   }
 
-  registerModule (path, module) {
+  registerModule (path: string | string[], module: StoreOption) {
     if (typeof path === 'string') path = [path]
     assert(Array.isArray(path), `module path must be a string or an Array.`)
     this._runtimeModules[path.join('.')] = module
@@ -130,7 +130,7 @@ export class Store<S> {
     resetStoreVM(this, this.state)
   }
 
-  unregisterModule (path) {
+  unregisterModule (path: string | string[]) {
     if (typeof path === 'string') path = [path]
     assert(Array.isArray(path), `module path must be a string or an Array.`)
     delete this._runtimeModules[path.join('.')]
@@ -141,7 +141,7 @@ export class Store<S> {
     resetStore(this)
   }
 
-  hotUpdate (newOptions) {
+  hotUpdate (newOptions: StoreOption) {
     const options = this._options
     if (newOptions.actions) {
       options.actions = newOptions.actions
@@ -153,8 +153,9 @@ export class Store<S> {
       options.getters = newOptions.getters
     }
     if (newOptions.modules) {
+      let modules = options.modules = options.modules || {}
       for (const key in newOptions.modules) {
-        options.modules[key] = newOptions.modules[key]
+        modules[key] = newOptions.modules[key]
       }
     }
     resetStore(this)
