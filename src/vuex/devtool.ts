@@ -5,14 +5,14 @@ const devtoolHook =
   typeof window !== 'undefined' &&
   window.__VUE_DEVTOOLS_GLOBAL_HOOK__
 
-export default function devtoolPlugin (store: Store) {
+export default function devtoolPlugin<S>(store: Store<S>) {
   if (!devtoolHook) return
 
   store._devtoolHook = devtoolHook
 
   devtoolHook.emit('vuex:init', store)
 
-  devtoolHook.on('vuex:travel-to-state', (targetState: _) => {
+  devtoolHook.on('vuex:travel-to-state', (targetState: S) => {
     store.replaceState(targetState)
   })
 

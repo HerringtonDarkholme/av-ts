@@ -22,7 +22,7 @@ export class Store<S> {
   /* @internal */ _actions: ActionCollection = Object.create(null)
   /* @internal */ _mutations: MutationCollection = Object.create(null)
   /* @internal */ _wrappedGetters = Object.create(null)
-  /* @internal */ _runtimeModules = Object.create(null)
+  /* @internal */ _runtimeModules: {[key: string]: StoreOption} = Object.create(null)
   /* @internal */ _subscribers: Subscriber<S>[] = []
   /* @internal */ _devtoolHook: any
   /* @internal */ _vm: any
