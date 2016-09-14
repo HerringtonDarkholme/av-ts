@@ -1,5 +1,6 @@
 import devtoolPlugin from './devtool'
 import applyMixin from './mixin'
+import VueCtor = require('vue')
 
 import {
   StoreOption,
@@ -12,7 +13,7 @@ import {
 
 import {WatchHandler, WatchOption} from '../watch'
 
-let Vue: any // bind on install
+let Vue: typeof VueCtor // bind on install
 
 export class Store<S> {
 
@@ -32,7 +33,7 @@ export class Store<S> {
   public getters: {}
 
   constructor (options: StoreOption = {}) {
-    assert(Vue, `must call Vue.use(Vuex) before creating a store instance.`)
+    assert(!!Vue, `must call Vue.use(Vuex) before creating a store instance.`)
     assert(typeof Promise !== 'undefined', `vuex requires a Promise polyfill in this browser.`)
 
     const {
@@ -332,7 +333,7 @@ function getNestedState (state: any, path: string[]) {
     : state
 }
 
-function install (_Vue: any) {
+function install (_Vue: typeof VueCtor) {
   if (Vue) {
     console.error(
       '[vuex] already installed. Vue.use(Vuex) should be called only once.'
