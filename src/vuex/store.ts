@@ -10,6 +10,13 @@ export class Store<S> {
   private _committing = false
   private _options: StoreOption
   private _actions = Object.create(null)
+  private _mutations = Object.create(null)
+  private _wrappedGetters = Object.create(null)
+  private _runtimeModules = Object.create(null)
+  private _subscribers = []
+  private _watcherVM = new Vue()
+
+  public strict: boolean
 
   /* @internal */ _devtoolHook: any
 
@@ -21,16 +28,10 @@ export class Store<S> {
       state = {},
       plugins = [],
       strict = false
-    } = _options
+    } = options
 
     // store internal state
     this._options = options
-    this._actions = Object.create(null)
-    this._mutations = Object.create(null)
-    this._wrappedGetters = Object.create(null)
-    this._runtimeModules = Object.create(null)
-    this._subscribers = []
-    this._watcherVM = new Vue()
 
     // bind commit and dispatch to self
     const store = this
@@ -48,7 +49,7 @@ export class Store<S> {
     // init root module.
     // this also recursively registers all sub-modules
     // and collects all module getters inside this._wrappedGetters
-    installModule(this, state, [], _options)
+    installModule(this, state, [], options)
 
     // initialize the store vm, which is responsible for the reactivity
     // (also registers _wrappedGetters as computed properties)
@@ -234,7 +235,7 @@ function resetStoreVM (store, state) {
   }
 }
 
-function installModule (store, rootState, path, module, hot) {
+function installModule (store, rootState, path, module, hot?) {
   const isRoot = !path.length
   const {
     state,
