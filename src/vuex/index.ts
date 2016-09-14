@@ -1,7 +1,7 @@
 import Vue = require('vue')
-import {Store, mapGetters, mapActions, mapMutations} from 'vuex'
-import {$$Prop} from './interface'
-import {Component} from './core'
+import {$$Prop} from '../interface'
+import {Component} from '../core'
+import {Store} from './store'
 
 export type StateFuncs<S> = {[k: string]: ((this: S, ...args: any[]) => any)}
 export type StoreFuncs<S, G, M, A> = {
@@ -95,15 +95,7 @@ class StoreImpl implements Full<any, any, any, any> {
   }
 
   toComponentHelper(): any {
-    let store = this.toStore()
-    let config = this._config
     let ret: any = {}
-    ret.mutations = mapMutations(Object.keys(config.mutations))
-    ret.actions = mapActions(Object.keys(config.actions))
-    let getters: any = ret.getters = mapGetters(Object.keys(config.getters))
-    for (let key in getters) {
-      getters[key] = { get: getters[key] }
-    }
     return ret
   }
 }
