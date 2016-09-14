@@ -2,10 +2,9 @@ import devtoolPlugin from './devtool'
 import applyMixin from './mixin'
 
 import {
-  _,
   StoreOption,
   Getter, ModuleGetters,
-  MutationOption, MutationCollection,
+  MutationOption, MutationCollection, RawMutaionHandler,
   ActionCollection, RawActionHandler,
   Subscriber,
 
@@ -69,7 +68,7 @@ export class Store<S> {
     assert(false, `Use store.replaceState() to explicit replace store state.`)
   }
 
-  commit = (type: string, payload: _, options: MutationOption) => {
+  commit = (type: string, payload: any, options: MutationOption) => {
     // check object-style commit
     let mutation = { type, payload }
     const entry = this._mutations[type]
@@ -87,7 +86,7 @@ export class Store<S> {
     }
   }
 
-  dispatch = (type: string, payload: _) => {
+  dispatch = (type: string, payload: any) => {
     const entry = this._actions[type]
     if (!entry) {
       console.error(`[vuex] unknown action type: ${type}`)
@@ -111,7 +110,7 @@ export class Store<S> {
     }
   }
 
-  watch (getter: Getter<S, _>, cb: WatchHandler<never, _>, options: WatchOption<never, _>) {
+  watch<R>(getter: Getter<S, R>, cb: WatchHandler<never, R>, options: WatchOption<never, R>) {
     assert(typeof getter === 'function', `store.watch only accepts a function.`)
     return this._watcherVM.$watch(() => getter(this.state), cb, options)
   }
@@ -273,9 +272,9 @@ function installModule<S>(store: Store<S>, rootState: S, path: string[], module:
   }
 }
 
-function registerMutation<S>(store: Store<S>, type: string, handler: (s: any, payload: _) => void, path: string[] = []) {
+function registerMutation<S>(store: Store<S>, type: string, handler: RawMutaionHandler, path: string[] = []) {
   const entry = store._mutations[type] || (store._mutations[type] = [])
-  entry.push(function wrappedMutationHandler (payload: _) {
+  entry.push(function wrappedMutationHandler (payload: any) {
     handler(getNestedState(store.state, path), payload)
   })
 }

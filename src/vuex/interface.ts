@@ -1,7 +1,5 @@
 import {Store} from './store'
 
-export type _ = never
-
 export interface VuexPlugin {
   (store: Store<{}>): void
 }
@@ -11,19 +9,19 @@ export interface RawGetter {
 }
 
 export  interface RawMutaionHandler {
-  (state: any, payload: _): void
+  (state: any, payload: any): void
 }
 
 export interface ActionContext<S, RS> {
-  dispatch<T>(type: string, payload: _): Promise<T> | undefined
-  commit(type: string, payload: _, options?: MutationOption): void
+  dispatch<T>(type: string, payload: any): Promise<T> | undefined
+  commit(type: string, payload: any, options?: MutationOption): void
   state: S
   getters: {}
   rootState: RS
 }
 
 export interface RawActionHandler<S, RS> {
-  (ctx: ActionContext<S, RS>, payload: _, cb?: Function): Promise<_>
+  (ctx: ActionContext<S, RS>, payload: any, cb?: Function): Promise<any>
 }
 
 
@@ -35,8 +33,8 @@ export interface StoreOption {
   state?: {}
   plugins?: VuexPlugin[]
   strict?: boolean
-  actions?: {[key: string]: RawActionHandler<_, _>}
-  mutations?: _[]
+  actions?: {[key: string]: RawActionHandler<any, any>}
+  mutations?: {[key: string]: RawMutaionHandler}
   getters?: ModuleGetters
   modules?: {[key: string]: StoreOption}
 }
@@ -54,7 +52,7 @@ export interface MutationCollection {
 }
 
 export interface ActionHandler {
-  (payload: _, callback?: Function): Promise<_>
+  (payload: any, callback?: Function): Promise<any>
 }
 
 export interface ActionCollection {
@@ -63,7 +61,7 @@ export interface ActionCollection {
 
 export interface Mutation {
   type: string,
-  payload: _
+  payload: any
 }
 
 export interface Subscriber<S> {
