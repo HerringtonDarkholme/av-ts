@@ -291,9 +291,8 @@ function registerAction<S>(store: Store<S>, type: string, handler: Function, pat
       state: getNestedState(store.state, path),
       rootState: store.state
     }, payload, cb)
-    if (!isPromise(res)) {
-      res = Promise.resolve(res)
-    }
+    // normalize
+    res = Promise.resolve(res)
     if (store._devtoolHook) {
       return res.catch((err: any) => {
         store._devtoolHook.emit('vuex:error', err)
@@ -326,10 +325,6 @@ function enableStrictMode<S>(store: Store<S>) {
   store._vm.$watch('state', () => {
     assert(store._committing, `Do not mutate vuex store state outside mutation handlers.`)
   }, { deep: true, sync: true })
-}
-
-function isPromise<T>(val: any): val is Promise<T> {
-  return val && typeof val.then === 'function'
 }
 
 function getNestedState (state: any, path: string[]) {
