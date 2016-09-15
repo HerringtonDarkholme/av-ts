@@ -23,7 +23,7 @@
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
     "reflect-metadata": "^0.1.8",
-    "typescript": "^2.0.2",
+    "typescript": "^2.1.0-dev.20160915",
     "vue": "^2.0.0-rc.5",
     "vuex": "^2.0.0-rc.5"
   }
