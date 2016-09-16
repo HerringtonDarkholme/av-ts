@@ -68,8 +68,8 @@ export interface Mutation {
   payload: any
 }
 
-export interface Subscriber<S> {
-  (mutation: Mutation, state: S): void
+export interface Subscriber<P, S> {
+  (mutation: P, state: S): void
 }
 
 export interface WrappedGetters<S> {

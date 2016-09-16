@@ -16,7 +16,7 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   readonly state: S
 
   constructor() {}
-  subscribe(fn: Subscriber<S>): () => void {
+  subscribe(fn: Subscriber<P, S>): () => void {
     return function() {
     }
   }

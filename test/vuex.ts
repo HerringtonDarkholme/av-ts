@@ -12,7 +12,7 @@ var b = Opt.create({myString: '333'})
 // .mutation('decrement', s => (k: number, h: string) => s.myString += 1)
 
 
-var c = Opt.create({})
+var c = Opt.create()
   .module("a", a)
   .module("b", b)
   .getter('mytest', s => {
@@ -24,4 +24,3 @@ var c = Opt.create({})
 var cmt = c.done().dispatch
 
 cmt('INCREMENT')("333")
-

@@ -7,11 +7,15 @@ export class Opt<S, G, M, A, P> {
   getter<K extends string, T>(key: K, f: (s: S) => T): Opt<S, ((k: K) => T) & G, M, A, P> {
     return this as any
   }
+
+  mutation<K extends string>(key: K, f: (s: S) => F0<void>): Opt<S, G, ((k: K, opt?: {}) => F0<void>) & M, A, {type: K} | P>
   mutation<K extends string, T>(key: K, f: (s: S) => F1<T, void>): Opt<S, G, ((k: K, opt?: {}) => F1<T, void>) & M, A, {type: K, payload: T} | P>
-  mutation<K extends string>(key: K, f: (s: S) => F0<void>): Opt<S, G, ((k: K, opt?: {}) => F0<void>) & M, A, {type: K} | P> {
+  mutation<K extends string, T>(key: K, f: (s: S) => F1<T, void>): Opt<S, G, ((k: K, opt?: {}) => F1<T, void>) & M, A, {type: K, payload: T} | P>
+  {
     return this as any
   }
 
+  action<K extends string, R>(k: K, f: (s: ActionStore<S, G, M, A>) => F0<R|Promise<R>>): Opt<S, G, M, ((k: K) => F0<Promise<R>>) & A, P>
   action<K extends string, T, R>(k: K, f: (s: ActionStore<S, G, M, A>) => F1<T, R|Promise<R>>): Opt<S, G, M, ((k: K) => F1<T, Promise<R>>) & A, P>
   action<K extends string, R>(k: K, f: (s: ActionStore<S, G, M, A>) => F0<R|Promise<R>>): Opt<S, G, M, ((k: K) => F0<Promise<R>>) & A, P>
   {
@@ -34,7 +38,10 @@ export class Opt<S, G, M, A, P> {
     return null as any
   }
 
-  static create<S>(s: S): Opt<S, never, never, never, never> {
+  static create(): Opt<never, never, never, never, never>
+  static create<S>(s: S): Opt<S, never, never, never, never>
+  static create<S>(s?: S): Opt<S, never, never, never, never>
+  {
     return new Opt() as any
   }
 }

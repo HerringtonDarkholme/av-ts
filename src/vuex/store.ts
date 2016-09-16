@@ -23,7 +23,7 @@ export class Store<S> {
   /** @internal */ _mutations: MutationCollection = Object.create(null)
   /** @internal */ _wrappedGetters: WrappedGetters<S> = Object.create(null)
   /** @internal */ _runtimeModules: {[key: string]: StoreOption} = Object.create(null)
-  /** @internal */ _subscribers: Subscriber<S>[] = []
+  /** @internal */ _subscribers: Subscriber<any, S>[] = []
   /** @internal */ _devtoolHook: any
   /** @internal */ _vm: any
 
@@ -98,7 +98,7 @@ export class Store<S> {
       : entry[0](payload)
   }
 
-  subscribe (fn: Subscriber<S>) {
+  subscribe (fn: Subscriber<any, S>) {
     const subs = this._subscribers
     if (subs.indexOf(fn) < 0) {
       subs.push(fn)
