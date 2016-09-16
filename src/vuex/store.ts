@@ -17,15 +17,15 @@ let Vue: typeof VueCtor // bind on install
 
 export class Store<S> {
 
-  /* @internal */ _committing = false
-  /* @internal */ _options: StoreOption
-  /* @internal */ _actions: ActionCollection = Object.create(null)
-  /* @internal */ _mutations: MutationCollection = Object.create(null)
-  /* @internal */ _wrappedGetters: WrappedGetters<S> = Object.create(null)
-  /* @internal */ _runtimeModules: {[key: string]: StoreOption} = Object.create(null)
-  /* @internal */ _subscribers: Subscriber<S>[] = []
-  /* @internal */ _devtoolHook: any
-  /* @internal */ _vm: any
+  /** @internal */ _committing = false
+  /** @internal */ _options: StoreOption
+  /** @internal */ _actions: ActionCollection = Object.create(null)
+  /** @internal */ _mutations: MutationCollection = Object.create(null)
+  /** @internal */ _wrappedGetters: WrappedGetters<S> = Object.create(null)
+  /** @internal */ _runtimeModules: {[key: string]: StoreOption} = Object.create(null)
+  /** @internal */ _subscribers: Subscriber<S>[] = []
+  /** @internal */ _devtoolHook: any
+  /** @internal */ _vm: any
 
   private _watcherVM = new Vue()
 
