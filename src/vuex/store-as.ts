@@ -9,7 +9,7 @@ export interface ActionStore<S, G, M, A> {
   readonly state: S
 }
 
-export class Store<S, G, M, A> implements ActionStore<S, G, M, A> {
+export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   readonly dispatch: A
   readonly commit: M
   readonly getters: G
@@ -26,7 +26,7 @@ export class Store<S, G, M, A> implements ActionStore<S, G, M, A> {
   }
   replaceState(state: S): void {
   }
-  hotUpdate(newOptions: Opt<S, G, M, A>): void {
+  hotUpdate(newOptions: Opt<S, G, M, A, P>): void {
   }
 }
 
