@@ -18,7 +18,7 @@ export  interface RawMutaionHandler {
 
 export interface ActionContext<S, RS> {
   dispatch<T>(type: string, payload: any): Promise<T> | undefined
-  commit(type: string, payload: any, options?: MutationOption): void
+  commit(type: string, payload: any, options?: CommitOption): void
   state: S
   getters: {}
   rootState: RS
@@ -43,7 +43,7 @@ export interface StoreOption {
   modules?: {[key: string]: StoreOption}
 }
 
-export interface MutationOption {
+export interface CommitOption {
   silent?: boolean
 }
 
