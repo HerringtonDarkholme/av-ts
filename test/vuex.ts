@@ -1,11 +1,3 @@
-declare class Action<T extends Function, S> {
-  action<K extends string, R, F extends (...args: any[]) => R>(k: K, func: (s: S) => F): Action<T & ((k: K) => F), S>
-  // action<K extends string, A, R>(k: K, func: (s: S) => (a: A) => R): Action<T & ((k: K) => (t: A) => R), S>
-  // action<K extends string, A, Q, R>(k: K, func: (s: S) => (a: A, q: Q) => R): Action<T & ((k: K) => (a: A, q: Q) => R), S>
-  // action<K extends string, A, Q, R, S>(k: K, func: (s: S) => (a: A, q: Q, s: S) => R): Action<T & ((k: K) => (a: A, q: Q, s: S) => R), S>
-  dispatch: T
-}
-
 type Never = (n: never) => never
 type F0<R> = () => R
 type F1<A, R> = (a: A) => R
@@ -18,7 +10,6 @@ type F7<A, B, C, D, E, F, G, R> = (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => 
 type F8<A, B, C, D, E, F, G, H, R> = (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R
 
 declare class Store<S, G, M, A> {
-  state<S_>(s: S_): Store<S_ & S, G, M, A>
   getter<K extends string, T>(key: K, func: (s: S) => T): Store<S, ((k: K) => T) & G, M, A>
   mutation<K extends string, F extends (...args: any[]) => void>(key: K, func: (s: S) => F): Store<S, G, ((k: K, opt?: {}) => F) & M, A>
   action<K extends string, R, F extends (...args: any[]) => Promise<R>>(k: K, func: (s: this) => F): Store<S, G, M, ((k: K) => F) & A>
@@ -33,24 +24,24 @@ declare class Store<S, G, M, A> {
   action<K extends string, R, A1, A2, A3, A4, A5, A6, A7, A8>(k: K, func: (s: this) => F8<A1, A2, A3, A4, A5, A6, A7, A8, R>): Store<S, G, M, ((k: K) => F8<A1, A2, A3, A4, A5, A6, A7, A8, Promise<R>>) & A>
 
   module<K extends string, S1, G1, M1, A1>(k: K, s: Store<S1, G1, M1, A1>): Store<S & {readonly $: (k: K) => S1}, G1 & G, M1 & M, A1 & A>
-  static create(): Store<{}, Never, Never, Never>
+  static create<S>(s: S): Store<S, Never, Never, Never>
 
   readonly dispatch: A
   readonly commit: M
   readonly getters: G
-  readonly states: S
+  readonly state: S
 }
 
-var a = Store.create().state({test: 123})
+var a = Store.create({test: 123})
   .action("test", s => (k: string) => 123)
   .action("test2", s => () => s.dispatch)
   .action("test3", s => (k: string, h: number) => s.dispatch)
 
-var b = Store.create().state({myString: '333'})
+var b = Store.create({myString: '333'})
 .mutation('increment', s => () => s.myString += 1)
 
 
-var c = Store.create()
+var c = Store.create({})
   .module("a", a)
   .module("b", b)
   .getter('mytest', s => {
