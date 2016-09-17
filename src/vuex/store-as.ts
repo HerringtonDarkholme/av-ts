@@ -27,10 +27,13 @@ interface Actions {
 export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   readonly dispatch: A
   readonly commit: M
-  readonly getters: G = ((k: string) => this._getters[k]()) as any
-  readonly state: S
+  readonly getters: G = ((k: string) => this._vm[k]) as any
 
-  /** @internal */ _watcherVM = new Vue()
+  get state(): S {
+    return this._vm['state']
+  }
+
+  /** @internal */ _vm: Vue
   /** @internal */ _committing = false
 
   /** @internal */ _getters: Getters = {}
@@ -41,8 +44,9 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
 
 
   private constructor(opt: Opt<S, G, M, A, P>) {
-    let state = this.state = State.create(opt._state)
+    let state = State.create(opt._state)
     installModules(this, opt, state)
+    initVM(this, state)
     opt._plugins.concat(devtoolPlugin).forEach(p => p(this))
   }
 
@@ -55,6 +59,7 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
     }
   }
 
+  private _watcherVM = new Vue()
   watch<R>(getter: RawGetter<S, R>, cb: WatchHandler<never, R>, options: WatchOption<never, R>): Function {
     return this._watcherVM.$watch(() => getter(this.state), cb, options)
   }
@@ -114,4 +119,23 @@ function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>, s
     })
     _actions[key].push(action)
   }
+}
+
+function initVM(store: AnyStore, state: State) {
+  // feed getters to vm as getters
+  // this enable lazy-caching
+  let computed = {}
+  let wrappedGetters = store._getters
+  for (let key of Object.keys(wrappedGetters)) {
+    computed[key] = wrappedGetters[key]
+  }
+
+  const silent = Vue.config.silent
+  Vue.config.silent = false
+  store._vm = new Vue({
+    data: {state},
+    computed: computed,
+  })
+  Vue.config.silent = silent
+
 }
