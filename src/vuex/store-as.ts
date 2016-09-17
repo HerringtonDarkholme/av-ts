@@ -1,6 +1,7 @@
 import {Subscriber, RawGetter, CommitOption} from './interface-as'
 import {WatchHandler, WatchOption} from '../watch'
 import {Opt, RawActions, RawGetters, RawMutations} from './opt'
+import {State, getSubState} from './state'
 import Vue = require('vue')
 
 export interface ActionStore<S, G, M, A> {
@@ -69,18 +70,18 @@ function withCommit(store: AnyStore, fn: () => void) {
 }
 
 function installModules(store: AnyStore, opt: AnyOpt, path: string[]) {
-  registerGetters(store, opt._getters)
-  registerMutations(store, opt._mutations)
-  registerActions(store, opt._actions)
+  registerGetters(store, opt._getters, path)
+  registerMutations(store, opt._mutations, path)
+  registerActions(store, opt._actions, path)
 }
 
-function registerGetters(store: AnyStore, getters: RawGetters<{}>) {
+function registerGetters(store: AnyStore, getters: RawGetters<{}>, path: string[]) {
   for (let key of Object.keys(getters)) {
     store._getters[key] = getters[key].bind(null, store.state)
   }
 }
 
-function registerMutations(store: AnyStore, mutations: RawMutations<{}>) {
+function registerMutations(store: AnyStore, mutations: RawMutations<{}>, path: string[]) {
   const _mutations = store._mutations
   for (let key of Object.keys(mutations)) {
     _mutations[key] = _mutations[key] || []
@@ -89,7 +90,7 @@ function registerMutations(store: AnyStore, mutations: RawMutations<{}>) {
   }
 }
 
-function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>) {
+function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>, path: string[]) {
   const _actions = store._actions
   for (let key of Object.keys(actions)) {
     _actions[key] = _actions[key] || []
