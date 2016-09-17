@@ -2,6 +2,7 @@ import {Subscriber, RawGetter, CommitOption} from './interface-as'
 import {WatchHandler, WatchOption} from '../watch'
 import {Opt, RawActions, RawGetters, RawMutations} from './opt'
 import {State} from './state'
+import devtoolPlugin from './devtool-as'
 import Vue = require('vue')
 
 export interface ActionStore<S, G, M, A> {
@@ -26,7 +27,7 @@ interface Actions {
 export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   readonly dispatch: A
   readonly commit: M
-  readonly getters: G
+  readonly getters: G = ((k: string) => this._getters[k]()) as any
   readonly state: S
 
   /** @internal */ _watcherVM = new Vue()
@@ -36,9 +37,13 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   /** @internal */ _mutations: Mutations = {}
   /** @internal */ _actions: Actions = {}
 
+  /** @internal */ _devtoolHook: any
+
+
   private constructor(opt: Opt<S, G, M, A, P>) {
     let state = this.state = State.create(opt._state)
     installModules(this, opt, state)
+    opt._plugins.concat(devtoolPlugin).forEach(p => p(this))
   }
 
   static create<S, G, M, A, P>(opt: Opt<S, G, M, A, P>) {
@@ -61,7 +66,7 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
 
 }
 
-type AnyStore = Store<{}, {}, {}, {}, {}>
+export type AnyStore = Store<{}, {}, {}, {}, {}>
 type AnyOpt = Opt<{}, {}, {}, {}, {}>
 function withCommit(store: AnyStore, fn: () => void) {
   const committing = store._committing
@@ -84,7 +89,7 @@ function installModules(store: AnyStore, opt: AnyOpt, state: State) {
 
 function registerGetters(store: AnyStore, getters: RawGetters<{}>, state: State) {
   for (let key of Object.keys(getters)) {
-    store._getters[key] = getters[key].bind(null, state)
+    store._getters[key] = () => getters[key](state)
   }
 }
 
