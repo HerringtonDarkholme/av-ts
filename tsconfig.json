@@ -4,7 +4,7 @@
         "target": "es5",
         "noImplicitAny": true,
         "noImplicitThis": true,
-        "noImplicitReturn": true,
+        "noImplicitReturns": true,
         "noUnusedLocals": true,
         "strictNullChecks": true,
         "sourceMap": false,
