@@ -1,11 +1,11 @@
 import {ActionStore, Store} from './store-as'
-import {CommitOption} from './interface'
+import {CommitOption} from './interface-as'
 
 export type F0<R> = () => R
 export type F01<T, R> = (t?: T) => R
 export type F1<A, R> = (a: A) => R
 
-interface RawAction<S, G, M, A> {
+export interface RawAction<S, G, M, A> {
   (s: ActionStore<S, G, M, A>): F01<any, any|Promise<any>>
 }
 
@@ -13,15 +13,15 @@ export interface RawActions<S, G, M, A> {
   [k: string]: RawAction<S, G, M, A>
 }
 
-interface RawMutation<S> {
-  (s: S): F01<any, void>
+export interface RawMutation<S> {
+  (s: S): (t?: any, m?: CommitOption) => void
 }
 
 export interface RawMutations<S> {
   [k: string]: RawMutation<S>
 }
 
-interface RawGetter<S> {
+export interface RawGetter<S> {
   (s: S): any
 }
 
@@ -37,13 +37,13 @@ export type Plugin<S, G, M, A, P> = (s: Store<S, G, M, A, P>) => void
 
 export class Opt<S, G, M, A, P> {
 
-  private _state: S
-  private _getters: RawGetters<S>
-  private _actions: RawActions<S, G, M, A> = {}
-  private _mutations: RawMutations<S> = {}
-  private _modules: Modules = {}
-  private _plugins: Plugin<S, G, M, A, P>[]
-  private _strict = false
+  /** @internal */ _state: S
+  /** @internal */ _getters: RawGetters<S> = {}
+  /** @internal */ _actions: RawActions<S, G, M, A> = {}
+  /** @internal */ _mutations: RawMutations<S> = {}
+  /** @internal */ _modules: Modules = {}
+  /** @internal */ _plugins: Plugin<S, G, M, A, P>[]
+  /** @internal */ _strict = false
 
   constructor(s: S) {
     this._state = s

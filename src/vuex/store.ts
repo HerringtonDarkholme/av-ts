@@ -122,46 +122,6 @@ export class Store<S> {
     })
   }
 
-  registerModule (path: string | string[], module: StoreOption) {
-    if (typeof path === 'string') path = [path]
-    assert(Array.isArray(path), `module path must be a string or an Array.`)
-    this._runtimeModules[path.join('.')] = module
-    installModule(this, this.state, path, module)
-    // reset store to update getters...
-    resetStoreVM(this, this.state)
-  }
-
-  unregisterModule (path: string[]) {
-    if (typeof path === 'string') path = [path]
-    assert(Array.isArray(path), `module path must be a string or an Array.`)
-    delete this._runtimeModules[path.join('.')]
-    this._withCommit(() => {
-      const parentState = getNestedState(this.state, path.slice(0, -1))
-      Vue.delete(parentState, path[path.length - 1])
-    })
-    resetStore(this)
-  }
-
-  hotUpdate (newOptions: StoreOption) {
-    const options = this._options
-    if (newOptions.actions) {
-      options.actions = newOptions.actions
-    }
-    if (newOptions.mutations) {
-      options.mutations = newOptions.mutations
-    }
-    if (newOptions.getters) {
-      options.getters = newOptions.getters
-    }
-    if (newOptions.modules) {
-      let modules = options.modules = options.modules || {}
-      for (const key in newOptions.modules) {
-        modules[key] = newOptions.modules[key]
-      }
-    }
-    resetStore(this)
-  }
-
   _withCommit (fn: () => void) {
     const committing = this._committing
     this._committing = true
@@ -172,21 +132,6 @@ export class Store<S> {
 
 function assert (condition: boolean, msg: string) {
   if (!condition) throw new Error(`[vuex] ${msg}`)
-}
-
-function resetStore<S>(store: Store<S>) {
-  store._actions = Object.create(null)
-  store._mutations = Object.create(null)
-  store._wrappedGetters = Object.create(null)
-  const state = store.state
-  // init root module
-  installModule(store, state, [], store._options, true)
-  // init all runtime modules
-  Object.keys(store._runtimeModules).forEach(key => {
-    installModule(store, state, key.split('.'), store._runtimeModules[key], true)
-  })
-  // reset vm
-  resetStoreVM(store, state)
 }
 
 function resetStoreVM<S>(store: Store<S>, state: S) {
@@ -231,7 +176,7 @@ function resetStoreVM<S>(store: Store<S>, state: S) {
   }
 }
 
-function installModule<S>(store: Store<S>, rootState: S, path: string[], module: StoreOption, hot?: boolean) {
+function installModule<S>(store: Store<S>, rootState: S, path: string[], module: StoreOption) {
   const isRoot = !path.length
   const {
     state,
@@ -242,7 +187,7 @@ function installModule<S>(store: Store<S>, rootState: S, path: string[], module:
   } = module
 
   // set state
-  if (!isRoot && !hot) {
+  if (!isRoot) {
     const parentState = getNestedState(rootState, path.slice(0, -1))
     const moduleName = path[path.length - 1]
     store._withCommit(() => {
@@ -268,7 +213,7 @@ function installModule<S>(store: Store<S>, rootState: S, path: string[], module:
 
   if (modules) {
     Object.keys(modules).forEach(key => {
-      installModule(store, rootState, path.concat(key), modules[key], hot)
+      installModule(store, rootState, path.concat(key), modules[key])
     })
   }
 }
@@ -283,14 +228,14 @@ function registerMutation<S>(store: Store<S>, type: string, handler: RawMutaionH
 function registerAction<S, SubState>(store: Store<S>, type: string, handler: RawActionHandler<SubState, S>, path: string[] = []) {
   const entry = store._actions[type] || (store._actions[type] = [])
   const { dispatch, commit } = store
-  entry.push(function wrappedActionHandler (payload, cb) {
+  entry.push(function wrappedActionHandler (payload) {
     let res = handler({
       dispatch,
       commit,
       getters: store.getters,
       state: getNestedState(store.state, path),
       rootState: store.state
-    }, payload, cb)
+    }, payload)
     // normalize
     res = Promise.resolve(res)
     if (store._devtoolHook) {

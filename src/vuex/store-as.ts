@@ -1,6 +1,6 @@
-import {Subscriber, RawGetter, CommitOption} from './interface'
+import {Subscriber, RawGetter, CommitOption} from './interface-as'
 import {WatchHandler, WatchOption} from '../watch'
-import {Opt, RawActions, RawGetters, RawMutations, Modules} from './opt'
+import {Opt, RawActions, RawGetters, RawMutations} from './opt'
 import Vue = require('vue')
 
 export interface ActionStore<S, G, M, A> {
@@ -28,27 +28,19 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   readonly getters: G
   readonly state: S
 
-  private _watcherVM = new Vue()
-  private _committing = false
+  /** @internal */ _watcherVM = new Vue()
+  /** @internal */ _committing = false
 
-  private _getters: Getters = {}
-  private _mutations: Mutations = {}
-  private _actions: Actions = {}
+  /** @internal */ _getters: Getters = {}
+  /** @internal */ _mutations: Mutations = {}
+  /** @internal */ _actions: Actions = {}
 
-  private constructor(
-    getters: RawGetters<S>,
-    mutations: RawMutations<S>,
-    actions: RawActions<S, G, M, A>,
-    modules: Modules,
-  ) {
-    this._installModules(modules)
-    this._registerGetters(getters)
-    this._registerMutations(mutations)
-    this._registerActions(actions)
+  private constructor(opt: Opt<S, G, M, A, P>) {
+    installModules(this, opt, /*paths*/[])
   }
 
-  static create(getters: any, mutations: any, actions: any, modules: any, plugins: any[]) {
-    return new Store(getters, mutations, actions, modules)
+  static create<S, G, M, A, P>(opt: Opt<S, G, M, A, P>) {
+    return new Store(opt)
   }
 
   subscribe(fn: Subscriber<P, S>): () => void {
@@ -61,51 +53,52 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   }
 
   replaceState(state: S): void {
-    this._withCommit(() => {
+    withCommit(this, () => {
     })
   }
 
-  hotUpdate(newOptions: Opt<S, G, M, A, P>): void {
-  }
+}
 
-  private _withCommit(fn: () => void) {
-    const committing = this._committing
-    this._committing = true
-    fn()
-    this._committing = committing
-  }
+type AnyStore = Store<{}, {}, {}, {}, {}>
+type AnyOpt = Opt<{}, {}, {}, {}, {}>
+function withCommit(store: AnyStore, fn: () => void) {
+  const committing = store._committing
+  store._committing = true
+  fn()
+  store._committing = committing
+}
 
-  private _installModules(mods: Modules) {
-    mods
-  }
+function installModules(store: AnyStore, opt: AnyOpt, path: string[]) {
+  registerGetters(store, opt._getters)
+  registerMutations(store, opt._mutations)
+  registerActions(store, opt._actions)
+}
 
-  private _registerGetters(getters: RawGetters<S>) {
-    for (let key in getters) {
-      this._getters[key] = getters[key].bind(null, this.state)
-    }
+function registerGetters(store: AnyStore, getters: RawGetters<{}>) {
+  for (let key of Object.keys(getters)) {
+    store._getters[key] = getters[key].bind(null, store.state)
   }
+}
 
-  private _registerMutations(mutations: RawMutations<S>) {
-    const _mutations = this._mutations
-    for (let key in mutations) {
-      _mutations[key] = _mutations[key] || []
-      const mutation = mutations[key](this.state)
-      _mutations[key].push(mutation)
-    }
+function registerMutations(store: AnyStore, mutations: RawMutations<{}>) {
+  const _mutations = store._mutations
+  for (let key of Object.keys(mutations)) {
+    _mutations[key] = _mutations[key] || []
+    const mutation = mutations[key](store.state)
+    _mutations[key].push(mutation)
   }
+}
 
-  private _registerActions(actions: RawActions<S, G, M, A>) {
-    const _actions = this._actions
-    for (let key in actions) {
-      _actions[key] = _actions[key] || []
-      const action = actions[key]({
-        state: this.state,
-        getters: this.getters,
-        commit: this.commit,
-        dispatch: this.dispatch,
-      })
-      _actions[key].push(action)
-    }
+function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>) {
+  const _actions = store._actions
+  for (let key of Object.keys(actions)) {
+    _actions[key] = _actions[key] || []
+    const action = actions[key]({
+      state: store.state,
+      getters: store.getters,
+      commit: store.commit,
+      dispatch: store.dispatch,
+    })
+    _actions[key].push(action)
   }
-
 }
