@@ -20,30 +20,38 @@ var c = create()
   .getter('mytest', s => {
     return s.$('b')
   })
-  .action('INCREMENT', s => (a: string) => {
+  .action('INCREMENT', s => (a?: string) => {
   })
-
-var p = c.p
-p
 
 
 var commit = c.done().commit
+var dispatch = c.done().dispatch
 
 var decrement = commit('decrement')
 var increment = commit('increment')
 var nothing = commit('nothing')
 var dft = commit('default')
 
+var disp1 = dispatch('INCREMENT')
+var disp2 = dispatch('test')
+var disp3 = dispatch('test1')
+
 //should compile
-decrement()
+decrement(undefined, {silent: true})
 decrement(123)
 dft()
 dft(222)
 increment()
 nothing(123)
+disp1('1231')
+disp2()
+disp3('1123')
+
 
 // should not compile
 increment(123)
 decrement('123')
 nothing()
 nothing('123')
+nothing({silent: true})
+disp3()
