@@ -1,7 +1,7 @@
 export class State {
   /** @internal */ avtsModuleState = {}
 
-  constructor(s: any) {
+  private constructor(s: any) {
     for (let key of Object.keys(s)) {
       this[key] = s[key]
     }
@@ -10,13 +10,8 @@ export class State {
   $(key: string): any {
     return this.avtsModuleState[key]
   }
-}
 
-export function getSubState(root: State, paths: string[]) {
-  let state = root
-  for (let path of paths) {
-    if (!state) break
-    state = state.$(path)
+  static create<S>(s: S): S & State {
+    return new State(s) as any
   }
-  return state
 }

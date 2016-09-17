@@ -1,7 +1,7 @@
 import {Subscriber, RawGetter, CommitOption} from './interface-as'
 import {WatchHandler, WatchOption} from '../watch'
 import {Opt, RawActions, RawGetters, RawMutations} from './opt'
-import {State, getSubState} from './state'
+import {State} from './state'
 import Vue = require('vue')
 
 export interface ActionStore<S, G, M, A> {
@@ -37,7 +37,8 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   /** @internal */ _actions: Actions = {}
 
   private constructor(opt: Opt<S, G, M, A, P>) {
-    installModules(this, opt, /*paths*/[])
+    let state = this.state = State.create(opt._state)
+    installModules(this, opt, state)
   }
 
   static create<S, G, M, A, P>(opt: Opt<S, G, M, A, P>) {
@@ -69,33 +70,39 @@ function withCommit(store: AnyStore, fn: () => void) {
   store._committing = committing
 }
 
-function installModules(store: AnyStore, opt: AnyOpt, path: string[]) {
-  registerGetters(store, opt._getters, path)
-  registerMutations(store, opt._mutations, path)
-  registerActions(store, opt._actions, path)
+function installModules(store: AnyStore, opt: AnyOpt, state: State) {
+  const modules = opt._modules
+  for (let key of Object.keys(modules)) {
+    let moduleOpt = modules[key]
+    let subState = state.avtsModuleState[key] = State.create(moduleOpt._state)
+    installModules(store, moduleOpt, subState)
+  }
+  registerGetters(store, opt._getters, state)
+  registerMutations(store, opt._mutations, state)
+  registerActions(store, opt._actions, state)
 }
 
-function registerGetters(store: AnyStore, getters: RawGetters<{}>, path: string[]) {
+function registerGetters(store: AnyStore, getters: RawGetters<{}>, state: State) {
   for (let key of Object.keys(getters)) {
-    store._getters[key] = getters[key].bind(null, store.state)
+    store._getters[key] = getters[key].bind(null, state)
   }
 }
 
-function registerMutations(store: AnyStore, mutations: RawMutations<{}>, path: string[]) {
+function registerMutations(store: AnyStore, mutations: RawMutations<{}>, state: State) {
   const _mutations = store._mutations
   for (let key of Object.keys(mutations)) {
     _mutations[key] = _mutations[key] || []
-    const mutation = mutations[key](store.state)
+    const mutation = mutations[key](state)
     _mutations[key].push(mutation)
   }
 }
 
-function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>, path: string[]) {
+function registerActions(store: AnyStore, actions: RawActions<{}, {}, {}, {}>, state: State) {
   const _actions = store._actions
   for (let key of Object.keys(actions)) {
     _actions[key] = _actions[key] || []
     const action = actions[key]({
-      state: store.state,
+      state: state,
       getters: store.getters,
       commit: store.commit,
       dispatch: store.dispatch,
