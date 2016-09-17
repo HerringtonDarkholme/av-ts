@@ -9,7 +9,7 @@ interface RawAction<S, G, M, A> {
   (s: ActionStore<S, G, M, A>): F01<any, any|Promise<any>>
 }
 
-interface RawActions<S, G, M, A> {
+export interface RawActions<S, G, M, A> {
   [k: string]: RawAction<S, G, M, A>
 }
 
@@ -17,7 +17,7 @@ interface RawMutation<S> {
   (s: S): F01<any, void>
 }
 
-interface RawMutations<S> {
+export interface RawMutations<S> {
   [k: string]: RawMutation<S>
 }
 
@@ -25,11 +25,11 @@ interface RawGetter<S> {
   (s: S): any
 }
 
-interface RawGetters<S> {
+export interface RawGetters<S> {
   [k: string]: RawGetter<S>
 }
 
-interface Modules {
+export interface Modules {
   [k: string]: Opt<{}, {}, {}, {}, {}>
 }
 

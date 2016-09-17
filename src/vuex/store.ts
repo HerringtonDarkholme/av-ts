@@ -5,7 +5,7 @@ import VueCtor = require('vue')
 import {
   StoreOption,
   RawGetter, ModuleGetters, WrappedGetters,
-  MutationOption, MutationCollection, RawMutaionHandler,
+  CommitOption, MutationCollection, RawMutaionHandler,
   ActionCollection, RawActionHandler,
   Subscriber,
 
@@ -69,7 +69,7 @@ export class Store<S> {
     assert(false, `Use store.replaceState() to explicit replace store state.`)
   }
 
-  commit = (type: string, payload: any, options: MutationOption) => {
+  commit = (type: string, payload: any, options: CommitOption) => {
     // check object-style commit
     let mutation = { type, payload }
     const entry = this._mutations[type]
