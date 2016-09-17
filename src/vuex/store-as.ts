@@ -15,11 +15,11 @@ interface Getters {
 }
 
 interface Mutations {
-  [k: string]: (t?: any, o?: CommitOption) => void
+  [k: string]: Array<(t?: any, o?: CommitOption) => void>
 }
 
 interface Actions {
-  [k: string]: (t?: any) => Promise<any>
+  [k: string]: Array<(t?: any) => Promise<any>>
 }
 
 export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
@@ -86,19 +86,25 @@ export class Store<S, G, M, A, P> implements ActionStore<S, G, M, A> {
   }
 
   private _registerMutations(mutations: RawMutations<S>) {
+    const _mutations = this._mutations
     for (let key in mutations) {
-      this._mutations[key] = mutations[key].bind(null, this.state)
+      _mutations[key] = _mutations[key] || []
+      const mutation = mutations[key](this.state)
+      _mutations[key].push(mutation)
     }
   }
 
   private _registerActions(actions: RawActions<S, G, M, A>) {
+    const _actions = this._actions
     for (let key in actions) {
-      this._actions[key] = actions[key].bind(null, {
+      _actions[key] = _actions[key] || []
+      const action = actions[key]({
         state: this.state,
         getters: this.getters,
         commit: this.commit,
         dispatch: this.dispatch,
       })
+      _actions[key].push(action)
     }
   }
 
