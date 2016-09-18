@@ -3,7 +3,7 @@ import {VNode, VNodeData} from 'vue/types/vnode'
 export {VNode} from 'vue/types/vnode'
 
 export {PropOptions} from 'vue/types/options'
-import {ComponentOptions} from 'vue/types/options'
+import {ComponentOptions, DirectiveFunction, DirectiveOptions} from 'vue/types/options'
 import {PropOptions} from 'vue/types/options'
 
 export {ComponentOptions} from 'vue/types/options'
@@ -18,10 +18,10 @@ export interface DecoratorPorcessor {
 export type $$Prop = string & {'$$Prop Brand': never}
 
 export interface ComponentMeta {
-  directive?: Hash<string>,
-  components?: Hash<VClass<Vue>>,
+  directive?: Hash<DirectiveFunction | DirectiveOptions>,
+  components?: Hash<VClass<Vue> | ComponentOptions>,
   functionals?: Hash<FunctionalProps<{}>>,
-  filters?: {},
+  filters?: {[key: string]: Function},
   name?: string,
   delimiter?: [string, string],
 }
