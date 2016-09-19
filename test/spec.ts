@@ -1,11 +1,10 @@
 import {
   Component, Prop, Watch,
-  Lifecycle, p, Render
+  Lifecycle, p, Render, Vue
 } from '../index'
 
 // import 'reflect-metadata'
 
-import Vue = require('vue')
 
 @Component
 export class MyMixin extends Vue {
@@ -14,7 +13,7 @@ export class MyMixin extends Vue {
 
 @Component({
   directive: {},
-  components: {a: {}},
+  components: {abc: {}},
   vuex: {},
   functionals: {},
   filters: {},

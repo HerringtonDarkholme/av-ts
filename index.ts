@@ -9,4 +9,4 @@ export {Watch} from './src/watch'
 export {functional} from './src/functional'
 
 export type CreateElement = typeof Vue.prototype.$createElement
-export var V = Vue
+export { Vue }
