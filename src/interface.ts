@@ -24,6 +24,7 @@ export interface ComponentMeta {
   filters?: {[key: string]: Function},
   name?: string,
   delimiter?: [string, string],
+  [k: string]: any
 }
 
 export interface ContextObject<T> {

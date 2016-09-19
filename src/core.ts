@@ -138,7 +138,7 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
 }
 
 export function Component<T extends VClass<Vue>>(ctor: T): T
-export function Component<C extends ComponentMeta>(config?: C): <T extends VClass<Vue>>(ctor: T) => T
+export function Component(config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
 export function Component(target: ComponentMeta | VClass<Vue>): any {
   if (typeof target === 'function') {
     return Component_()(target)

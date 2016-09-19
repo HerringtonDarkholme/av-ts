@@ -14,7 +14,8 @@ export class MyMixin extends Vue {
 
 @Component({
   directive: {},
-  components: {},
+  components: {a: {}},
+  vuex: {},
   functionals: {},
   filters: {},
   name: 'my-component',
