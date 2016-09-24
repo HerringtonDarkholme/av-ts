@@ -24,8 +24,8 @@ import {snapshot} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
-function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions {
-  let options: ComponentOptions = meta
+function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions<Vue> {
+  let options: ComponentOptions<Vue> = meta
   options.props = {}
   options.computed = {}
   options.watch = {}
@@ -61,7 +61,7 @@ type ProcessorEntries = {
 let registeredProcessors: ProcessorEntries = {}
 
 // delegate to processor
-function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions) {
+function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions<Vue>) {
   let processor = registeredProcessors[propKey]
   if (!processor) {
     return
@@ -70,7 +70,7 @@ function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, options
 }
 
 // un-annotated and undeleted methods/getters are handled as `methods` and `computed`
-function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrite: ComponentOptions) {
+function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrite: ComponentOptions<Vue>) {
   let descriptor = Object.getOwnPropertyDescriptor(proto, propKey)
   if (!descriptor) { // in case original descriptor is deleted
     return
@@ -88,7 +88,7 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
 const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
-function collectData(instance: Object, optionsToWrite: ComponentOptions) {
+function collectData(instance: Object, optionsToWrite: ComponentOptions<Vue>) {
   let selfData = {}
   for (let key of Object.keys(instance)) {
     if (VUE_KEYS.indexOf(key) === -1) {

@@ -12,14 +12,14 @@ export type Hash<V> = {[k: string]: V}
 export type VClass<T extends Vue> = {new(): T} & (typeof Vue)
 
 export interface DecoratorPorcessor {
-  (proto: Vue, instance: Vue, options: ComponentOptions): void
+  (proto: Vue, instance: Vue, options: ComponentOptions<Vue>): void
 }
 
 export type $$Prop = string & {'$$Prop Brand': never}
 
 export interface ComponentMeta {
   directive?: Hash<DirectiveFunction | DirectiveOptions>,
-  components?: Hash<VClass<Vue> | ComponentOptions>,
+  components?: Hash<VClass<Vue> | ComponentOptions<Vue>>,
   functionals?: Hash<FunctionalProps<{}>>,
   filters?: {[key: string]: Function},
   name?: string,

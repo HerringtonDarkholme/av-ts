@@ -26,6 +26,6 @@
     "typescript": "2.1.0-dev.20160915"
   },
   "peerDependencies": {
-    "vue": "^2.0.0-rc.6"
+    "vue": "^2.0.0-rc.7"
   }
 }
