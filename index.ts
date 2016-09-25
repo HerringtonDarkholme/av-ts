@@ -6,6 +6,7 @@ export {Prop, p} from './src/prop'
 export {Render} from './src/render'
 export {Transition} from './src/transition'
 export {Watch} from './src/watch'
+export {Data} from './src/data'
 export {functional} from './src/functional'
 
 export type CreateElement = typeof Vue.prototype.$createElement

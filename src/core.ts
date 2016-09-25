@@ -89,6 +89,8 @@ const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
 function collectData(instance: Object, optionsToWrite: ComponentOptions<Vue>) {
+  // already implemented by @Data
+  if (optionsToWrite.data) return
   let selfData = {}
   for (let key of Object.keys(instance)) {
     if (VUE_KEYS.indexOf(key) === -1) {
