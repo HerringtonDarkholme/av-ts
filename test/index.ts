@@ -11,7 +11,12 @@ describe('vue component', () => {
   })
 
   it('should new to a vue instance', () => {
-    let a = new MyComponent
+    let a = new MyComponent({
+      propsData: {
+        complex: {test: 123},
+        required: 456,
+      }
+    })
     expect(a).to.be.instanceOf(Vue)
   })
 

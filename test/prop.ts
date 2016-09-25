@@ -45,4 +45,15 @@ describe('prop options', () => {
     expect(data).to.not.have.property('complex')
     expect(data).to.not.have.property('screwed')
   })
+
+  it('should new instance', () => {
+    let instance = new MyComponent({
+      propsData: {
+        complex: {test: 123},
+        required: 456,
+      }
+    })
+    expect(instance.required).to.equal(456)
+    expect(instance.complex['test']).to.equal(123)
+  })
 })
