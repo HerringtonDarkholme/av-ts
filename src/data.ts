@@ -14,5 +14,6 @@ Component.register(DATA_KEY, (proto, instance, options) => {
   options.data = function(this: Vue) {
     return dataFunc.call(this)
   }
+  delete proto['data']
 })
 
