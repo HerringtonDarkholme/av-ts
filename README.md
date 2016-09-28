@@ -148,6 +148,7 @@ class MyAwesomeComponent {
 For full type signature, please refer to `av-ts.d.ts`. They are most up-to-date.
 
 ### `Component`
+-----
 
 Type: `ClassDecorator | (option) => ClassDecorator`
 
@@ -169,6 +170,7 @@ class MyComponent extends Vue {}
 ```
 
 ### `Prop`
+-----
 
 Type: `PropertyDecorator`
 
@@ -195,6 +197,7 @@ console.log(num)
 ```
 
 ### `Watch`
+-----
 
 Contrary to vue-typescript, `@Watch` is applied to a **watched property**.
 `Watch` takes handler as the first argument, and an optional config object as the second one.
@@ -225,17 +228,68 @@ watch: {
 ```
 
 ### `Lifecycle` and `Render`
+-----
 
 Type: TypedPropertyDecorator
 
-mark decorated methods as special hooks in vue. You cannot call them in methods.
+mark decorated methods as special hooks in vue. Caveat: You cannot call lifecycle/render in other methods.
+
+```typescript
+// lifecycle hook is speical so it is decorated
+@Lifecycle mounted() {
+  console.log('called in lifecycle code!')
+}
+
+// this decorator can only decorate method with name same as lifecycle
+// @Lifecycle willNotCompile() {}
+```
 
 ### `Transition`
+-----
 
 Type: TypedPropertyDecorator
 
 mark method as a callback of transition component. method is still called in other instance methods.
 This decorator is solely for type checking.
+
+```typescript
+// solely for type checking! beforeEnter can be called in other methods
+@Transition beforeEnter(el: HTMLElement) {
+  el.style.opacity = 0
+  el.style.height = 0
+}
+```
+
+### Data
+-----
+
+Type: TypedPropertyDecorator
+
+By default, all undecorated instance properties are collected to `data` option. However, sometimes `data` function needs to access other instance properties like `props`, which is not availabel when you declare a Vue component class.
+
+Here comes the `Data` decorator. When `Data` decorator is applied to a method, the method will be extracted as `data` function in vue's option, with `this` injected. And none instance property is counted as `data` option.
+
+This is useful for [defining a local data property that uses the prop’s initial value as its initial value](http://rc.vuejs.org/guide/components.html#One-Way-Data-Flow)
+
+Example:
+
+```typescript
+@Component
+class TestData extends Vue {
+  @Prop a = p(Number)
+  b =  456 // this initializer will be ignored
+
+  @Data data() {
+    return {
+      b: this.a // b will be initialized to prop value
+    }
+  }
+}
+
+let instance = new TestData({propsData: {a: 777}})
+instance.b === 777 // true
+```
+
 
 ## common tricks
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
