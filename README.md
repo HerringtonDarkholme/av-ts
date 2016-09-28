@@ -1,4 +1,4 @@
-Awesome Vue TS
+Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av.ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av.ts)
 -----
 
 ## Why:

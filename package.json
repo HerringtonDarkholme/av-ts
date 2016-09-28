@@ -4,6 +4,7 @@
   "description": "Awesome Vue2.0's for TypeScript2.0",
   "main": "./dist/index.js",
   "scripts": {
+    "compile": "tsc",
     "test": "mocha dist/test/*.js",
     "prepublish": "tsc && npm test"
   },
@@ -23,9 +24,10 @@
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
-    "typescript": "2.1.0-dev.20160915"
+    "typescript": "2.1.0-dev.20160915",
+    "vue": "^2.0.0-rc.8"
   },
   "peerDependencies": {
-    "vue": "^2.0.0-rc.7"
+    "vue": "^2.0.0-rc.8"
   }
 }
