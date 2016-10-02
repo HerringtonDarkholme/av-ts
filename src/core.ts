@@ -20,7 +20,7 @@ import {
   ComponentMeta,
 } from './interface'
 
-import {snapshot} from './util'
+import {snapshot, createMap} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
@@ -54,11 +54,7 @@ function getKeys(proto: Vue) {
   }
 }
 
-type ProcessorEntries = {
-  [k: string]: DecoratorPorcessor|undefined
-}
-
-let registeredProcessors: ProcessorEntries = {}
+let registeredProcessors = createMap<DecoratorPorcessor|undefined>()
 
 // delegate to processor
 function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions<Vue>) {

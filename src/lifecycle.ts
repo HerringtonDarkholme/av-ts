@@ -2,6 +2,7 @@ import Vue = require('vue')
 
 import {Component} from './core'
 import {$$Prop} from './interface'
+import {createMap} from './util'
 
 const LIFECYCLE_KEY = '$$Lifecycle' as $$Prop
 
@@ -12,7 +13,7 @@ export type Lifecycles =
   'beforeUpdate' | 'updated'
 
 export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
-  let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || {}
+  let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
   lifecycles[life] = true
 }
 

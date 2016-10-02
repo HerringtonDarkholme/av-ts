@@ -2,11 +2,9 @@ import Vue = require('vue')
 import {PropOptions, $$Prop} from './interface'
 import {Component} from './core'
 
-import {getReflectType} from './util'
+import {getReflectType, createMap} from './util'
 
 const PROP_KEY = '$$Prop' as $$Prop
-
-type Props = {[key: string]: PropOptions}
 
 export function Prop(target: Vue, key: string): void {
   let propKeys: string[] = target[PROP_KEY] = target[PROP_KEY] || []
@@ -15,7 +13,7 @@ export function Prop(target: Vue, key: string): void {
 
 Component.register(PROP_KEY, function(proto, instance, options) {
   let propKeys: string[] = proto[PROP_KEY]
-  let props: Props = {}
+  let props = createMap<PropOptions>()
 
   for (let key of propKeys) {
     let prop: PropOptions = {}

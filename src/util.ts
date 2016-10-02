@@ -17,3 +17,14 @@ export function getReflectType(target: Object, key: string): any {
     }
     return null
 }
+
+export interface Map<T> {
+  [k: string]: T
+}
+
+export function createMap<T>(): Map<T> {
+  const ret = Object.create(null)
+  ret["__"] = undefined
+  delete ret["__"]
+  return ret
+}
