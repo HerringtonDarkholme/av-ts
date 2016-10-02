@@ -1,4 +1,4 @@
-Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av.ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av.ts)
+Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av-ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av-ts)
 -----
 
 ## Why:
@@ -32,6 +32,8 @@ I believe av-ts have a good balance between safety, brevity, consistency and ext
 5. `watch` handlers are declared in `@Watch` decorator, so user cannot watch the wrong property.
 
 6. All other options are considered as component's meta info. So users should declare them in the `@Componet` decorator function.
+
+7. You can also extend av-ts by `Component.register`ing new decorators. Useful for libraries like Vuex, Vue-router.
 
 
 ## Example:
@@ -289,6 +291,26 @@ class TestData extends Vue {
 let instance = new TestData({propsData: {a: 777}})
 instance.b === 777 // true
 ```
+
+### Component.register
+---
+
+```typescript
+// has type
+Componet.registter: (key: $$Prop, logic: DecoratorProcessor) => void
+// $$Prop is a special string type that means you have to prefix the key with `$$`
+// DecoratorProcessor can access prototype, instance and options of the decorated class
+// where
+type $$Prop = string & {'$$Prop Brand': never}
+type DecoratorProcessor = (proto: Vue, instance: Vue, options: ComponentOptions<Vue>) => void;
+```
+
+`Component.register` is for advanced users.
+
+Sometimes you need to extend Vue's functionality by adding new instance option. Those new options usually are not type-safe. For example, `render` is a special method can access `this` but cannot be put in `methods` option at the same time.
+
+To implement a new decorator. You need first to know how av-ts works underhood. The [comment](https://github.com/HerringtonDarkholme/av-ts/blob/master/src/core.ts) is quite a good start. Also you can find some [example](https://github.com/HerringtonDarkholme/av-ts/blob/master/src/render.ts) [implmentation](https://github.com/HerringtonDarkholme/kilimanjaro/blob/master/src/decorator.ts#L16).
+
 
 
 ## common tricks

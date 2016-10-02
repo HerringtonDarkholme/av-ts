@@ -3,19 +3,19 @@
  * and then process these marks to collect options and modify class/instance.
  *
  * A decorator will mark `internalKey` on prototypes, storgin meta information
- * Then register `DecoratorPorcessor` on Component, which will be called in `Component` decorator
- * `DecoratorPorcessor` can execute custom logic based on meta information stored before
+ * Then register `DecoratorProcessor` on Component, which will be called in `Component` decorator
+ * `DecoratorProcessor` can execute custom logic based on meta information stored before
  *
  * For non-annotated fields, `Component` will treat them as `methods` and `computed` in `option`
  * instance variable is treated as the return value of `data()` in `option`
  *
- * So a `DecoratorPorcessor` may delete fields on prototype and instance,
+ * So a `DecoratorProcessor` may delete fields on prototype and instance,
  * preventing meta properties like lifecycle and prop to pollute `method` and `data`
  */
 
 import Vue = require('vue')
 import {
-  VClass, DecoratorPorcessor,
+  VClass, DecoratorProcessor,
   ComponentOptions, $$Prop,
   ComponentMeta,
 } from './interface'
@@ -54,7 +54,7 @@ function getKeys(proto: Vue) {
   }
 }
 
-let registeredProcessors = createMap<DecoratorPorcessor|undefined>()
+let registeredProcessors = createMap<DecoratorProcessor|undefined>()
 
 // delegate to processor
 function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions<Vue>) {
@@ -145,7 +145,7 @@ export function Component(target: ComponentMeta | VClass<Vue>): any {
 }
 
 export namespace Component {
-  export function register(key: $$Prop, logic: DecoratorPorcessor) {
+  export function register(key: $$Prop, logic: DecoratorProcessor) {
     registeredProcessors[key] = logic
   }
 }
