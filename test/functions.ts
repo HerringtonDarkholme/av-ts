@@ -31,7 +31,7 @@ describe('util functions', () => {
     expect(Mixed).to.be.a('function')
     let options = Mixed['options']
     expect(options).to.haveOwnProperty('mixins')
-    expect(options.mixins).to.have.length(2)
+    expect(options.mixins).to.have.length(1)
     let instance = new Mixed
     expect(instance).to.haveOwnProperty('data1')
     expect(instance.data1).to.equal(123)

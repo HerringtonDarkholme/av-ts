@@ -339,11 +339,14 @@ instance.b === 777 // true
 
 ### Mixin
 
-a function to mix all `Trait` decorated constructors into one Vue constructor. It's return value is simply `Vue.extend({mixins: [...traits]})`
+has roughly type: `(parentConstructor: typeof Vue, ...traitConstructor: (typeof Vue)[]): (typeof Vue)`
 
-has roughly type: `(...vueConstructors: (typeof Vue)[]): (typeof Vue)`
+a function to mix all `Trait`s decorated constructors into one Vue constructor.
+
+It's return value is `parentConstructor.extend({mixins: traitConstructor})`: extending the first trait as parentConstructor and pack all remaining traits in `mixins` option.
 
 See source for more specific type.
+
 
 [Example](https://www.youtube.com/watch?v=PfHmMpWrCBA):
 
@@ -379,8 +382,8 @@ var Apple = Vue.extend({
   }
 })
 
-var Mixin = Vue.extend({
-  mixins: [ Pen, Apple ]
+var Mixin = Pen.extend({
+  mixins: [ Apple ]
 })
 
 var ApplePen = Mixin.extend({
