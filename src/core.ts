@@ -24,7 +24,18 @@ import {snapshot, createMap} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
-function makeOptionsFromMeta(meta: ComponentMeta): ComponentOptions<Vue> {
+function makeOptionsFromMeta(meta: ComponentMeta, name: string): ComponentOptions<Vue> {
+  if (meta.functionals) {
+    let components = meta.components = meta.components || {}
+    let functionals = meta.functionals
+    for (let key of Object.keys(functionals)) {
+      if (components[key]) {
+        console.error(`Conflicting key "${key}" found in ${name} 's option: functionals and components`)
+        continue
+      }
+      meta.components[key] = meta.functionals[key] as any
+    }
+  }
   let options: ComponentOptions<Vue> = meta
   options.props = {}
   options.computed = {}
@@ -114,7 +125,7 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     let instance = new cls()
     let proto = cls.prototype
-    let options = makeOptionsFromMeta(meta)
+    let options = makeOptionsFromMeta(meta, cls['name'])
 
     let {internalKeys, normalKeys} = getKeys(proto)
 

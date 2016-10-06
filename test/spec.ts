@@ -11,6 +11,13 @@ export class MyMixin extends Vue {
   public k: string
 }
 
+// extends interface option
+declare module '../src/interface' {
+  interface ComponentMeta {
+    vuex?: {}
+  }
+}
+
 @Component({
   directive: {},
   components: {abc: {}},
@@ -83,11 +90,4 @@ export class MyComponent extends Vue {
     return h('h1', 'Daisuke')
   }
 
-  // extensibility, like vuex
-
-  // needs updating for Vuex2
-  // @Vuex readonly getter2 = getter(s => s.whatever)
-
-  // @Vuex
-  // readonly action2 = action(s => s.dispatch('action2'))
 }
