@@ -1,4 +1,4 @@
-Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av-ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av-ts)
+# Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av-ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av-ts)
 -----
 
 ## Why:
@@ -21,7 +21,7 @@ I believe av-ts have a good balance between safety, brevity, consistency and ext
 
 ## Usage:
 
-1. component is declared via a decorated class. `extends` should work. (`mixin` support is under consideration)
+1. component is declared via a decorated class. `extends` should work. (`mixin` support is added in 0.3.0!)
 
 2. `data`, `methods` and `computed` can be declared by property initializer, member methods and property accessors in class body, respectively.
 
@@ -127,6 +127,29 @@ let MyComponent = Vue.extend({
 })
 ```
 
+## mixin examples
+
+Contrary to other libraries, av-ts supports first class Mixin! Example adapted from [here](http://www.ie-kau.net/entry/2016/02/26/Vue.js%E3%81%AEmixin%E3%82%92%E5%88%A9%E7%94%A8%E3%81%97%E3%81%A6%E8%82%A5%E5%A4%A7%E5%8C%96%E3%81%97%E3%81%9FViewModel%E3%82%92%E3%83%AA%E3%83%95%E3%82%A1%E3%82%AF%E3%82%BF%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%99)
+
+```typescript
+// define mixin trait by `Trait` decorator
+@Trait class VegetableSearchable extends Vue {
+  vegetableName = 'tomato'
+  searchVegetable() { alert('find vegi!')}
+}
+
+@Trait class FruitSearchable extends Vue {
+  vegetableName = 'apple'
+  searchVegetable() { alert('find fruits!')}
+}
+
+// Mixin them!
+@Component
+class App extends Mixin(VegetableSearchable, FruitSearchable) {}
+```
+
+Voila! No `implements`, No repeating code. And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+
 ## install
 
 Via our old friend npm.
@@ -149,6 +172,10 @@ class MyAwesomeComponent {
 
 For full type signature, please refer to `av-ts.d.ts`. They are most up-to-date.
 
+
+## Class Decorators
+----
+
 ### `Component`
 -----
 
@@ -170,6 +197,20 @@ class VueComp extends Vue {}
 })
 class MyComponent extends Vue {}
 ```
+
+### `Trait`
+-----
+
+Type: `ClassDecorator | (option) => ClassDecorator`
+
+An alias of `Component`,used for defining Vue traits to be mixed in.
+At runtime, these decorators transform constructor to vue option and then feed to `Vue.extend`.
+So there is no semantic difference between `Component` and `Trait`. Placing `Component` on a class to be used as mixin just feels too strange. This alias is solely for API aesthetic.
+
+To use a `Trait`, declare a class that extends `Mixin(...Traits)`. See example in `Mixin` section.
+
+## Property Decorators
+----
 
 ### `Prop`
 -----
@@ -271,7 +312,7 @@ By default, all undecorated instance properties are collected to `data` option. 
 
 Here comes the `Data` decorator. When `Data` decorator is applied to a method, the method will be extracted as `data` function in vue's option, with `this` injected. And none instance property is counted as `data` option.
 
-This is useful for [defining a local data property that uses the prop’s initial value as its initial value](http://rc.vuejs.org/guide/components.html#One-Way-Data-Flow)
+This is useful for [defining a local data property that uses the prop’s initial value as its initial value](http://vuejs.org/guide/components.html#One-Way-Data-Flow)
 
 Example:
 
@@ -291,6 +332,70 @@ class TestData extends Vue {
 let instance = new TestData({propsData: {a: 777}})
 instance.b === 777 // true
 ```
+
+
+## Utility Functions
+---
+
+### Mixin
+
+a function to mix all `Trait` decorated constructors into one Vue constructor. It's return value is simply `Vue.extend({mixins: [...traits]})`
+
+has roughly type: `(...vueConstructors: (typeof Vue)[]): (typeof Vue)`
+
+See source for more specific type.
+
+[Example](https://www.youtube.com/watch?v=PfHmMpWrCBA):
+
+```typescript
+@Trait class Pen extends Vue {
+  havePen() { alert('I have a pen')}
+}
+@Trait class Apple extends Vue {
+  haveApple() { alert('I have an apple')}
+}
+
+
+@Component class ApplePen extends Mixin(Apple, Pen) {
+  Uh() {
+    this.havePen()
+    this.haveApple()
+    alert('Apple pen')
+  }
+}
+```
+
+is equivalent to
+
+```typescript
+var Pen = Vue.extend({
+  methods: {
+    havePen() { alert('I have a pen')}
+  }
+})
+var Apple = Vue.extend({
+  methods: {
+    haveApple() { alert('I have an apple')}
+  }
+})
+
+var Mixin = Vue.extend({
+  mixins: [ Pen, Apple ]
+})
+
+var ApplePen = Mixin.extend({
+  methods: {
+    Uh() {
+      this.havePen()
+      this.haveApple()
+      alert('Apple pen')
+    }
+  }
+})
+```
+
+Implementing `PineapplePen` and `PenPineappleApplePen` is left for exercise.
+
 
 ### Component.register
 ---
@@ -343,7 +448,7 @@ Difference
 
 **Todo Features:**
 
-- [ ] `mixin`
+- [x] ~~`mixin`~~
 
 - [x] ~~`extends`~~
 
