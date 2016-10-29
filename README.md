@@ -31,7 +31,7 @@ I believe av-ts have a good balance between safety, brevity, consistency and ext
 
 5. `watch` handlers are declared in `@Watch` decorator, so user cannot watch the wrong property.
 
-6. All other options are considered as component's meta info. So users should declare them in the `@Componet` decorator function.
+6. All other options are considered as component's meta info. So users should declare them in the `@Component` decorator function.
 
 7. You can also extend av-ts by `Component.register`ing new decorators. Useful for libraries like Vuex, Vue-router.
 
@@ -159,9 +159,9 @@ Via our old friend npm.
 And don't forget installing vue. and then in your vue file.
 
 ```typescript
-import {Componet} from 'av-ts'
+import {Component} from 'av-ts'
 
-@Componet
+@Component
 class MyAwesomeComponent {
   // ....
 }
@@ -187,7 +187,7 @@ It can be directly applied on component class as decorator, or take one option a
 @Component
 class VueComp extends Vue {}
 
-@Componet({
+@Component({
   directive: {},
   components: {},
   functionals: {},
@@ -405,7 +405,7 @@ Implementing `PineapplePen` and `PenPineappleApplePen` is left for exercise.
 
 ```typescript
 // has type
-Componet.registter: (key: $$Prop, logic: DecoratorProcessor) => void
+Component.registter: (key: $$Prop, logic: DecoratorProcessor) => void
 // $$Prop is a special string type that means you have to prefix the key with `$$`
 // DecoratorProcessor can access prototype, instance and options of the decorated class
 // where
