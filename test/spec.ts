@@ -24,6 +24,7 @@ declare module 'vue/types/options' {
   vuex: {},
   filters: {},
   name: 'my-component',
+  transitions: {},
   delimiters: ['{{', '}}'],
 })
 export class MyComponent extends Vue {

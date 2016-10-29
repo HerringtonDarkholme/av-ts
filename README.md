@@ -43,7 +43,7 @@ import {
   Component, Prop, Watch, Lifecycle,
 } from 'av-ts'
 
-// meta info in `Component` decorator
+// vue options in `Component` decorator
 @Component({
   filters: {},
   name: 'my-component',
@@ -188,12 +188,11 @@ It can be directly applied on component class as decorator, or take one option a
 class VueComp extends Vue {}
 
 @Component({
-  directive: {},
+  directives: {},
   components: {},
-  functionals: {},
   filters: {},
   name: 'my-awesome-component',
-  delimiter: ['{{', '}}'],
+  delimiters: ['{{', '}}'],
 })
 class MyComponent extends Vue {}
 ```
@@ -440,17 +439,20 @@ class MyComponent extends Vue {
 
 2. ComponentMeta augmentation
 
-Sometimes you need new fields in Vue's instance configuration object. For example, av-ts is designed to work with vue-loader.
-So there is no `template` in `ComponentMeta`. To support `template`, you can use TypeScript's module augmentation feature.
+Sometimes you need new fields in Vue's instance configuration object.
+
+For example, av-ts has no builtin vuex1.0 support, but you want to use av-ts in your projects under migration.
+
+To support `vuex` property, you can use TypeScript's module augmentation feature.
 
 ```typescript
-declare module 'av-ts/dist/src/interface' {
-  export interface ComponentMeta {
-    template?: string
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends Vue> {
+    vuex?: {}
   }
 }
 @Component({
-  template: '<div>'
+  vuex: {}
 })
 class V extends Vue {}
 ```
@@ -462,13 +464,7 @@ Difference
 
 **Added Feature:**
 
-* functional component has its own assets slot.
-
 * new decorator `@Transition` for typechecking transition hooks!
-
-**Removed Feature:**
-
-* transitions is no longer needed given `<transition>` wrapper component.
 
 **Todo Features:**
 
