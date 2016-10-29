@@ -1,12 +1,16 @@
 # Awesome Vue TS [![Build Status](https://travis-ci.org/HerringtonDarkholme/av-ts.svg?branch=master)](https://travis-ci.org/HerringtonDarkholme/av-ts)
 -----
 
+![screenshot](https://raw.githubusercontent.com/HerringtonDarkholme/vue-ts-example/master/screen.png)
+
+[Try av-ts in your browser](http://plnkr.co/edit/KHhs7KDye3kwUvM8SNyZ?p=preview)!
+
 ## Why:
 
-Awesome Vue.TS aims at getting type safety as much as possible, while still keeping TypeScript concise and idiomatic.
+Awesome Vue.TS aims at getting _type safety_ as much as possible, while still keeping TypeScript _concise_ and _idiomatic_.
 To achieve this, av-ts exploits many techniques, tricks and hacks in TypeScript, which makes av-ts a good tour of TypeScript features.
 
-Note: The target vue version is 2.0.
+**Note: The target vue version is 2.0.**
 
 The canonical [library](https://github.com/vuejs/vue-class-component) does not
 solve the problem that `this.propertyInDataOption` is not checked by compiler.
