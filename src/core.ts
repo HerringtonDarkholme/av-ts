@@ -17,25 +17,13 @@ import Vue = require('vue')
 import {
   VClass, DecoratorProcessor,
   ComponentOptions, $$Prop,
-  ComponentMeta,
 } from './interface'
 
 import {snapshot, createMap} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
-function makeOptionsFromMeta(meta: ComponentMeta, name: string): ComponentOptions<Vue> {
-  if (meta.functionals) {
-    let components = meta.components = meta.components || {}
-    let functionals = meta.functionals
-    for (let key of Object.keys(functionals)) {
-      if (components[key]) {
-        console.error(`Conflicting key "${key}" found in ${name} 's option: functionals and components`)
-        continue
-      }
-      meta.components[key] = meta.functionals[key] as any
-    }
-  }
+function makeOptionsFromMeta(meta: ComponentOptions<Vue>, name: string): ComponentOptions<Vue> {
   let options: ComponentOptions<Vue> = meta
   options.props = {}
   options.computed = {}
@@ -121,7 +109,7 @@ function findSuper(proto: Object): VClass<Vue> {
   return Super
 }
 
-function Component_(meta: ComponentMeta = {}): ClassDecorator {
+function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     let instance = new cls()
     let proto = cls.prototype
@@ -147,8 +135,8 @@ function Component_(meta: ComponentMeta = {}): ClassDecorator {
 }
 
 export function Component<T extends VClass<Vue>>(ctor: T): T
-export function Component(config?: ComponentMeta): <T extends VClass<Vue>>(ctor: T) => T
-export function Component(target: ComponentMeta | VClass<Vue>): any {
+export function Component(config?: ComponentOptions<Vue>): <T extends VClass<Vue>>(ctor: T) => T
+export function Component(target: ComponentOptions<Vue> | VClass<Vue>): any {
   if (typeof target === 'function') {
     return Component_()(target)
   }

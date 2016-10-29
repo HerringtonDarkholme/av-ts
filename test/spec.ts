@@ -12,20 +12,19 @@ export class MyMixin extends Vue {
 }
 
 // extends interface option
-declare module '../src/interface' {
-  interface ComponentMeta {
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends Vue> {
     vuex?: {}
   }
 }
 
 @Component({
-  directive: {},
+  directives: {},
   components: {abc: {}},
   vuex: {},
-  functionals: {},
   filters: {},
   name: 'my-component',
-  delimiter: ['{{', '}}'],
+  delimiters: ['{{', '}}'],
 })
 export class MyComponent extends Vue {
   myData = '123'

@@ -1,16 +1,6 @@
 // functional isn't decorator, but worth implementing here
-import {RenderFunc, FunctionalProps, VClass} from './interface'
+import {VClass} from './interface'
 import Vue = require('vue')
-
-export function functional<T>(render: RenderFunc<T>, _props?: T): FunctionalProps<T> {
-  // we fool compiler here. _props at runtime is a config object in Vue
-  // but for better type inference we `assert` it as a plain data object
-  // for more info please refer to the helper function `p` in prop.ts
-  let props: any = _props
-  return {
-    props, render, functional: true
-  }
-}
 
 export type Cls<T> = {new (): T} & (typeof Vue)
 export function Mixin<A extends Vue, B extends Vue>(a: VClass<A>, b: VClass<B>): Cls<A & B>

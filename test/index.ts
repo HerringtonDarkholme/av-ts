@@ -1,6 +1,5 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
-import {Component, functional} from '../index'
 
 import Vue = require('vue')
 
@@ -57,16 +56,5 @@ describe('vue component', () => {
     expect(myGetter.get).to.be.a('function')
   })
 
-  it('should migrate functionals to component', () => {
-    @Component({
-      functionals: {
-        func: functional((h) => h('h1'))
-      }
-    })
-    class Test extends Vue {}
-    let options = Test['options']
-    expect(options).to.haveOwnProperty('components')
-    expect(options.components.func).to.be.a('function')
-  })
 })
 
