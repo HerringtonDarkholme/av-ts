@@ -422,6 +422,9 @@ To implement a new decorator. You need first to know how av-ts works underhood. 
 
 
 ## common tricks
+
+1. Property reification
+
 One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
 
 ```typescript
@@ -435,6 +438,24 @@ class MyComponent extends Vue {
 }
 ```
 
+2. ComponentMeta augmentation
+
+Sometimes you need new fields in Vue's instance configuration object. For example, av-ts is designed to work with vue-loader.
+So there is no `template` in `ComponentMeta`. To support `template`, you can use TypeScript's module augmentation feature.
+
+```typescript
+declare module 'av-ts/dist/src/interface' {
+  export interface ComponentMeta {
+    template?: string
+  }
+}
+@Component({
+  template: '<div>'
+})
+class V extends Vue {}
+```
+
+Configuration objects in `Component` is merged with other fields defined in class body and then passed to `Vue.extend`.
 
 Difference
 ---
