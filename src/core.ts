@@ -24,12 +24,12 @@ import {snapshot, createMap} from './util'
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
 function makeOptionsFromMeta(meta: ComponentOptions<Vue>, name: string): ComponentOptions<Vue> {
-  let options: ComponentOptions<Vue> = meta
-  options.props = {}
-  options.computed = {}
-  options.watch = {}
-  options.methods = {}
-  return options
+  meta.name = name
+  meta.props = meta.props || {}
+  meta.computed = meta.computed || {}
+  meta.watch = meta.watch || {}
+  meta.methods = meta.methods || {}
+  return meta
 }
 
 // given a vue class' prototype, return its internalKeys and normalKeys

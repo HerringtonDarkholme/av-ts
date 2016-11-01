@@ -20,10 +20,9 @@ export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescrip
 Component.register(LIFECYCLE_KEY, function(proto, instance, options) {
   let lifecycles: string[] = proto[LIFECYCLE_KEY]
   for (let lifecycle in lifecycles) {
-    // lifecycles may be on proto/methods
-    let handler = proto[lifecycle] || options.methods![lifecycle]
+    // lifecycles must be on proto because internalKeys is processed before method
+    let handler = proto[lifecycle]
     delete proto[lifecycle]
-    delete options.methods![lifecycle]
     options[lifecycle] = handler
   }
 })

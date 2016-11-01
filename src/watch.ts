@@ -1,6 +1,7 @@
 import Vue = require('vue')
 import {$$Prop} from './interface'
 import {Component} from './core'
+import {createMap} from './util'
 
 export type WatchHandler<C, T> = (this: C, newVal?: any, oldVal?: any) => void
 
@@ -16,7 +17,7 @@ const WATCH_PROP = '$$Watch' as $$Prop
 
 export function Watch<C extends Vue, T>(func: WatchHandler<C, T>, option?: WatchOption<C, T>): VuePropDecorator {
   return function(target: Vue, key: string) {
-    let watchedProps = target[WATCH_PROP] = target[WATCH_PROP] || {}
+    let watchedProps = target[WATCH_PROP] = target[WATCH_PROP] || createMap()
     if (!option) {
       watchedProps[key] = func
       return
@@ -28,5 +29,8 @@ export function Watch<C extends Vue, T>(func: WatchHandler<C, T>, option?: Watch
 
 Component.register(WATCH_PROP, function(target, instance, optionsToWrite) {
   let watchedProps = target[WATCH_PROP]
-  optionsToWrite.watch = watchedProps
+  const watch = optionsToWrite.watch
+  for (let key in watchedProps) {
+    watch![key] = watchedProps[key]
+  }
 })

@@ -13,7 +13,7 @@ export function Prop(target: Vue, key: string): void {
 
 Component.register(PROP_KEY, function(proto, instance, options) {
   let propKeys: string[] = proto[PROP_KEY]
-  let props = createMap<PropOptions>()
+  let props = options.props = options.props || createMap()
 
   for (let key of propKeys) {
     let prop: PropOptions = {}

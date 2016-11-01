@@ -5,7 +5,7 @@ import {Component} from './core'
 const DATA_KEY = '$$data' as $$Prop
 
 export type Dict = {[k: string]: any}
-export function Data(target: Vue, key: "data", _: TypedPropertyDescriptor<() => Dict>): void {
+export function Data(target: Vue, key: 'data', _: TypedPropertyDescriptor<() => Dict>): void {
   target[DATA_KEY] = target[key]
 }
 

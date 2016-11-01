@@ -24,10 +24,10 @@
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
-    "typescript": "2.1.0-dev.20160915",
-    "vue": "^2.0.1"
+    "typescript": "^2.0.3",
+    "vue": "^2.0.3"
   },
   "peerDependencies": {
-    "vue": "^2.0.1"
+    "vue": "^2.0.3"
   }
 }

@@ -1,12 +1,22 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
 import {
-  Component, Data, Vue, Prop, p
+  Component, Data, Vue, Prop, p,
+  Watch
 } from '../index'
 
-@Component
+@Component({
+  props: {
+    b: String
+  },
+  watch: {
+    a: () => {}
+  }
+})
 class TestData extends Vue {
   @Prop a = p(Number)
+
+  @Watch(() => {})
   b =  456
 
   @Data data() {
@@ -45,5 +55,19 @@ describe('various decorators', () => {
     expect(instance).to.have.property('a')
     expect(instance.a).to.be.equal(777)
     expect(instance.data).to.equal(undefined)
+  })
+
+  it('should merge options', () => {
+    let opt = TestData['options']
+    expect(opt).to.have.property('props')
+    expect(opt.props).to.haveOwnProperty('a')
+    expect(opt.props).to.haveOwnProperty('b')
+  })
+
+  it('should merge watch', () => {
+    let opt = TestData['options']
+    expect(opt).to.have.property('watch')
+    expect(opt.watch).to.haveOwnProperty('a')
+    expect(opt.watch).to.haveOwnProperty('b')
   })
 })
