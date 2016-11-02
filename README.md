@@ -12,16 +12,22 @@ To achieve this, av-ts exploits many techniques, tricks and hacks in TypeScript,
 
 **Note: The target vue version is 2.0.**
 
-The canonical [library](https://github.com/vuejs/vue-class-component) does not
-solve the problem that `this.propertyInDataOption` is not checked by compiler.
+You can read more for av-ts' [raison d'etre here](http://herringtondarkholme.github.io/2016/11/01/how-to-choose-vue-library/)
 
-Another popular [library](https://github.com/itsFrank/vue-typescript) can provide more
-decorators for different usages and more type-safety.
+## Quick start
 
-None of the above two has taken extensibility into account.
-While av-ts pays attention how users can create their own decorators.
+1. [Try av-ts in your browser](http://plnkr.co/edit/KHhs7KDye3kwUvM8SNyZ?p=preview)!
 
-I believe av-ts have a good balance between safety, brevity, consistency and extensibility.
+2. use [template](https://github.com/HerringtonDarkholme/av-ts-template) by [vue-cli](https://github.com/vuejs/vue-cli)
+
+```bash
+npm install vue-cli -g
+vue init HerringtonDarkholme/av-ts-template myproject
+cd myproject
+npm install
+npm run dev
+```
+
 
 ## Usage:
 
@@ -153,23 +159,6 @@ class App extends Mixin(VegetableSearchable, FruitSearchable) {}
 ```
 
 Voila! No `implements`, No repeating code. And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
-
-## install
-
-Via our old friend npm.
-
-`npm install av-ts --save`
-
-And don't forget installing vue. and then in your vue file.
-
-```typescript
-import {Component} from 'av-ts'
-
-@Component
-class MyAwesomeComponent {
-  // ....
-}
-```
 
 
 ## API
