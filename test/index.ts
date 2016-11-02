@@ -1,7 +1,6 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
-
-import Vue = require('vue')
+import {Component, Vue} from '../index'
 
 describe('vue component', () => {
 
@@ -54,6 +53,25 @@ describe('vue component', () => {
     expect(myGetter).to.be.a('object')
     expect(myGetter).to.haveOwnProperty('get')
     expect(myGetter.get).to.be.a('function')
+  })
+
+  it('should handle array in data', () => {
+    @Component
+    class ArrayComp extends Vue {
+      myArray = [1, 2, 3]
+    }
+    let options = ArrayComp['options']
+    expect(options).to.haveOwnProperty('data')
+    let data = options.data()
+    expect(data).to.haveOwnProperty('myArray')
+    let myArray = data.myArray
+    expect(myArray).to.be.a('array')
+    expect(myArray.push).to.be.a('function')
+    expect(myArray).to.have.length(3)
+    expect(myArray[0]).to.equal(1)
+    expect(myArray[1]).to.equal(2)
+    expect(myArray[2]).to.equal(3)
+
   })
 
 })

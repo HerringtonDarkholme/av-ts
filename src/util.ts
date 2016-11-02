@@ -4,7 +4,7 @@ export function snapshot(obj: any) {
   if (obj == null || typeof obj !== 'object') {
     return obj
   }
-  let temp: any = {}
+  let temp: any = Array.isArray(obj) ? [] : {}
   for (let key of Object.keys(obj)) {
     temp[key] = snapshot(obj[key])
   }
