@@ -414,43 +414,7 @@ To implement a new decorator. You need first to know how av-ts works underhood. 
 
 
 ## common tricks
-
-1. Property reification
-
-One can specify more specific class in vue special fields like `$el`. This can be done by annotating types on a class property declaration without initializer.
-
-```typescript
-class MyComponent extends Vue {
-  // instance property reification
-  $refs: {
-    mychild: Vue
-  }
-  // don't initialize `$el`
-  $el: HTMLDivElement
-}
-```
-
-2. ComponentMeta augmentation
-
-Sometimes you need new fields in Vue's instance configuration object.
-
-For example, av-ts has no builtin vuex1.0 support, but you want to use av-ts in your projects under migration.
-
-To support `vuex` property, you can use TypeScript's module augmentation feature.
-
-```typescript
-declare module 'vue/types/options' {
-  interface ComponentOptions<V extends Vue> {
-    vuex?: {}
-  }
-}
-@Component({
-  vuex: {}
-})
-class V extends Vue {}
-```
-
-Configuration objects in `Component` is merged with other fields defined in class body and then passed to `Vue.extend`.
+Please see [FAQ](https://github.com/HerringtonDarkholme/av-ts/wiki/FAQ)
 
 Difference
 ---
