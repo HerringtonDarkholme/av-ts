@@ -19,7 +19,7 @@ import {
   ComponentOptions, $$Prop,
 } from './interface'
 
-import {snapshot, createMap} from './util'
+import {createMap, NOOP} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
@@ -83,18 +83,24 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
 const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
-function collectData(instance: Object, optionsToWrite: ComponentOptions<Vue>) {
+function collectData(cls: Function, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
   // already implemented by @Data
   if (optionsToWrite.data) return
-  let selfData = {}
-  for (let key of Object.keys(instance)) {
-    if (VUE_KEYS.indexOf(key) === -1) {
-      selfData[key] = instance[key]
-    }
-  }
   // what a closure! :(
-  optionsToWrite.data = function() {
-    return snapshot(selfData)
+  optionsToWrite.data = function(this: Vue) {
+    let selfData = {}
+    let proxy = Object.create(Vue.prototype)
+    for (let key in Object.keys(this)) {
+      proxy[key] = this[key]
+    }
+    proxy['_init'] = NOOP
+    cls.call(proxy)
+    for (let key of keys) {
+      if (VUE_KEYS.indexOf(key) === -1) {
+        selfData[key] = proxy[key]
+      }
+    }
+    return selfData
   }
 }
 
@@ -111,7 +117,14 @@ function findSuper(proto: Object): VClass<Vue> {
 
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
-    let instance = new cls()
+    Component.inDefinition = true
+    // workaround flow inference
+    let instance: Vue = undefined as any
+    try {
+      instance = new cls()
+    } finally {
+      Component.inDefinition = false
+    }
     let proto = cls.prototype
     let options = makeOptionsFromMeta(meta, cls['name'])
 
@@ -126,7 +139,7 @@ function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
     }
 
     // everything on instance is packed into data
-    collectData(instance, options)
+    collectData(cls, Object.keys(instance), options)
 
     let Super = findSuper(proto)
     return Super.extend(options)
@@ -147,4 +160,5 @@ export namespace Component {
   export function register(key: $$Prop, logic: DecoratorProcessor) {
     registeredProcessors[key] = logic
   }
+  export let inDefinition = false
 }

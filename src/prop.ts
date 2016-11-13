@@ -67,6 +67,9 @@ export function p<T>(conf: DefaultProp<T>): T
 export function p<T>(conf: PlainProp<T>): T | undefined
 export function p<T extends Function>(conf: FuncProp<T>): T
 export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
+  if (!Component.inDefinition) {
+    return undefined as any
+  }
   if (typeof confOrType === 'function') {
     let tpe = confOrType
     return {type: tpe} as any
