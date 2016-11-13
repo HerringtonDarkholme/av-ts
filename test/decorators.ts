@@ -70,4 +70,35 @@ describe('various decorators', () => {
     expect(opt.watch).to.haveOwnProperty('a')
     expect(opt.watch).to.haveOwnProperty('c')
   })
+
+  it('should handle various data initilization', () => {
+    class Test {}
+    var sharedObject = {}
+    var counter = 0
+    function cp(t: NumberConstructor): number {
+      if (Component.inDefinition) {
+        counter++
+        return t as any
+      }
+      return undefined as any
+    }
+    @Component
+    class TestComponent extends Vue {
+      @Prop propValue = cp(Number)
+      normal = 'normal'
+      test = new Test
+      own = this.propValue + 1
+      shared = sharedObject
+    }
+
+    let instance = new TestComponent({
+      propsData: {propValue: 123}
+    })
+    expect(instance.normal).to.equal('normal')
+    expect(instance.test).to.be.instanceOf(Test)
+    expect(instance.own).to.equal(124)
+    expect(instance.shared).to.equal(sharedObject)
+    expect(counter).to.equal(1)
+  })
+
 })

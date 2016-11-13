@@ -89,9 +89,16 @@ function collectData(cls: Function, keys: string[], optionsToWrite: ComponentOpt
   // what a closure! :(
   optionsToWrite.data = function(this: Vue) {
     let selfData = {}
-    let proxy = Object.create(Vue.prototype)
-    for (let key in Object.keys(this)) {
-      proxy[key] = this[key]
+    let proxy = Object.create(cls.prototype)
+    for (let key of Object.keys(this)) {
+      if (keys.indexOf(key) > 0) {
+        proxy[key] = this[key]
+      } else {
+        Object.defineProperty(proxy, key, {
+          get: () => this[key],
+          set: NOOP
+        })
+      }
     }
     proxy['_init'] = NOOP
     cls.call(proxy)
