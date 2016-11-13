@@ -17,11 +17,11 @@ class TestData extends Vue {
   @Prop a = p(Number)
 
   @Watch(() => {})
-  b =  456
+  c =  456
 
   @Data data() {
     return {
-      b: this.a
+      c: this.a
     }
   }
 }
@@ -49,7 +49,7 @@ describe('various decorators', () => {
     let opt = TestData['options']
     expect(opt).to.have.property('data')
     expect(opt.data).to.be.a('function')
-    expect(opt.data.call({a: 123}).b).to.equal(123)
+    expect(opt.data.call({a: 123}).c).to.equal(123)
     expect(opt.methods.data).to.equal(undefined)
     let instance = new TestData({propsData: {a: 777}})
     expect(instance).to.have.property('a')
@@ -68,6 +68,6 @@ describe('various decorators', () => {
     let opt = TestData['options']
     expect(opt).to.have.property('watch')
     expect(opt.watch).to.haveOwnProperty('a')
-    expect(opt.watch).to.haveOwnProperty('b')
+    expect(opt.watch).to.haveOwnProperty('c')
   })
 })

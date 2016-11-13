@@ -8,16 +8,16 @@ describe('util functions', () => {
   })
 
   it('should mixin', () => {
-    @Trait class A extends Vue {
+    @Trait class MA extends Vue {
       data1 = 123
       myMethod() {}
     }
-    @Trait class B extends Vue {
+    @Trait class MB extends Vue {
       data2 = 456
       myMethod2() {}
     }
 
-    let Mixed = Mixin(A, B)
+    let Mixed = Mixin(MA, MB)
     expect(Mixed).to.be.a('function')
     let options = Mixed['options']
     expect(options).to.haveOwnProperty('mixins')
