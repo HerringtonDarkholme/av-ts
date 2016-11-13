@@ -89,7 +89,10 @@ function collectData(cls: Function, keys: string[], optionsToWrite: ComponentOpt
   // what a closure! :(
   optionsToWrite.data = function(this: Vue) {
     let selfData = {}
+    // create a Vue instance proxy, this pass Vue's this check
     let proxy = Object.create(cls.prototype)
+    // for not data property, set as a readonly prop
+    // so @Prop does not rewrite it to undefined
     for (let key of Object.keys(this)) {
       if (keys.indexOf(key) > 0) {
         proxy[key] = this[key]
@@ -100,6 +103,7 @@ function collectData(cls: Function, keys: string[], optionsToWrite: ComponentOpt
         })
       }
     }
+    // _init is the only method required for `cls` call
     proxy['_init'] = NOOP
     cls.call(proxy)
     for (let key of keys) {
