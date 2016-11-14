@@ -5,19 +5,28 @@ import {
   Watch
 } from '../index'
 
+
+var globalCounter = 0
+
 @Component({
   props: {
     b: String
   },
   watch: {
-    a: () => {}
+    a: () => {
+      globalCounter++
+    }
   }
 })
 class TestData extends Vue {
   @Prop a = p(Number)
 
-  @Watch(() => {})
   c =  456
+
+  @Watch('c')
+  increaseCounter() {
+    globalCounter++
+  }
 
   @Data data() {
     return {
@@ -99,6 +108,22 @@ describe('various decorators', () => {
     expect(instance.own).to.equal(124)
     expect(instance.shared).to.equal(sharedObject)
     expect(counter).to.equal(1)
+  })
+
+  it('should make watch run', done => {
+    let instance = new TestData({
+      propsData: {b: 'test', a: 123}
+    })
+    expect(globalCounter).to.equal(0)
+    instance.c = 111
+    instance.$nextTick(() => {
+      expect(globalCounter).to.equal(1)
+      instance.a = 321
+      instance.$nextTick(() => {
+        expect(globalCounter).to.equal(2)
+        done()
+      })
+    })
   })
 
 })
