@@ -300,11 +300,7 @@ This decorator is solely for type checking.
 
 Type: TypedPropertyDecorator
 
-By default, all undecorated instance properties are collected to `data` option. However, sometimes `data` function needs to access other instance properties like `props`, which is not availabel when you declare a Vue component class.
-
-Here comes the `Data` decorator. When `Data` decorator is applied to a method, the method will be extracted as `data` function in vue's option, with `this` injected. And none instance property is counted as `data` option.
-
-This is useful for [defining a local data property that uses the prop’s initial value as its initial value](http://vuejs.org/guide/components.html#One-Way-Data-Flow)
+Collecting instance properties is heavy and hacky. It needs to find all `props` and other properties for you. If you want to make instance creation faster you can skip `data` collection. Here comes the `Data` decorator. When `Data` decorator is applied to a method, the method will be extracted as `data` function in vue's option, with `this` injected. And none instance property is counted as `data` option.
 
 Example:
 
