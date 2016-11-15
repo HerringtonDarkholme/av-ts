@@ -74,5 +74,21 @@ describe('vue component', () => {
 
   })
 
+  it('should only handle own property', () => {
+    const sbmoz: any = Object.create({
+      watch() {}
+    })
+    expect(sbmoz).to.not.have.ownProperty('watch')
+    expect(sbmoz.watch).to.be.a('function')
+
+    @Component(sbmoz)
+    class Test extends Vue {}
+
+    const options = Test['options']
+    expect(options).to.haveOwnProperty('watch')
+    expect(options.watch).to.be.an('object')
+
+  })
+
 })
 

@@ -19,3 +19,7 @@ export function createMap<T>(): Map<T> {
   delete ret["__"]
   return ret
 }
+
+export function hasOwn(obj: Object, key: string) {
+  return Object.prototype.hasOwnProperty.call(obj, key)
+}
