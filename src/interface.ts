@@ -8,7 +8,7 @@ import {ComponentOptions} from 'vue/types/options'
 export {ComponentOptions} from 'vue/types/options'
 
 export type Hash<V> = {[k: string]: V}
-export type VClass<T extends Vue> = {new(): T} & (typeof Vue)
+export type VClass<T extends Vue> = {new(): T}
 
 export interface DecoratorProcessor {
   (proto: Vue, instance: Vue, options: ComponentOptions<Vue>): void

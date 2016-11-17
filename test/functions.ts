@@ -17,7 +17,9 @@ describe('util functions', () => {
       myMethod2() {}
     }
 
-    let Mixed = Mixin(MA, MB)
+    interface Mixed extends MA, MB {}
+
+    let Mixed = Mixin<Mixed>(MA, MB)
     expect(Mixed).to.be.a('function')
     let options = Mixed['options']
     expect(options).to.haveOwnProperty('mixins')
@@ -28,5 +30,20 @@ describe('util functions', () => {
     expect(instance.data2).to.equal(456)
     expect(instance.myMethod).to.be.a('function')
     expect(instance.myMethod2).to.be.a('function')
+  })
+
+  it('should mixin instance', () => {
+    @Trait class MA extends Vue {
+      data1 = 123
+      myMethod() {}
+    }
+    @Trait class MB extends Vue {
+      data2 = 456
+      myMethod2() {}
+    }
+
+    interface Mixed extends MA, MB {}
+
+    class Mixed extends Mixin<Mixed>(MA, MB) {}
   })
 })
