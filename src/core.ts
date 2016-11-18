@@ -130,10 +130,12 @@ function findSuper(proto: Object): VClass<Vue> {
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
-    // workaround flow inference
-    let instance: Vue = undefined as any
+    let instance = Object.create(Vue.prototype)
+    Object.defineProperty(instance, '_init', {
+      value: NOOP, enumerable: false
+    })
     try {
-      instance = new cls()
+      cls.call(instance)
     } finally {
       Component.inDefinition = false
     }
