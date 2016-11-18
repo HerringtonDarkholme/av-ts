@@ -130,7 +130,7 @@ function findSuper(proto: Object): VClass<Vue> {
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
-    let instance = Object.create(Vue.prototype)
+    let instance = Object.create(cls.prototype)
     Object.defineProperty(instance, '_init', {
       value: NOOP, enumerable: false
     })
