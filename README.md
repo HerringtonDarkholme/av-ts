@@ -153,12 +153,16 @@ Contrary to other libraries, av-ts supports first class Mixin! Example adapted f
   searchVegetable() { alert('find fruits!')}
 }
 
+interface FGMixin extends VegetableSearchable, FruitSearchable {}
+
 // Mixin them!
 @Component
-class App extends Mixin(VegetableSearchable, FruitSearchable) {}
+class App extends Mixin<FGMixin>(VegetableSearchable, FruitSearchable) {}
 ```
 
-Voila! No `implements`, No repeating code. And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+Voila! No `implements`, No repeating code. You only need to declare one more interface! And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+
+N.B.: actually declare one interface is TypeScript's limitation. But you can vote for removing this limitation [here](https://github.com/Microsoft/TypeScript/issues/10261).
 
 
 ## API
@@ -199,7 +203,7 @@ An alias of `Component`,used for defining Vue traits to be mixed in.
 At runtime, these decorators transform constructor to vue option and then feed to `Vue.extend`.
 So there is no semantic difference between `Component` and `Trait`. Placing `Component` on a class to be used as mixin just feels too strange. This alias is solely for API aesthetic.
 
-To use a `Trait`, declare a class that extends `Mixin(...Traits)`. See example in `Mixin` section.
+To use a `Trait`, declare a class that extends `Mixin<MixedInterface>(...Traits)`. See example in `Mixin` section.
 
 ## Property Decorators
 ----
@@ -327,9 +331,11 @@ instance.b === 777 // true
 
 ### Mixin
 
-has roughly type: `(parentConstructor: typeof Vue, ...traitConstructor: (typeof Vue)[]): (typeof Vue)`
+has roughly type: `<V>(parentConstructor: typeof Vue, ...traitConstructor: (typeof Vue)[]): {new(): V}`
 
 a function to mix all `Trait`s decorated constructors into one Vue constructor.
+
+To use Mixin correctly, you need to declare one interface to extend all traits you need. Then pass it as a generic type argument to `Mixin<MixedInterface>(...traits)`. This is TypeScript's limitation.
 
 It's return value is `parentConstructor.extend({mixins: traitConstructor})`: extending the first trait as parentConstructor and pack all remaining traits in `mixins` option.
 
@@ -346,8 +352,9 @@ See source for more specific type.
   haveApple() { alert('I have an apple')}
 }
 
+interface PAMixed extends Pen, Apple {}
 
-@Component class ApplePen extends Mixin(Apple, Pen) {
+@Component class ApplePen extends Mixin<PAMixed>(Apple, Pen) {
   Uh() {
     this.havePen()
     this.haveApple()
