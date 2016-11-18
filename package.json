@@ -1,6 +1,6 @@
 {
   "name": "av-ts",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Awesome Vue2.0's for TypeScript2.0",
   "main": "./dist/index.js",
   "scripts": {
@@ -24,12 +24,10 @@
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
+    "typescript": "^2.2.0-dev.20161117",
     "vue": "^2.0.3"
   },
   "peerDependencies": {
     "vue": "^2.0.3"
-  },
-  "dependencies": {
-    "typescript": "^2.2.0-dev.20161117"
   }
 }
