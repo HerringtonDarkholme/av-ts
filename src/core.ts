@@ -84,29 +84,26 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
 const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
-function collectData(cls: Function, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
+function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
   // already implemented by @Data
   if (optionsToWrite.data) return
   // what a closure! :(
   optionsToWrite.data = function(this: Vue) {
     let selfData = {}
-    // create a Vue instance proxy, this pass Vue's this check
-    let proxy = Object.create(cls.prototype)
+    let vm = this
+    // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
-    for (let key of Object.keys(this)) {
-      if (keys.indexOf(key) > 0) {
-        proxy[key] = this[key]
-      } else {
-        Object.defineProperty(proxy, key, {
-          get: () => this[key],
+    cls.prototype._init = function(this: Vue) {
+      for (let key of Object.keys(vm)) {
+        if (keys.indexOf(key) >= 0) continue
+        Object.defineProperty(this, key, {
+          get: () => vm[key],
           set: NOOP
         })
       }
     }
-    // _init is the only method required for `cls` call
-    proxy['_init'] = NOOP
-    cls.call(proxy)
+    let proxy = new cls()
     for (let key of keys) {
       if (VUE_KEYS.indexOf(key) === -1) {
         selfData[key] = proxy[key]
@@ -130,15 +127,18 @@ function findSuper(proto: Object): VClass<Vue> {
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
-    let instance = Object.create(cls.prototype)
-    Object.defineProperty(instance, '_init', {
-      value: NOOP, enumerable: false
-    })
+    // let instance = Object.create(cls.prototype)
+    // Object.defineProperty(instance, '_init', {
+    //   value: NOOP, enumerable: false
+    // })
+    cls.prototype._init = NOOP
+    let instance: Vue = null as any
     try {
-      cls.call(instance)
+      instance = new cls()
     } finally {
       Component.inDefinition = false
     }
+    delete cls.prototype._init
     let proto = cls.prototype
     let options = makeOptionsFromMeta(meta, cls['name'])
 
