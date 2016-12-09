@@ -23,7 +23,7 @@ class TestData extends Vue {
 
   c =  456
 
-  @Watch('c')
+  @Watch('c', {deep: true})
   increaseCounter() {
     globalCounter++
   }
@@ -78,6 +78,8 @@ describe('various decorators', () => {
     expect(opt).to.have.property('watch')
     expect(opt.watch).to.haveOwnProperty('a')
     expect(opt.watch).to.haveOwnProperty('c')
+    expect(opt.watch.c).to.haveOwnProperty('deep')
+    expect(opt.watch.c.deep).to.equal(true)
   })
 
   it('should handle various data initilization', () => {

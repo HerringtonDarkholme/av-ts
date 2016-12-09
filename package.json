@@ -24,7 +24,7 @@
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
-    "typescript": "^2.2.0-dev.20161117",
+    "typescript": "^2.1.4",
     "vue": "^2.0.3"
   },
   "peerDependencies": {

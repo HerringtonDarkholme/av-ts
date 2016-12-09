@@ -39,7 +39,7 @@ npm run dev
 
 4. `render` and life cycle handler like `created` is declared by decorated methods. They are declared in class body because these handlers use `this`. But you cannot invoke them on the instance itself. So they are decorated to remind users. When declaring custom methods, you should avoid these reserved names.
 
-5. `watch` handlers are declared in `@Watch` decorator, so user cannot watch the wrong property.
+5. `watch` handlers are declared by `@Watch(propName)` decorator, handler type is checked by `keyof` lookup type.
 
 6. All other options are considered as component's meta info. So users should declare them in the `@Component` decorator function.
 
@@ -83,10 +83,11 @@ export class MyComponent extends Vue { // extends Vue or your own component
   }
 
   // watch handler is declared by decorator
-  @Watch(function(){
+  myWatchee = 'watch me!'
+  @Watch('myWatchee')
+  handler(newVal, oldVal) {
     console.log(this.myWatchee + 'changed!')
   })
-  myWatchee = 'watch me!'
 
   // lifecycle hook is speical so it is decorated
   @Lifecycle beforeCreate() {}
@@ -238,18 +239,17 @@ console.log(num)
 ### `Watch`
 -----
 
-Contrary to vue-typescript, `@Watch` is applied to a **watched property**.
-`Watch` takes handler as the first argument, and an optional config object as the second one.
+Same as vue-typescript, `@Watch` is applied to a **watched handler**.
+`Watch` takes watchee name as the first argument, and an optional config object as the second one.
 
 
 ```typescript
-// ....
-
-@Watch(function(newVal, oldVal) {
+// watch handler is declared by decorator
+properyBeingWatched = 123
+@Watch('properyBeingWatched', {deep: true})
+handler(newVal, oldVal) {
   console.log('the delta is ' + (newVal - oldVal))
-}, {deep: true})
-properyBeingWatched: number
-
+})
 // ....
 ```
 
