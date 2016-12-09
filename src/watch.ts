@@ -2,28 +2,23 @@ import Vue = require('vue')
 import {$$Prop} from './interface'
 import {Component} from './core'
 import {createMap} from './util'
-
-export type WatchHandler<C, T> = (this: C, newVal?: any, oldVal?: any) => void
-
-export interface WatchOption<C, T>{
-  deep?: boolean
-  immediate?: boolean
-  handler?: WatchHandler<C, T>
-}
+import {WatchOptions} from 'vue/types/options'
 
 export type VuePropDecorator = (target: Vue, key: string) => void
 
 const WATCH_PROP = '$$Watch' as $$Prop
 
-export function Watch<C extends Vue, T>(func: WatchHandler<C, T>, option?: WatchOption<C, T>): VuePropDecorator {
-  return function(target: Vue, key: string) {
+
+export type WatchHandler<T> = (val: T, oldVal: T) => void
+export type WatchDecorator<K extends string> =
+  <T>(target: {[k in K]: T}, key: string, prop: TypedPropertyDescriptor<WatchHandler<T>>) => void
+
+export function Watch<K extends string>(key: K, opt: WatchOptions = {}): WatchDecorator<K> {
+  return function(target: any, method: string) {
     let watchedProps = target[WATCH_PROP] = target[WATCH_PROP] || createMap()
-    if (!option) {
-      watchedProps[key] = func
-      return
-    }
-    option.handler = func
-    watchedProps[key] = option
+    opt['handler'] = target[method]
+    opt['originalMethod'] = method
+    watchedProps[key] = opt as any
   }
 }
 
@@ -32,5 +27,6 @@ Component.register(WATCH_PROP, function(target, instance, optionsToWrite) {
   const watch = optionsToWrite.watch
   for (let key in watchedProps) {
     watch![key] = watchedProps[key]
+    delete target[watchedProps[key]['originalMethod']]
   }
 })

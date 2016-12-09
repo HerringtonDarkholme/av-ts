@@ -69,10 +69,12 @@ export class MyComponent extends Vue {
     return this.myProp
   }
 
-  @Watch<MyComponent, string>(function(){
-    console.log(this.myData)
-  })
   myWatchee = 'watch me!'
+
+  @Watch('myWatchee')
+  logWatch(str: string) {
+    console.log(this.myData)
+  }
 
   // instance property reification
   $parent: MyMixin
