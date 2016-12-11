@@ -2,7 +2,7 @@ import {MyComponent} from './spec'
 import {expect} from 'chai'
 import {
   Component, Data, Vue, Prop, p,
-  Watch
+  Watch, WatchSub
 } from '../index'
 
 
@@ -23,14 +23,25 @@ class TestData extends Vue {
 
   c =  456
 
+  d : {a: any, b: number} = {a: 0, b: 0};
+
   @Watch('c', {deep: true})
   increaseCounter() {
     globalCounter++
   }
 
+  @WatchSub('d.a', {deep: true})
+  increaseCounter2() {
+    globalCounter++
+  }
+
   @Data data() {
     return {
-      c: this.a
+      c: this.a,
+      d: {
+        a: 1,
+        b: 2,
+      }
     }
   }
 }
@@ -80,6 +91,10 @@ describe('various decorators', () => {
     expect(opt.watch).to.haveOwnProperty('c')
     expect(opt.watch.c).to.haveOwnProperty('deep')
     expect(opt.watch.c.deep).to.equal(true)
+
+    expect(opt.watch).to.haveOwnProperty('d.a')
+    expect(opt.watch['d.a']).to.haveOwnProperty('deep')
+    expect(opt.watch['d.a'].deep).to.equal(true)
   })
 
   it('should handle various data initilization', () => {
@@ -117,15 +132,28 @@ describe('various decorators', () => {
       propsData: {b: 'test', a: 123}
     })
     expect(globalCounter).to.equal(0)
-    instance.c = 111
-    instance.$nextTick(() => {
-      expect(globalCounter).to.equal(1)
-      instance.a = 321
-      instance.$nextTick(() => {
-        expect(globalCounter).to.equal(2)
-        done()
-      })
-    })
-  })
 
+    const testModifications = [
+      { handle: () => {instance.c = 111}, inc: true },
+      { handle: () => {instance.a = 321}, inc: true },
+      { handle: () => {instance.d.a++}, inc: true },
+      { handle: () => {instance.d.a = {x: 0}}, inc: true },
+      { handle: () => {instance.d.a.x++}, inc: true },
+    ];
+
+    function test(currentTest: number, currentGlobalCouter: number){
+      if (currentTest == testModifications.length) {
+        done();
+      } else {
+        testModifications[currentTest].handle();
+        if(testModifications[currentTest].inc) currentGlobalCouter++;
+        instance.$nextTick(() => {
+          expect(globalCounter).to.equal(currentGlobalCouter);
+          test(currentTest+1, currentGlobalCouter);
+        });
+      }
+    };
+
+    test(0,0);
+  })
 })

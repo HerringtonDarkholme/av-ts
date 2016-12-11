@@ -39,7 +39,7 @@ npm run dev
 
 4. `render` and life cycle handler like `created` is declared by decorated methods. They are declared in class body because these handlers use `this`. But you cannot invoke them on the instance itself. So they are decorated to remind users. When declaring custom methods, you should avoid these reserved names.
 
-5. `watch` handlers are declared by `@Watch(propName)` decorator, handler type is checked by `keyof` lookup type.
+5. `watch` handlers are declared by `@Watch(propName)` decorator, handler type is checked by `keyof` lookup type. Non-strict watches must use `@WatchSub(propPath)` decorator.
 
 6. All other options are considered as component's meta info. So users should declare them in the `@Component` decorator function.
 
@@ -258,6 +258,36 @@ is equivalent to
 ```typescript
 watch: {
   properyBeingWatched: {
+    handler: function(newVal, oldVal) {
+      console.log('the delta is ' + (newVal - oldVal))
+    },
+    deep: true
+  }
+}
+```
+
+### `WatchSub`
+-----
+
+Same as `@Watch`, `@WatchSub` is applied to a **watched handler**.
+`Watch` takes expression name as the first argument, and an optional config object as the second one.
+
+
+```typescript
+// watch handler is declared by decorator
+properyBeingWatched = { key1: 0 }
+@Watch('properyBeingWatched.key1', {deep: true})
+handler(newVal, oldVal) {
+  console.log('the delta is ' + (newVal - oldVal))
+})
+// ....
+```
+
+is equivalent to
+
+```typescript
+watch: {
+  'properyBeingWatched.key1' {
     handler: function(newVal, oldVal) {
       console.log('the delta is ' + (newVal - oldVal))
     },
