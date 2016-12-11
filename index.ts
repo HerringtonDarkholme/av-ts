@@ -6,6 +6,7 @@ export {Prop, p} from './src/prop'
 export {Render} from './src/render'
 export {Transition} from './src/transition'
 export {Watch} from './src/watch'
+export {WatchSub} from './src/watch_sub'
 export {Data} from './src/data'
 export * from './src/functions'
 
