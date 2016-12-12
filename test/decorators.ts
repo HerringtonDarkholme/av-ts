@@ -23,14 +23,30 @@ class TestData extends Vue {
 
   c =  456
 
+  d = {
+    e: {
+      f: 123
+    }
+  }
+
   @Watch('c', {deep: true})
   increaseCounter() {
     globalCounter++
   }
 
+  @Watch(['d', 'e', 'f'])
+  decreaseCounter() {
+    globalCounter--
+  }
+
   @Data data() {
     return {
-      c: this.a
+      c: this.a,
+      d: {
+        e: {
+          f: 123
+        }
+      }
     }
   }
 }
@@ -78,6 +94,7 @@ describe('various decorators', () => {
     expect(opt).to.have.property('watch')
     expect(opt.watch).to.haveOwnProperty('a')
     expect(opt.watch).to.haveOwnProperty('c')
+    expect(opt.watch).to.haveOwnProperty('d.e.f')
     expect(opt.watch.c).to.haveOwnProperty('deep')
     expect(opt.watch.c.deep).to.equal(true)
   })
@@ -125,6 +142,18 @@ describe('various decorators', () => {
         expect(globalCounter).to.equal(2)
         done()
       })
+    })
+  })
+
+  it('should watch nested prop', done => {
+    let instance = new TestData({
+      propsData: {b: 'test', a: 123}
+    })
+    expect(globalCounter).to.equal(2)
+    instance.d.e.f = 111
+    instance.$nextTick(() => {
+      expect(globalCounter).to.equal(1)
+      done()
     })
   })
 

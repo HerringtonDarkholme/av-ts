@@ -240,13 +240,19 @@ console.log(num)
 -----
 
 Same as vue-typescript, `@Watch` is applied to a **watched handler**.
-`Watch` takes watchee name as the first argument, and an optional config object as the second one.
+`Watch` takes watchee name, or an array of key-path to a nested property, as the first argument, and an optional config object as the second one.
 
 
 ```typescript
 // watch handler is declared by decorator
 properyBeingWatched = 123
 @Watch('properyBeingWatched', {deep: true})
+handler(newVal, oldVal) {
+  console.log('the delta is ' + (newVal - oldVal))
+})
+
+// the key path length is 4 at most
+@Watch(['nested', 'path', 'property'])
 handler(newVal, oldVal) {
   console.log('the delta is ' + (newVal - oldVal))
 })
