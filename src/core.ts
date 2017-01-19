@@ -24,7 +24,7 @@ import {createMap, hasOwn, NOOP} from './util'
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
 function makeOptionsFromMeta(meta: ComponentOptions<Vue>, name: string): ComponentOptions<Vue> {
-  meta.name = name
+  meta.name = meta.name || name
   for (let key of ['props', 'computed', 'watch', 'methods']) {
     if (!hasOwn(meta, key)) {
       meta[key] = {}
