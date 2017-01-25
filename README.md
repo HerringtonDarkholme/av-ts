@@ -154,17 +154,14 @@ Contrary to other libraries, av-ts supports first class Mixin! Example adapted f
   searchVegetable() { alert('find fruits!')}
 }
 
-interface FGMixin extends VegetableSearchable, FruitSearchable {}
-
 // Mixin them!
 @Component
-class App extends Mixin<FGMixin>(VegetableSearchable, FruitSearchable) {}
+class App extends Mixin(VegetableSearchable, FruitSearchable) {}
 ```
 
-Voila! No `implements`, No repeating code. You only need to declare one more interface! And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
+Voila! No `implements`, No repeating code. And it looks like [real mixins in ES6](http://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/).
 
-N.B.: actually declare one interface is TypeScript's limitation. But you can vote for removing this limitation [here](https://github.com/Microsoft/TypeScript/issues/10261).
-
+N.B.: Requires TypeScript 2.2.
 
 ## API
 
@@ -358,9 +355,8 @@ See source for more specific type.
   haveApple() { alert('I have an apple')}
 }
 
-interface PAMixed extends Pen, Apple {}
-
-@Component class ApplePen extends Mixin<PAMixed>(Apple, Pen) {
+// compiles under TS2.2
+@Component class ApplePen extends Mixin(Apple, Pen) {
   Uh() {
     this.havePen()
     this.haveApple()
