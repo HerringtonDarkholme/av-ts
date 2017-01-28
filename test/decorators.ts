@@ -54,7 +54,7 @@ class TestData extends Vue {
 describe('various decorators', () => {
   it('should handle lifecycle', () => {
     let opt = MyComponent['options']
-    expect(opt.beforeCreate).to.be.a('array')
+    expect(opt.beforeCreate).to.be.an('array')
     expect(opt).to.not.have.property('created')
     expect(opt.methods!['created']).to.be.a('function')
   })

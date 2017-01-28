@@ -6,7 +6,7 @@ describe('prop options', () => {
     let options = MyComponent['options']
     expect(options).to.haveOwnProperty('props')
     let props = options.props!
-    expect(props).to.be.a('object')
+    expect(props).to.be.an('object')
     expect(props).to.haveOwnProperty('myProp')
     expect(props).to.haveOwnProperty('complex')
     expect(props).to.haveOwnProperty('screwed')

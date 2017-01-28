@@ -6,7 +6,7 @@ describe('vue component', () => {
 
   it('should return a vue constructor', () => {
     expect(MyComponent).to.haveOwnProperty('options')
-    expect(MyComponent['options']).to.be.a('object')
+    expect(MyComponent['options']).to.be.an('object')
   })
 
   it('should new to a vue instance', () => {
@@ -24,7 +24,7 @@ describe('vue component', () => {
     expect(options).to.haveOwnProperty('data')
     expect(options.data).to.be.a('function')
     let data = (options.data as any)()
-    expect(data).to.be.a('object')
+    expect(data).to.be.an('object')
     expect(Object.keys(data)).to.be.eql(['myData', 'funcData', 'myWatchee'])
     expect(data['myData']).to.equal('123')
     expect(data['funcData']).to.be.a('function')
@@ -50,7 +50,7 @@ describe('vue component', () => {
     expect(options).to.haveOwnProperty('computed')
     expect(options.computed).to.haveOwnProperty('myGetter')
     let myGetter = options.computed!['myGetter']
-    expect(myGetter).to.be.a('object')
+    expect(myGetter).to.be.an('object')
     expect(myGetter).to.haveOwnProperty('get')
     expect(myGetter.get).to.be.a('function')
   })
@@ -65,7 +65,7 @@ describe('vue component', () => {
     let data = options.data()
     expect(data).to.haveOwnProperty('myArray')
     let myArray = data.myArray
-    expect(myArray).to.be.a('array')
+    expect(myArray).to.be.an('array')
     expect(myArray.push).to.be.a('function')
     expect(myArray).to.have.length(3)
     expect(myArray[0]).to.equal(1)
