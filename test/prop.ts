@@ -17,7 +17,7 @@ describe('prop options', () => {
     expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
   })
 
-  it('it should handle complex prop', () => {
+  it('should handle complex prop', () => {
     let props: any = MyComponent['options'].props
     let complex = props['complex']
     expect(complex['type']).to.equal(Object)
