@@ -54,8 +54,9 @@ class TestData extends Vue {
 describe('various decorators', () => {
   it('should handle lifecycle', () => {
     let opt = MyComponent['options']
+    opt.beforeCreate[0]()
     expect(opt.beforeCreate).to.be.an('array')
-    expect(opt).to.not.have.property('created')
+    // expect(opt).to.not.have.property('created')
     expect(opt.methods!['created']).to.be.a('function')
   })
 
@@ -106,6 +107,7 @@ describe('various decorators', () => {
     function cp(t: NumberConstructor): number {
       if (Component.inDefinition) {
         counter++
+        t['_$_'] = true
         return t as any
       }
       return undefined as any

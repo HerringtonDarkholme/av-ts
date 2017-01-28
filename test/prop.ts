@@ -17,6 +17,40 @@ describe('prop options', () => {
     expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
   })
 
+  it('should handle default value without p', () => {
+    let prop = MyComponent['options'].props['numberDefault']
+    expect(prop['type']).to.equal(Number)
+    expect(prop['default']).to.be.a('number')
+    expect(prop['required']).to.equal(false)
+  })
+
+  it('should handle required value without p', () => {
+    let prop = MyComponent['options'].props['numberRequired']
+    expect(prop['type']).to.equal(Number)
+    expect(prop['required']).to.equal(true)
+  })
+
+  it('should handle a function default value without p', () => {
+    let prop = MyComponent['options'].props['anotherDefault']
+    expect(prop['type']).to.equal(Number)
+    expect(prop['default']).to.be.a('function')
+    expect(prop['required']).to.not.equal(true)
+  })
+
+  it('should handle an actual function default value without p', () => {
+    let prop = MyComponent['options'].props['lala']
+    expect(prop['type']).to.equal(Function)
+    expect(prop['default']).to.be.a('function')
+    expect(prop['required']).to.not.equal(true)
+  })
+
+  it('should handle an object default value without p', () => {
+    let prop = MyComponent['options'].props['lolo']
+    expect(prop['type']).to.equal(Object)
+    expect(prop['default']).to.be.a('function')
+    expect(prop['required']).to.not.equal(true)
+  })
+
   it('should handle complex prop', () => {
     let props: any = MyComponent['options'].props
     let complex = props['complex']
@@ -51,8 +85,10 @@ describe('prop options', () => {
       propsData: {
         complex: {test: 123},
         required: 456,
+        numberRequired: 234
       }
     })
+    instance.myMethod()
     expect(instance.required).to.equal(456)
     expect(instance.complex['test']).to.equal(123)
   })

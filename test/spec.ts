@@ -1,6 +1,6 @@
 import {
   Component, Prop, Watch,
-  Lifecycle, p, Render, Vue
+  Lifecycle, p, Render, Vue, resultOf
 } from '../index'
 
 // import 'reflect-metadata'
@@ -48,21 +48,32 @@ export class MyComponent extends Vue {
     required: true,
   })
 
-  @Prop default = p({
+  @Prop default: number = p({
     default() {
       return 123
     }
   })
 
+  @Prop anotherDefault: number = resultOf(() => this.numberDefault)
+  @Prop numberDefault = 123
+  @Prop numberRequired: number
+  @Prop lala = function(a: number) {
+    return `${a}`
+  }
+  @Prop lolo = {
+    num: this.numberDefault
+  }
+
   @Prop screwed = p({
     type: Function,
-    // bug: TS cannot infer return type
     default(a: number) {
+      console.log('??')
       return false
     }
   })
 
   myMethod() {
+    // console.log(this)
   }
 
   get myGetter() {
@@ -85,8 +96,8 @@ export class MyComponent extends Vue {
 
   // lifecycle
   @Lifecycle beforeCreate() {}
-  // as method
-  created() {}
+
+  @Lifecycle created() {}
 
   @Render render(h: Function) {
     return h('h1', 'Daisuke')

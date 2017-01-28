@@ -5,6 +5,7 @@ import {Component} from './core'
 import {getReflectType, createMap} from './util'
 
 const PROP_KEY = '$$Prop' as $$Prop
+const PROP_MRK = '_$_'
 
 export function Prop(target: Vue, key: string): void {
   let propKeys: string[] = target[PROP_KEY] = target[PROP_KEY] || []
@@ -17,14 +18,31 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 
   for (let key of propKeys) {
     let prop: PropOptions = {}
-    if (instance[key] != null) {
+    if (instance[key] && instance[key][PROP_MRK]) {
+      delete instance[key][PROP_MRK]
       prop = instance[key]
       delete instance[key]
-    }
-    // refill type if not existing, do we need this?
-    if (!prop.type) {
+      if (!prop.type) {
+        prop.type = getReflectType(proto, key)
+      }
+    } else if (instance[key]) {
+      if (typeof instance[key] === 'object') {
+        prop.default = () => instance[key]
+      } else {
+        prop.default = instance[key]
+      }
+      prop.required = prop.default === undefined
+      try {
+        prop.type = Object.getPrototypeOf(instance[key]).constructor
+      } catch (error) {
+        prop.type = instance[key].__proto__ ? instance[key].__proto__.constructor : instance[key].constructor
+      }
+      delete instance[key]
+    } else {
+      prop.required = true
       prop.type = getReflectType(proto, key)
     }
+
     props[key] = prop
   }
   options.props = props
@@ -71,7 +89,19 @@ export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
     return undefined as any
   }
   if (typeof confOrType === 'function') {
-    return {type: confOrType} as any
+    return {type: confOrType, _$_: true} as any
   }
+  confOrType[PROP_MRK] = true
   return confOrType as any
+}
+
+export function resultOf<T>(fn: () => T): T {
+  if (!Component.inDefinition) {
+    return undefined as any
+  }
+
+  return {
+    default: fn,
+    [PROP_MRK]: true
+  } as any
 }

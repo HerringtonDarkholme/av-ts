@@ -1,4 +1,4 @@
-declare var Reflect: any
+import 'reflect-metadata'
 
 export function NOOP() {}
 
