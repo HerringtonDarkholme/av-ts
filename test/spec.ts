@@ -57,7 +57,7 @@ export class MyComponent extends Vue {
   @Prop screwed = p({
     type: Function,
     // bug: TS cannot infer return type
-    defaultFunc(a: number): boolean {
+    default(a: number) {
       return false
     }
   })

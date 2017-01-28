@@ -51,7 +51,7 @@ export interface RequiredProp<T> extends PlainProp<T> {
 // FuncPropOption is solely for bad API
 export interface FuncProp<T extends Function> {
   type?: FunctionConstructor,
-  defaultFunc?: T
+  default?: T
   required?: boolean
 }
 
@@ -71,14 +71,7 @@ export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
     return undefined as any
   }
   if (typeof confOrType === 'function') {
-    let tpe = confOrType
-    return {type: tpe} as any
+    return {type: confOrType} as any
   }
-  let conf: any = confOrType
-  if (conf.type === Function) {
-    conf.default = conf.defaultFunc
-    // TODO: evaluate copying a config rather than delete prop
-    delete conf.defaultFunc
-  }
-  return conf
+  return confOrType as any
 }
