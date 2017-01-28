@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Trait, Component, Mixin, Vue} from '../index'
+import {Trait, Component, Mix, Vue} from '../index'
 
 describe('util functions', () => {
 
@@ -18,7 +18,7 @@ describe('util functions', () => {
     }
     interface Mixed extends MA, MB {}
 
-    let Mixed = Mixin<Mixed>(MA, MB)
+    let Mixed = Mix<Mixed>(MA, MB)
     expect(Mixed).to.be.a('function')
     let options = Mixed['options']
     expect(options).to.haveOwnProperty('mixins')
@@ -44,7 +44,7 @@ describe('util functions', () => {
     interface M extends MA, MB {}
 
     @Component
-    class Mixed extends Mixin<M>(MA, MB) {
+    class Mixed extends Mix<M>(MA, MB) {
       data3 = 222
       m() {
         this.myMethod()
