@@ -89,7 +89,7 @@ export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
     return undefined as any
   }
   if (typeof confOrType === 'function') {
-    return {type: confOrType, _$_: true} as any
+    return {type: confOrType, [PROP_MRK]: true} as any
   }
   confOrType[PROP_MRK] = true
   return confOrType as any
