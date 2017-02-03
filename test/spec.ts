@@ -1,6 +1,6 @@
 import {
   Component, Prop, Watch,
-  Lifecycle, p, Render, Vue, resultOf
+  Lifecycle, Render, Vue, resultOf
 } from '../index'
 
 // import 'reflect-metadata'
@@ -33,26 +33,14 @@ export class MyComponent extends Vue {
     console.log('ひふみ')
   }
 
-  @Prop myProp = p(Function)
+  @Prop myProp: Function | null = null
 
-  @Prop complex = p({
-    type: Object,
-    required: true,
-    default() {
-      return {a: 123, b: 456}
-    }
-  })
+  @Prop({required: true})
+  complex = {a: 123, b: 456}
 
-  @Prop required = p({
-    type: Number,
-    required: true,
-  })
+  @Prop required: number
 
-  @Prop default: number = p({
-    default() {
-      return 123
-    }
-  })
+  @Prop default: number = 123
 
   @Prop anotherDefault: number = resultOf(() => this.numberDefault)
   @Prop numberDefault = 123
@@ -64,13 +52,7 @@ export class MyComponent extends Vue {
     num: this.numberDefault
   }
 
-  @Prop screwed = p({
-    type: Function,
-    default(a: number) {
-      console.log('??')
-      return false
-    }
-  })
+  @Prop screwed = (a: number) => false
 
   myMethod() {
     // console.log(this)

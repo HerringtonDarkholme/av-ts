@@ -1,7 +1,7 @@
 import {MyComponent} from './spec'
 import {expect} from 'chai'
 import {
-  Component, Data, Vue, Prop, p,
+  Component, Data, Vue, Prop,
   Watch
 } from '../index'
 
@@ -19,7 +19,7 @@ var globalCounter = 0
   }
 })
 class TestData extends Vue {
-  @Prop a = p(Number)
+  @Prop({required: false}) a: number
 
   c =  456
 
@@ -114,7 +114,7 @@ describe('various decorators', () => {
     }
     @Component
     class TestComponent extends Vue {
-      @Prop propValue = cp(Number)
+      @Prop propValue: number = cp(Number)
       normal = 'normal'
       test = new Test
       own = this.propValue + 1
