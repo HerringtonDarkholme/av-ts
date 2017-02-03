@@ -5,7 +5,7 @@ import {Component} from './core'
 import {getReflectType, createMap, objAssign} from './util'
 
 const PROP_KEY = '$$Prop' as $$Prop
-const PROP_MRK = '_$_'
+const PROP_DEF = '$$PropDefault' as $$Prop
 
 export type Constructor = new (...args: any[]) => any
 
@@ -42,36 +42,30 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 
   for (let key in mappedProps) {
     let prop: PropOptions = {}
-    if (instance[key] && instance[key][PROP_MRK]) {
-      delete instance[key][PROP_MRK]
-      prop = instance[key]
-      if (!prop.type) {
-        prop.type = getReflectType(proto, key)
-      }
-    } else if (instance[key]) {
-      if (typeof instance[key] === 'object') {
-        let obj = instance[key]
-        prop.default = () => objAssign({}, obj)
-      } else {
-        prop.default = instance[key]
-      }
-      prop.required = prop.default === undefined
-      try {
-        prop.type = Object.getPrototypeOf(instance[key]).constructor
-      } catch (error) {
-        prop.type = instance[key].__proto__ ? instance[key].__proto__.constructor : instance[key].constructor
-      }
-    } else if (instance[key] === null) {
-      prop.required = false
-      prop.type = getReflectType(proto, key)
-    } else {
-      prop.required = true
+
+    if (instance[key] && instance[key][PROP_DEF]) {
+      prop.default = instance[key][PROP_DEF]
       prop.type = getReflectType(proto, key)
     }
 
+    else if (instance[key] && typeof instance[key] === 'object') {
+      let obj = instance[key]
+      prop.default = () => objAssign({}, obj)
+      prop.type = Object
+    }
+
+    else {
+      prop.default = instance[key]
+      prop.type = instance[key]
+                ? Object.getPrototypeOf(instance[key]).constructor
+                : getReflectType(proto, key)
+    }
+
+    prop.required = instance[key] === undefined
     props[key] = objAssign({}, prop, mappedProps[key])
     delete instance[key]
   }
+
   options.props = props
 })
 
@@ -80,8 +74,5 @@ export function resultOf<T>(fn: () => T): T {
     return undefined as any
   }
 
-  return {
-    default: fn,
-    [PROP_MRK]: true
-  } as any
+  return { [PROP_DEF]: fn } as any
 }

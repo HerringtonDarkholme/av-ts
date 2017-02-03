@@ -14,7 +14,7 @@ describe('prop options', () => {
 
   it('should handle simple prop option', () => {
     let props = MyComponent['options'].props!
-    expect(props['myProp']).to.deep.equal({type: Function, required: false}, 'simple prop')
+    expect(props['myProp']).to.deep.equal({type: Function, required: false, default: null}, 'simple prop')
   })
 
   it('should handle default value without p', () => {

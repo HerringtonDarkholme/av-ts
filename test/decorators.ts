@@ -100,37 +100,6 @@ describe('various decorators', () => {
     expect(opt.watch.c.deep).to.equal(true)
   })
 
-  it('should handle various data initilization', () => {
-    class Test {}
-    var sharedObject = {}
-    var counter = 0
-    function cp(t: NumberConstructor): number {
-      if (Component.inDefinition) {
-        counter++
-        t['_$_'] = true
-        return t as any
-      }
-      return undefined as any
-    }
-    @Component
-    class TestComponent extends Vue {
-      @Prop propValue: number = cp(Number)
-      normal = 'normal'
-      test = new Test
-      own = this.propValue + 1
-      shared = sharedObject
-    }
-
-    let instance = new TestComponent({
-      propsData: {propValue: 123}
-    })
-    expect(instance.normal).to.equal('normal')
-    expect(instance.test).to.be.instanceOf(Test)
-    expect(instance.own).to.equal(124)
-    expect(instance.shared).to.equal(sharedObject)
-    expect(counter).to.equal(1)
-  })
-
   it('should make watch run', done => {
     let instance = new TestData({
       propsData: {b: 'test', a: 123}
