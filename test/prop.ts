@@ -22,13 +22,13 @@ describe('prop options', () => {
   it('should infer not required when a default value is given', () => {
     let prop = MyComponent['options'].props['defaultInfersNotRequired']
     expect(prop.default).to.exist
-    expect(prop.required).to.not.be.true
+    expect(prop.required).to.be.false
   })
 
   it('should infer not required when property is nullable', () => {
     let prop = MyComponent['options'].props['nullableSoNotRequired']
     expect(prop.default).to.be.null
-    expect(prop.required).to.not.be.true
+    expect(prop.required).to.be.false
   })
 
   it('should infer correct type from default value', () => {
@@ -74,7 +74,7 @@ describe('prop options', () => {
   it('should allow you to force a property to not be required', () => {
     let prop = MyComponent['options'].props['forcedNotRequired']
     expect(prop.default).to.not.exist
-    expect(prop.required).to.not.be.true
+    expect(prop.required).to.be.false
   })
 
   it('should allow you to overwrite the default using the decorator', () => {
@@ -84,6 +84,6 @@ describe('prop options', () => {
 
   it('should be able to work with multiple types using the decorator', () => {
     let prop = MyComponent['options'].props['multiTyped']
-    expect(prop.type).to.deep.equal([String, Number])
+    expect(prop.type).to.have.members([String, Number])
   })
 })
