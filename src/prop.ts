@@ -56,9 +56,9 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 
     else {
       prop.default = instance[key]
-      prop.type = instance[key]
-                ? Object.getPrototypeOf(instance[key]).constructor
-                : getReflectType(proto, key)
+      prop.type = instance[key] == null
+                ? getReflectType(proto, key)
+                : Object.getPrototypeOf(instance[key]).constructor
     }
 
     prop.required = instance[key] === undefined

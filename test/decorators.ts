@@ -54,10 +54,18 @@ class TestData extends Vue {
 describe('various decorators', () => {
   it('should handle lifecycle', () => {
     let opt = MyComponent['options']
-    opt.beforeCreate[0]()
-    expect(opt.beforeCreate).to.be.an('array')
-    // expect(opt).to.not.have.property('created')
-    expect(opt.methods!['created']).to.be.a('function')
+    expect(opt.created).to.be.an('array')
+    expect(opt.methods['created']).to.be.a('function')
+
+    let propsData = {
+      numberWithoutDefault: 123,
+      noDefaultInfersRequired: 456,
+      forcedRequired: 789
+    }
+
+    let a = new MyComponent({ propsData })
+
+    expect(a.lifecycleHooksCalled).to.equal(2)
   })
 
   it('should handle render', () => {

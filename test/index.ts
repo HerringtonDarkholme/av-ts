@@ -12,9 +12,9 @@ describe('vue component', () => {
   it('should new to a vue instance', () => {
     let a = new MyComponent({
       propsData: {
-        complex: {test: 123},
-        required: 456,
-        numberRequired: 234
+        numberWithoutDefault: 123,
+        noDefaultInfersRequired: 456,
+        forcedRequired: 789
       }
     })
     expect(a).to.be.instanceOf(Vue)
@@ -37,7 +37,7 @@ describe('vue component', () => {
     expect(options).to.haveOwnProperty('methods')
     expect(options.methods).to.have.ownProperty('myMethod')
     expect(options.methods!['myMethod']).to.be.a('function')
-    expect(Object.keys(options.methods)).to.be.eql(['myMethod', 'beforeCreate', 'created'])
+    expect(Object.keys(options.methods)).to.be.eql(['myMethod', 'created', 'initializeSomeStuff'])
   })
 
   it('should not have function data in methods', () => {
