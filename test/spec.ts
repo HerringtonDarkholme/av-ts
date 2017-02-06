@@ -68,7 +68,7 @@ export class MyComponent extends Vue {
   defaultOverwritten = 'this will be overwritten'
 
   @Prop(String, Number)
-  multiTyped = '1234'
+  multiTyped: string | number = '1234'
 
   myMethod() {
     // console.log(this)
