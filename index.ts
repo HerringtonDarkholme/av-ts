@@ -9,6 +9,7 @@ export {Watch} from './src/watch'
 export {Data} from './src/data'
 export * from './src/functions'
 export * from './src/aliases'
+export * from './src/context'
 
 export type CreateElement = typeof Vue.prototype.$createElement
 export { Vue }
