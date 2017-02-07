@@ -26,7 +26,7 @@ describe('vue component', () => {
     expect(options.data).to.be.a('function')
     let data = (options.data as any)()
     expect(data).to.be.an('object')
-    // expect(Object.keys(data)).to.be.eql(['myData', 'funcData', 'myWatchee'])
+    expect(Object.keys(data)).to.be.eql(['myData', 'lifecycleHooksCalled', 'funcData', 'myWatchee'])
     expect(data['myData']).to.equal('123')
     expect(data['funcData']).to.be.a('function')
   })

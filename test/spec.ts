@@ -26,6 +26,12 @@ declare module 'vue/types/options' {
   delimiters: ['{{', '}}'],
 })
 export class MyComponent extends Vue {
+  static components = {def: 'hello'}
+  
+  static method() {
+    console.log('do something...')
+  }
+
   myData = '123'
   lifecycleHooksCalled = 0
 

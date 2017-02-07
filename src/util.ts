@@ -37,3 +37,21 @@ export function objAssign<T, U, V>(target: T, source1: U, source2?: V): T & U & 
   }
   return <T & U & V>target
 }
+
+export const makeObject = (obj: any) => (key: string) => ({ [key]: obj[key] })
+
+export module global {
+Array.prototype.diff =
+  function<T>(this: T[], list: any[]): T[] {
+    return this.filter( elem => list.indexOf(elem) === -1)
+  }
+
+Array.prototype.mapToObject =
+  function<T>(this: T[], transform: (obj: any) => any): any {
+    let transformed: any = {}
+    for (let elem of this) {
+      objAssign(transformed, transform(elem))
+    }
+    return transformed
+  }
+}
