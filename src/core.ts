@@ -19,7 +19,7 @@ import {
   ComponentOptions, $$Prop,
 } from './interface'
 
-import {createMap, hasOwn, NOOP} from './util'
+import {createMap, hasOwn, NOOP, objAssign} from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
@@ -81,36 +81,19 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
   }
 }
 
-const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
-function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
+function collectData(instance: Vue, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
   // already implemented by @Data
   if (optionsToWrite.data) return
-  // what a closure! :(
-  optionsToWrite.data = function(this: Vue) {
-    let selfData = {}
-    let vm = this
-    // _init is the only method required for `cls` call
-    // for not data property, set as a readonly prop
-    // so @Prop does not rewrite it to undefined
-    cls.prototype._init = function(this: Vue) {
-      for (let key of Object.keys(vm)) {
-        if (keys.indexOf(key) >= 0) continue
-        Object.defineProperty(this, key, {
-          get: () => vm[key],
-          set: NOOP
-        })
-      }
-    }
-    let proxy = new cls()
-    for (let key of keys) {
-      if (VUE_KEYS.indexOf(key) === -1) {
-        selfData[key] = proxy[key]
-      }
-    }
-    return selfData
+
+  let obj: any = {}
+
+  for (let key of keys) {
+    obj[key] = instance[key]
   }
+
+  optionsToWrite.data = () => objAssign({}, obj)
 }
 
 // find proto's superclass' constructor to correctly extend
@@ -153,7 +136,7 @@ function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
     }
 
     // everything on instance is packed into data
-    collectData(cls, Object.keys(instance), options)
+    collectData(instance, Object.keys(instance), options)
 
     let Super = findSuper(proto)
     return Super.extend(options)
