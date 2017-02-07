@@ -94,7 +94,7 @@ function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: Component
     // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
-    cls.prototype._init = function(this: Vue) {
+    cls.prototype._init = !vm ? NOOP : function(this: Vue) {
       for (let key of Object.keys(vm)) {
         if (keys.indexOf(key) >= 0) continue
         Object.defineProperty(this, key, {
@@ -127,10 +127,6 @@ function findSuper(proto: Object): VClass<Vue> {
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
-    // let instance = Object.create(cls.prototype)
-    // Object.defineProperty(instance, '_init', {
-    //   value: NOOP, enumerable: false
-    // })
     cls.prototype._init = NOOP
     let instance: Vue = null as any
     try {
