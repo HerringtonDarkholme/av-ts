@@ -1,6 +1,6 @@
 {
   "name": "av-ts",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Awesome Vue2.0's for TypeScript2.0",
   "main": "./dist/index.js",
   "scripts": {
@@ -26,11 +26,11 @@
     "mocha": "^3.0.2",
     "reflect-metadata": "^0.1.9",
     "typescript": "rc",
-    "vue": "^2.0.3",
+    "vue": "^2.1.0",
     "vuex": "^2.1.2"
   },
   "peerDependencies": {
-    "vue": "^2.0.3",
+    "vue": "^2.1.0",
     "vuex": "^2.1.2"
   }
 }
