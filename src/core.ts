@@ -111,7 +111,7 @@ function collectData(cls: VClass<Vue>, instance: Vue, keys: string[], optionsToW
     // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
-    cls.prototype._init = !vm ? NOOP : function(this: Vue) {
+    cls.prototype._init = function(this: Vue) {
       for (let key of Object.keys(vm)) {
         if (keys.indexOf(key) >= 0) continue
         Object.defineProperty(this, key, {
