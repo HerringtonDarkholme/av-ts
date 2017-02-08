@@ -14,13 +14,6 @@ export function Prop(...types: Constructor[]): PropDec
 export function Prop(options: PropOptions): PropDec
 export function Prop(target: Vue, key: string): void
 export function Prop(target: Vue | Constructor, key?: string | Constructor, ...types: Constructor[]): PropDec | void {
-  function makePropDecorator(options: PropOptions = {}): PropDec {
-    return (target: Vue, key: string) => {
-      let propKeys: {[key: string]: PropOptions} = target[PROP_KEY] = target[PROP_KEY] || {}
-      propKeys[key] = options
-    }
-  }
-
   if (target instanceof Vue && typeof key === 'string') {
     return makePropDecorator()(target, key)
   }
@@ -34,6 +27,13 @@ export function Prop(target: Vue | Constructor, key?: string | Constructor, ...t
   }
 
   return makePropDecorator(target)
+}
+
+function makePropDecorator(options: PropOptions = {}): PropDec {
+  return (target: Vue, key: string) => {
+    let propKeys: {[key: string]: PropOptions} = target[PROP_KEY] = target[PROP_KEY] || {}
+    propKeys[key] = options
+  }
 }
 
 Component.register(PROP_KEY, function(proto, instance, options) {
