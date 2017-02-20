@@ -50,7 +50,7 @@ npm run dev
 
 ```typescript
 import {
-  Component, Prop, Watch, Lifecycle,
+  Component, Prop, Watch, Lifecycle, p
 } from 'av-ts'
 
 // vue options in `Component` decorator
