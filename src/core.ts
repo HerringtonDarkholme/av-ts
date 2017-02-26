@@ -90,12 +90,13 @@ function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: Component
   // what a closure! :(
   optionsToWrite.data = function(this: Vue) {
     let selfData = {}
-    let vm = this.$props
+    let vm = this
+    let insKeys = Object.keys(vm).concat(Object.keys(vm.$props || {}))
     // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
     cls.prototype._init = !vm ? NOOP : function(this: Vue) {
-      for (let key of Object.keys(vm)) {
+      for (let key of insKeys) {
         if (keys.indexOf(key) >= 0) continue
         Object.defineProperty(this, key, {
           get: () => vm[key],
