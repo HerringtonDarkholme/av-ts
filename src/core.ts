@@ -90,7 +90,7 @@ function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: Component
   // what a closure! :(
   optionsToWrite.data = function(this: Vue) {
     let selfData = {}
-    let vm = this
+    let vm = this.$props
     // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
