@@ -1,4 +1,4 @@
-import Vue = require('vue')
+import Vue from 'vue'
 import {$$Prop} from './interface'
 import {Component} from './core'
 import {createMap} from './util'

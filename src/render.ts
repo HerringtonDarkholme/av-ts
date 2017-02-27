@@ -1,4 +1,4 @@
-import Vue = require('vue')
+import Vue from 'vue'
 import {VNode, $$Prop} from './interface'
 import {Component} from './core'
 

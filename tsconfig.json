@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "es6",
         "target": "es5",
+        "moduleResolution": "node",
         "noImplicitAny": true,
         "noImplicitThis": true,
         "noImplicitReturns": true,
@@ -11,9 +12,9 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "suppressImplicitAnyIndexErrors": true,
+        "allowSyntheticDefaultImports": true,
         "declaration": true,
         "stripInternal": true,
-        "outDir": "./dist",
         "lib": ["es5", "es2015.promise", "dom"]
     },
     "exclude": [
