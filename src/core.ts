@@ -19,7 +19,7 @@ import {
   ComponentOptions, $$Prop,
 } from './interface'
 
-import {createMap, hasOwn, NOOP} from './util'
+import { createMap, hasOwn, NOOP, objAssign, makeObject } from './util'
 
 // option is a full-blown Vue compatible option
 // meta is vue.ts specific type for annotation, a subset of option
@@ -36,10 +36,16 @@ function makeOptionsFromMeta(meta: ComponentOptions<Vue>, name: string): Compone
 // given a vue class' prototype, return its internalKeys and normalKeys
 // internalKeys are for decorators' use, like $$Prop, $$Lifecycle
 // normalKeys are for methods / computed property
-function getKeys(proto: Vue) {
-  let protoKeys = Object.getOwnPropertyNames(proto)
+function getKeys(cls: VClass<Vue>, Super: VClass<Vue>) {
+  let proto = cls.prototype
+
+  let [clsKeys, protoKeys, superKeys]
+    = [cls, proto, Super].map(Object.getOwnPropertyNames)
+
   let internalKeys: $$Prop[] = []
   let normalKeys: string[] = []
+  let optionKeys: string[] = clsKeys.diff(superKeys)
+
   for (let key of protoKeys) {
     if (key === 'constructor') {
       continue
@@ -49,12 +55,13 @@ function getKeys(proto: Vue) {
       normalKeys.push(key)
     }
   }
+
   return {
-    internalKeys, normalKeys
+    internalKeys, normalKeys, optionKeys
   }
 }
 
-let registeredProcessors = createMap<DecoratorProcessor|undefined>()
+let registeredProcessors = createMap<DecoratorProcessor | undefined>()
 
 // delegate to processor
 function collectInternalProp(propKey: $$Prop, proto: Vue, instance: Vue, optionsToWrite: ComponentOptions<Vue>) {
@@ -81,21 +88,31 @@ function collectMethodsAndComputed(propKey: string, proto: Object, optionsToWrit
   }
 }
 
-const VUE_KEYS = Object.keys(new Vue)
 // find all undeleted instance property as the return value of data()
 // need to remove Vue keys to avoid cyclic references
-function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
+function collectData(cls: VClass<Vue>, instance: Vue, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
   // already implemented by @Data
   if (optionsToWrite.data) return
+
+  let obj = createMap<any>()
+
+  for (let key of keys) {
+    obj[key] = instance[key]
+  }
+
   // what a closure! :(
-  optionsToWrite.data = function(this: Vue) {
+  optionsToWrite.data = function (this: Vue) {
+    if (this === undefined) {
+      return objAssign({}, obj)
+    }
+
     let selfData = {}
     let vm = this
     let insKeys = Object.keys(vm).concat(Object.keys(vm.$props || {}))
     // _init is the only method required for `cls` call
     // for not data property, set as a readonly prop
     // so @Prop does not rewrite it to undefined
-    cls.prototype._init = !vm ? NOOP : function(this: Vue) {
+    cls.prototype._init = function (this: Vue) {
       for (let key of insKeys) {
         if (keys.indexOf(key) >= 0) continue
         Object.defineProperty(this, key, {
@@ -106,9 +123,7 @@ function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: Component
     }
     let proxy = new cls()
     for (let key of keys) {
-      if (VUE_KEYS.indexOf(key) === -1) {
-        selfData[key] = proxy[key]
-      }
+      selfData[key] = proxy[key]
     }
     return selfData
   }
@@ -125,6 +140,10 @@ function findSuper(proto: Object): VClass<Vue> {
   return Super
 }
 
+function collectOptions(cls: VClass<Vue>, keys: string[], optionsToWrite: ComponentOptions<Vue>) {
+  optionsToWrite = objAssign({}, keys.mapToObject(makeObject(cls)), optionsToWrite)
+}
+
 function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
@@ -137,9 +156,10 @@ function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
     }
     delete cls.prototype._init
     let proto = cls.prototype
+    let Super = findSuper(proto)
     let options = makeOptionsFromMeta(meta, cls['name'])
 
-    let {internalKeys, normalKeys} = getKeys(proto)
+    let { internalKeys, normalKeys, optionKeys } = getKeys(cls, Super)
 
     for (let protoKey of internalKeys) {
       collectInternalProp(protoKey, proto, instance, options)
@@ -150,9 +170,9 @@ function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
     }
 
     // everything on instance is packed into data
-    collectData(cls, Object.keys(instance), options)
+    collectData(cls, instance, Object.keys(instance), options)
+    collectOptions(cls, optionKeys, options)
 
-    let Super = findSuper(proto)
     return Super.extend(options)
   }
   return decorate

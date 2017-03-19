@@ -24,12 +24,15 @@
     "@types/mocha": "^2.2.31",
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
+    "reflect-metadata": "^0.1.9",
     "ts-loader": "^2.0.1",
     "typescript": "^2.2.0",
     "vue": "^2.2.0",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "vuex": "^2.2.1"
   },
   "peerDependencies": {
-    "vue": "^2.2.0"
+    "vue": "^2.2.0",
+    "vuex": "^2.2.1"
   }
 }
