@@ -11,7 +11,8 @@ export type Lifecycles =
   'beforeDestroy' | 'destroyed' |
   'beforeMount' | 'mounted' |
   'beforeUpdate' | 'updated' |
-  'activated' | 'deactivated'
+  'activated' | 'deactivated' |
+  'beforeRouteEnter' | 'beforeRouteLeave' | 'beforeRouteUpdate'
 
 export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
