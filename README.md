@@ -246,13 +246,13 @@ properyBeingWatched = 123
 @Watch('properyBeingWatched', {deep: true})
 handler(newVal, oldVal) {
   console.log('the delta is ' + (newVal - oldVal))
-})
+}
 
 // the key path length is 4 at most
 @Watch(['nested', 'path', 'property'])
 handler(newVal, oldVal) {
   console.log('the delta is ' + (newVal - oldVal))
-})
+}
 // ....
 ```
 
