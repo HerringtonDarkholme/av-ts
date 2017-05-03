@@ -157,7 +157,7 @@ describe('various decorators', () => {
     })
   })
 
-  it('should watch nested optional prop', done => {
+  it('should watch nested optional prop', () => {
     type Type = {
       prop?: number;
     }
