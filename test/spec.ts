@@ -1,9 +1,7 @@
 import {
   Component, Prop, Watch,
-  Lifecycle, p, Render, Vue
+  Lifecycle, Render, Vue, resultOf
 } from '../index'
-
-// import 'reflect-metadata'
 
 
 @Component
@@ -28,45 +26,62 @@ declare module 'vue/types/options' {
   delimiters: ['{{', '}}'],
 })
 export class MyComponent extends Vue {
+  static components = {def: 'hello'}
+  
+  static method() {
+    console.log('do something...')
+  }
+
   myData = '123'
+  lifecycleHooksCalled = 0
+
   funcData = function() {
     console.log('ひふみ')
   }
 
-  @Prop myProp = p(Function)
+  @Prop numberWithoutDefault: number
+  @Prop noDefaultInfersRequired: number
+  @Prop defaultInfersNotRequired = 'Hello World!'
+  @Prop nullableSoNotRequired: boolean | null = null
+  @Prop countIncrementedByFunctionDefaultProp = 0
 
-  @Prop complex = p({
-    type: Object,
-    required: true,
-    default() {
-      return {a: 123, b: 456}
+  @Prop functionType = (a: number) => a === 5
+
+  /**
+   * This function only runs when
+   * no input value was given
+   */
+  @Prop functionDefault: number = resultOf(
+    function(this: MyComponent) {
+      return this.countIncrementedByFunctionDefaultProp++
     }
-  })
+  )
 
-  @Prop required = p({
-    type: Number,
-    required: true,
-  })
+  /**
+   * This object will be placed in a function
+   * and cloned for every new instance,
+   * so no worries about shared state
+   */
+  @Prop objectDefault = {a: 123, b: 456}
 
-  @Prop default = p({
-    default() {
-      return 123
-    }
-  })
+  @Prop({required: true})
+  forcedRequired = 123
 
-  @Prop screwed = p({
-    type: Function,
-    // bug: TS cannot infer return type
-    defaultFunc(a: number): boolean {
-      return false
-    }
-  })
+  @Prop({required: false})
+  forcedNotRequired: number
+
+  @Prop({default: 'overwritten'})
+  defaultOverwritten = 'this will be overwritten'
+
+  @Prop(String, Number)
+  multiTyped: string | number = '1234'
 
   myMethod() {
+    // console.log(this)
   }
 
   get myGetter() {
-    return this.myProp
+    return this.myData
   }
 
   myWatchee = 'watch me!'
@@ -83,10 +98,14 @@ export class MyComponent extends Vue {
   }
   $el: HTMLDivElement
 
-  // lifecycle
-  @Lifecycle beforeCreate() {}
-  // as method
-  created() {}
+  @Lifecycle created() {
+    this.lifecycleHooksCalled++
+  }
+
+  @Lifecycle('created')
+  initializeSomeStuff() {
+    this.lifecycleHooksCalled++
+  }
 
   @Render render(h: Function) {
     return h('h1', 'Daisuke')

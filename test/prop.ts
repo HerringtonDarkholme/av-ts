@@ -2,58 +2,88 @@ import {MyComponent} from './spec'
 import {expect} from 'chai'
 
 describe('prop options', () => {
-  it('should have prop suboptions in options', () => {
-    let options = MyComponent['options']
-    expect(options).to.haveOwnProperty('props')
-    let props = options.props!
-    expect(props).to.be.a('object')
-    expect(props).to.haveOwnProperty('myProp')
-    expect(props).to.haveOwnProperty('complex')
-    expect(props).to.haveOwnProperty('screwed')
+  let propsData: any = {
+    numberWithoutDefault: 123,
+    noDefaultInfersRequired: 456,
+    forcedRequired: 789
+  }
+
+  it('should infer the correct type using reflection', () => {
+    let prop = MyComponent['options'].props['numberWithoutDefault']
+    expect(prop.type).to.equal(Number)
   })
 
-  it('should handle simple prop option', () => {
-    let props = MyComponent['options'].props!
-    expect(props['myProp']).to.deep.equal({type: Function}, 'simple prop')
+  it('should infer required when no default value is given', () => {
+    let prop = MyComponent['options'].props['noDefaultInfersRequired']
+    expect(prop.default).to.be.undefined
+    expect(prop.required).to.be.true
   })
 
-  it('it should handle complex prop', () => {
-    let props: any = MyComponent['options'].props
-    let complex = props['complex']
-    expect(complex['type']).to.equal(Object)
-    expect(complex['required']).to.equal(true)
-    expect(complex['default']).to.be.a('function')
-    let defaultProp1 = complex['default']()
-    expect(defaultProp1).to.deep.equal({a: 123, b: 456})
-    let defaultProp2 = complex['default']()
-    expect(defaultProp2).to.deep.equal({a: 123, b: 456}, 'idempotency')
-    expect(defaultProp1).to.not.equal(defaultProp2)
+  it('should infer not required when a default value is given', () => {
+    let prop = MyComponent['options'].props['defaultInfersNotRequired']
+    expect(prop.default).to.exist
+    expect(prop.required).to.be.false
   })
 
-  it('should handle prop for function', () => {
-    let props: any = MyComponent['options'].props
-    let screwed = props['screwed']
-    expect(screwed['type']).to.equal(Function)
-    expect(screwed['default']).to.be.a('function')
-    expect(screwed).to.not.haveOwnProperty('defaultFunc')
-    expect(screwed['defaultFunc']).to.equal(undefined)
+  it('should infer not required when property is nullable', () => {
+    let prop = MyComponent['options'].props['nullableSoNotRequired']
+    expect(prop.default).to.be.null
+    expect(prop.required).to.be.false
   })
 
-  it('should not set in data options', () => {
-    let data = MyComponent['options'].data!
-    expect(data).to.not.have.property('myProp')
-    expect(data).to.not.have.property('complex')
-    expect(data).to.not.have.property('screwed')
+  it('should infer correct type from default value', () => {
+    let prop = MyComponent['options'].props['countIncrementedByFunctionDefaultProp']
+    expect(prop.type).to.equal(Number)
   })
 
-  it('should new instance', () => {
-    let instance = new MyComponent({
-      propsData: {
-        complex: {test: 123},
-        required: 456,
-      }
-    })
-    expect(instance.required).to.equal(456)
-    expect(instance.complex['test']).to.equal(123)
+  it('should assign function type to props with function default values', () => {
+    let prop = MyComponent['options'].props['functionType']
+    expect(prop.default).to.be.a('function')
+    expect(prop.type).to.equal(Function)
+  })
+
+  it('should only call the function in resultOf() when it needs the default value', () => {
+    let a = new MyComponent({ propsData })
+
+    expect(a.functionDefault).to.equal(0)
+    expect(a.countIncrementedByFunctionDefaultProp).to.equal(1)
+
+    propsData.functionDefault = 4
+
+    let b = new MyComponent({ propsData })
+
+    expect(b.functionDefault).to.equal(4)
+    expect(b.countIncrementedByFunctionDefaultProp).to.equal(0)
+  })
+
+  it('should put an object default value in a function to return a different object for each instance', () => {
+    let prop = MyComponent['options'].props['objectDefault']
+    expect(prop.type).to.be.a('function')
+
+    let a = new MyComponent({ propsData })
+    let b = new MyComponent({ propsData })
+    expect(a.objectDefault).to.not.equal(b.objectDefault)
+  })
+
+  it('should allow you to force a property to be required', () => {
+    let prop = MyComponent['options'].props['forcedRequired']
+    expect(prop.default).to.exist
+    expect(prop.required).to.be.true
+  })
+
+  it('should allow you to force a property to not be required', () => {
+    let prop = MyComponent['options'].props['forcedNotRequired']
+    expect(prop.default).to.not.exist
+    expect(prop.required).to.be.false
+  })
+
+  it('should allow you to overwrite the default using the decorator', () => {
+    let prop = MyComponent['options'].props['defaultOverwritten']
+    expect(prop.default).to.equal('overwritten')
+  })
+
+  it('should be able to work with multiple types using the decorator', () => {
+    let prop = MyComponent['options'].props['multiTyped']
+    expect(prop.type).to.have.members([String, Number])
   })
 })

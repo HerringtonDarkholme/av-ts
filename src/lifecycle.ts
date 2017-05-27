@@ -14,17 +14,42 @@ export type Lifecycles =
   'activated' | 'deactivated' |
   'beforeRouteEnter' | 'beforeRouteLeave' | 'beforeRouteUpdate'
 
-export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
-  let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
-  lifecycles[life] = true
+export type LifecycleDecorator = (target: Vue, method: string) => void
+export function Lifecycle(life: Lifecycles): LifecycleDecorator
+export function Lifecycle(target: Vue, life: Lifecycles): void
+export function Lifecycle(target: Vue | Lifecycles, life?: Lifecycles): LifecycleDecorator | void {
+  function makeDecorator(life: Lifecycles): LifecycleDecorator {
+    return (target: Vue, method: string) => {
+      let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
+      lifecycles[life] = lifecycles[life] || []
+      lifecycles[life].push(method)
+    }
+  }
+
+  if (target instanceof Vue) {
+    return makeDecorator(life!)(target, life!)
+  } else {
+    return makeDecorator(target)
+  }
 }
 
 Component.register(LIFECYCLE_KEY, function(proto, instance, options) {
-  let lifecycles: string[] = proto[LIFECYCLE_KEY]
+  let lifecycles: string[][] = proto[LIFECYCLE_KEY]
   for (let lifecycle in lifecycles) {
     // lifecycles must be on proto because internalKeys is processed before method
-    let handler = proto[lifecycle]
-    delete proto[lifecycle]
-    options[lifecycle] = handler
+    let methods: string[] = lifecycles[lifecycle]
+    // delete proto[lifecycle]
+    options[lifecycle] = function(this: Vue) {
+      // console.log(this)
+      methods.forEach( method => {
+        // this[method] does not exist on beforeCreate
+        if (this[method]) {
+          this[method]()
+        } else if (this['$options']) {
+          // but maybe we could just always do this one?
+          this['$options'].methods![method].bind(this)()
+        }
+      })
+    }
   }
 })
