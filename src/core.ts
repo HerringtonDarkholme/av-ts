@@ -13,7 +13,7 @@
  * preventing meta properties like lifecycle and prop to pollute `method` and `data`
  */
 
-import Vue from 'vue'
+import * as Vue from 'vue'
 import {
   VClass, DecoratorProcessor,
   ComponentOptions, $$Prop,
@@ -125,7 +125,7 @@ function findSuper(proto: Object): VClass<Vue> {
   return Super
 }
 
-function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
+function Component_(meta: ComponentOptions<Vue> = {}) {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
     cls.prototype._init = NOOP
@@ -160,7 +160,7 @@ function Component_(meta: ComponentOptions<Vue> = {}): ClassDecorator {
 
 export function Component<T extends VClass<Vue>>(ctor: T): T
 export function Component(config?: ComponentOptions<Vue>): <T extends VClass<Vue>>(ctor: T) => T
-export function Component(target: ComponentOptions<Vue> | VClass<Vue>): any {
+export function Component(target?: ComponentOptions<Vue> | VClass<Vue>): any {
   if (typeof target === 'function') {
     return Component_()(target)
   }

@@ -12,7 +12,6 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "suppressImplicitAnyIndexErrors": true,
-        "allowSyntheticDefaultImports": true,
         "declaration": true,
         "stripInternal": true,
         "lib": ["es5", "es2015.promise", "dom"]
