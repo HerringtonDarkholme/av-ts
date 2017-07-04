@@ -348,7 +348,6 @@ See source for more specific type.
 [Example](https://www.youtube.com/watch?v=PfHmMpWrCBA):
 
 ```typescript
-declare interface ApplePenTrait extends Pen, Apple {}
 @Trait class Pen extends Vue {
   havePen() { alert('I have a pen')}
 }
@@ -357,7 +356,7 @@ declare interface ApplePenTrait extends Pen, Apple {}
 }
 
 // compiles under TS2.2
-@Component class ApplePen extends Mixin<ApplePenTrait>(Apple, Pen) {
+@Component class ApplePen extends Mixin<Apple & Pen>(Apple, Pen) {
   Uh() {
     this.havePen()
     this.haveApple()
