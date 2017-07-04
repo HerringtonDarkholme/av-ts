@@ -90,5 +90,22 @@ describe('vue component', () => {
 
   })
 
+  it('should support static property', () => {
+    @Component
+    class A extends Vue {
+      static field = 123
+      static method() {
+        return 456
+      }
+      method() {
+        return A.method() + A.field
+      }
+    }
+    expect(A.field).to.equal(123)
+    expect(A.method()).to.equal(456)
+    const instance = new A()
+    expect(instance.method()).to.equal(579)
+  })
+
 })
 

@@ -125,6 +125,8 @@ function findSuper(proto: Object): VClass<Vue> {
   return Super
 }
 
+const BUILTIN = ['name', 'length', 'prototype']
+
 function Component_(meta: ComponentOptions<Vue> = {}) {
   function decorate(cls: VClass<Vue>): VClass<Vue> {
     Component.inDefinition = true
@@ -153,7 +155,12 @@ function Component_(meta: ComponentOptions<Vue> = {}) {
     collectData(cls, Object.keys(instance), options)
 
     let Super = findSuper(proto)
-    return Super.extend(options)
+    let ret = Super.extend(options)
+    let statics = Object.getOwnPropertyNames(cls).filter(k => BUILTIN.indexOf(k) < 0)
+    for (let key of statics) {
+      ret[key] = cls[key]
+    }
+    return ret
   }
   return decorate
 }
