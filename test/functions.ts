@@ -16,9 +16,8 @@ describe('util functions', () => {
       data2 = 456
       myMethod2() {}
     }
-    interface Mixed extends MA, MB {}
 
-    let Mixed = Mixin<Mixed>(MA, MB)
+    let Mixed = Mixin(MA, MB)
     expect(Mixed).to.be.a('function')
     let options = Mixed['options']
     expect(options).to.haveOwnProperty('mixins')
@@ -41,10 +40,8 @@ describe('util functions', () => {
       myMethod2() {}
     }
 
-    interface M extends MA, MB {}
-
     @Component
-    class Mixed extends Mixin<M>(MA, MB) {
+    class Mixed extends Mixin(MA, MB) {
       data3 = 222
       m() {
         this.myMethod()

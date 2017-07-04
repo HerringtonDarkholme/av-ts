@@ -8,7 +8,7 @@ import {ComponentOptions, FunctionalComponentOptions} from 'vue/types/options'
 export {ComponentOptions} from 'vue/types/options'
 
 export type Hash<V> = {[k: string]: V}
-export type VClass<T extends Vue> = {
+export type VClass<T> = {
   new(): T
   extend(option: ComponentOptions<Vue> | FunctionalComponentOptions): typeof Vue
 }
