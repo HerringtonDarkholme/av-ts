@@ -201,7 +201,7 @@ An alias of `Component`,used for defining Vue traits to be mixed in.
 At runtime, these decorators transform constructor to vue option and then feed to `Vue.extend`.
 So there is no semantic difference between `Component` and `Trait`. Placing `Component` on a class to be used as mixin just feels too strange. This alias is solely for API aesthetic.
 
-To use a `Trait`, declare a class that extends `Mixin<MixedInterface>(...Traits)`. See example in `Mixin` section.
+To use a `Trait`, declare a class that extends `Mixin(...Traits)`. See example in `Mixin` section.
 
 ## Property Decorators
 ----
@@ -338,7 +338,9 @@ has roughly type: `<V>(parentConstructor: typeof Vue, ...traitConstructor: (type
 
 a function to mix all `Trait`s decorated constructors into one Vue constructor.
 
-To use Mixin correctly, you need to declare one interface to extend all traits you need. Then pass it as a generic type argument to `Mixin<MixedInterface>(...traits)`. This is TypeScript's limitation.
+~~To use Mixin correctly, you need to declare one interface to extend all traits you need. Then pass it as a generic type argument to `Mixin<MixedInterface>(...traits)`. This is TypeScript's limitation.~~
+
+In new version, you can just use `Mixin(trait1, trait2)`. Note: Mixin supports at most four traits. More traits requires manuall type argument annotation.
 
 It's return value is `parentConstructor.extend({mixins: traitConstructor})`: extending the first trait as parentConstructor and pack all remaining traits in `mixins` option.
 
@@ -348,7 +350,6 @@ See source for more specific type.
 [Example](https://www.youtube.com/watch?v=PfHmMpWrCBA):
 
 ```typescript
-declare interface ApplePenTrait extends Pen, Apple {}
 @Trait class Pen extends Vue {
   havePen() { alert('I have a pen')}
 }
@@ -357,7 +358,7 @@ declare interface ApplePenTrait extends Pen, Apple {}
 }
 
 // compiles under TS2.2
-@Component class ApplePen extends Mixin<ApplePenTrait>(Apple, Pen) {
+@Component class ApplePen extends Mixin(Apple, Pen) {
   Uh() {
     this.havePen()
     this.haveApple()
@@ -396,6 +397,21 @@ var ApplePen = Mixin.extend({
 ```
 
 Implementing `PineapplePen` and `PenPineappleApplePen` is left for exercise.
+
+
+Explicit annotation example:
+
+```ts
+// Five traits and more reuire explicit annotation
+interface GodLike extends FirstBlood, DoubleKill, KillingSpree, Rampage, Unstoppable {}
+
+@Component
+class LegendaryClass extends Mixin<GodLike>(FirstBlood, DoubleKill, KillingSpree, Rampage, Unstoppable) {
+  dominate() {
+    console.log('Mooooooooonster Kill')
+  }
+}
+```
 
 
 ### Component.register

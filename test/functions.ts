@@ -55,4 +55,33 @@ describe('util functions', () => {
     expect(instance.myMethod).to.be.a('function')
     expect(instance.myMethod2).to.be.a('function')
   })
+
+  it('more traits', () => {
+    @Trait class A extends Vue {
+      a = 1
+    }
+    @Trait class B extends Vue {
+      b = 2
+    }
+    @Trait class C extends Vue {
+      c = 3
+    }
+    @Trait class D extends Vue {
+      d = 4
+    }
+    @Trait class E extends Vue {
+      e = 5
+    }
+
+    interface M extends A, B, C, D, E {}
+
+    @Component
+    class Mixed extends Mixin<M>(A, B, C, D, E) {}
+    let instance = new Mixed
+    expect(instance.a).to.equal(1)
+    expect(instance.b).to.equal(2)
+    expect(instance.c).to.equal(3)
+    expect(instance.d).to.equal(4)
+    expect(instance.e).to.equal(5)
+  })
 })
