@@ -31,7 +31,7 @@ Component.register(PROP_KEY, function(proto, instance, options) {
 })
 
 
-export type Class<T> = {new (...args: {}[]): T}
+export type Class<T> = {['@@vueTag']: T} | {new (...args: any[]): T & object}
 
 export interface PlainProp<T> {
   type?: Class<T>
@@ -58,15 +58,12 @@ export interface FuncProp<T extends Function> {
 // we cast arugment's config object type into plain data object type
 // say, p(Number) has a return type of `number`, but at runtime it is
 // {type: Number}. This is solely for API user's conciseness
-export function p<T>(tpe: NumberConstructor): number | undefined
-export function p<T>(tpe: StringConstructor): string | undefined
-export function p<T>(tpe: BooleanConstructor): boolean | undefined
 export function p<T>(tpe: Class<T>): T | undefined
 export function p<T>(conf: RequiredProp<T>): T
 export function p<T>(conf: DefaultProp<T>): T
 export function p<T>(conf: PlainProp<T>): T | undefined
 export function p<T extends Function>(conf: FuncProp<T>): T
-export function p<T>(confOrType: Class<T> | PlainProp<T>): T {
+export function p<T>(confOrType: any): T {
   if (!Component.inDefinition) {
     return undefined as any
   }

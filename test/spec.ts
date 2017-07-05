@@ -33,9 +33,12 @@ export class MyComponent extends Vue {
     console.log('ひふみ')
   }
 
+  @Prop plain = p({type: Number})
+  @Prop plain2 = p(String)
+
   @Prop myProp = p(Function)
 
-  @Prop complex = p({
+  @Prop complex = p<Object>({
     type: Object,
     required: true,
     default() {
