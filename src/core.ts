@@ -13,7 +13,7 @@
  * preventing meta properties like lifecycle and prop to pollute `method` and `data`
  */
 
-import * as Vue from 'vue'
+import Vue from 'vue'
 import {
   VClass, DecoratorProcessor,
   ComponentOptions, $$Prop,

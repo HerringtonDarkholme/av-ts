@@ -11,6 +11,7 @@
         "sourceMap": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "allowSyntheticDefaultImports": true,
         "suppressImplicitAnyIndexErrors": true,
         "declaration": true,
         "stripInternal": true,

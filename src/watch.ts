@@ -1,4 +1,4 @@
-import * as Vue from 'vue'
+import Vue from 'vue'
 import {$$Prop} from './interface'
 import {Component} from './core'
 import {createMap} from './util'

@@ -1,4 +1,4 @@
-import * as Vue from 'vue'
+import Vue from 'vue'
 
 export {Component} from './src/core'
 export {Lifecycle} from './src/lifecycle'

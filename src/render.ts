@@ -1,4 +1,4 @@
-import * as Vue from 'vue'
+import Vue from 'vue'
 import {VNode, $$Prop} from './interface'
 import {Component} from './core'
 
