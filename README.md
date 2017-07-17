@@ -163,6 +163,29 @@ Voila! No `implements`, No repeating code. And it looks like [real mixins in ES6
 
 N.B.: Requires TypeScript 2.2.
 
+
+# TSX example
+
+You need to first understand how TypeScript checkes JSX. https://www.typescriptlang.org/docs/handbook/jsx.html
+You also need to know the difference between VueJSX and React JSX. https://github.com/vuejs/babel-plugin-transform-vue-jsx
+
+```ts
+
+import Foo from './foo.vue'
+
+@Component
+class Bar extends Vue {
+  // $props is JSX.ElementAttributesProperty
+  $props: {
+    name: string
+  }
+  defaultName = 'John'
+  render() {
+    return (<Foo><Bar name={this.defaultName}>name attribute is required</Bar></Foo>)
+  }
+}
+```
+
 ## API
 
 For full type signature, please refer to `av-ts.d.ts`. They are most up-to-date.
@@ -444,11 +467,5 @@ Difference
 **Added Feature:**
 
 * new decorator `@Transition` for typechecking transition hooks!
-
-**Todo Features:**
-
-- [x] ~~`mixin`~~
-
-- [x] ~~`extends`~~
-
+* tsx support
 

@@ -1,3 +1,8 @@
+0.9.0
+----
+New Feature:
+Support tsx
+
 0.8.0
 ----
 New Feature:
