@@ -11,10 +11,19 @@ export type Lifecycles =
   'beforeDestroy' | 'destroyed' |
   'beforeMount' | 'mounted' |
   'beforeUpdate' | 'updated' |
-  'activated' | 'deactivated' |
-  'beforeRouteEnter' | 'beforeRouteLeave' | 'beforeRouteUpdate'
+  'activated' | 'deactivated'
 
-export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>) {
+export type RouterLifecyle =
+  'beforeRouteEnter' |
+  'beforeRouteLeave' |
+  'beforeRouteUpdate'
+
+export type NextFunc = ((vm: Vue) => void) | (() => void)
+export type RouterHandler = (to: any, from: any, next: NextFunc) => void
+
+export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>): void
+export function Lifecycle(target: Vue, life: RouterLifecyle, _: TypedPropertyDescriptor<RouterHandler>): void
+export function Lifecycle(target: Vue, life: string, _: TypedPropertyDescriptor<Function>) {
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
   lifecycles[life] = true
 }

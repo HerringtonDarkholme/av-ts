@@ -94,5 +94,6 @@ export class MyComponent extends Vue {
   @Render render(h: Function) {
     return h('h1', 'Daisuke')
   }
+  @Lifecycle beforeRouteEnter() {}
 
 }
