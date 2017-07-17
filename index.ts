@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import './src/global'
 
 export {Component} from './src/core'
 export {Lifecycle} from './src/lifecycle'
@@ -11,15 +12,3 @@ export {Mixin, Trait} from './src/functions'
 
 export type CreateElement = typeof Vue.prototype.$createElement
 export { Vue }
-
-declare global {
-  interface NumberConstructor {
-    ['@@vueTag']: number
-  }
-  interface StringConstructor {
-    ['@@vueTag']: string
-  }
-  interface BooleanConstructor {
-    ['@@vueTag']: boolean
-  }
-}
