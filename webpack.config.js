@@ -1,4 +1,5 @@
 var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
   entry: {
@@ -22,5 +23,8 @@ module.exports = {
       {test: /\.ts$/, use: 'ts-loader'}
     ]
   },
+  plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin()
+  ],
   target: 'node'
 }

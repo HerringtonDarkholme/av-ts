@@ -125,7 +125,7 @@ function findSuper(proto: Object): VClass<Vue> {
   return Super
 }
 
-const BUILTIN = ['name', 'length', 'prototype']
+const BUILTIN = ['name', 'length', 'prototype', 'arguments', 'caller']
 
 function Component_(meta: ComponentOptions<Vue> = {}) {
   function decorate(cls: VClass<Vue>): VClass<Vue> {

@@ -1,3 +1,14 @@
+0.8.0
+----
+New Feature:
+p({type: Number}) no longer requires casting.
+
+0.7.0
+---
+BREAKING CHANGE:
+
+You need to turn on `allowSyntheticDefaultImports` in tsconfig.json
+
 0.6.0
 ----
 
