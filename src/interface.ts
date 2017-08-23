@@ -11,7 +11,7 @@ export type Hash<V> = {[k: string]: V}
 export type VClass<T> = {
   new(): T
   extend(option: ComponentOptions<Vue> | FunctionalComponentOptions): typeof Vue
-}
+} & Pick<typeof Vue, keyof typeof Vue>
 
 export interface DecoratorProcessor {
   (proto: Vue, instance: Vue, options: ComponentOptions<Vue>): void

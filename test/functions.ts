@@ -49,6 +49,7 @@ describe('util functions', () => {
     }
 
     let instance = new Mixed
+
     expect(instance).to.haveOwnProperty('data1')
     expect(instance.data1).to.equal(123)
     expect(instance.data2).to.equal(456)
@@ -83,5 +84,13 @@ describe('util functions', () => {
     expect(instance.c).to.equal(3)
     expect(instance.d).to.equal(4)
     expect(instance.e).to.equal(5)
+
+    @Component({
+      components: {
+        Mixed: Mixed
+      }
+    })
+    class TestType extends Vue {}
+    TestType
   })
 })
