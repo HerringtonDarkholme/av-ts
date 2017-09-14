@@ -1,6 +1,6 @@
 // functional isn't decorator, but worth implementing here
 import { VClass as Cls } from './interface'
-import Vue from 'vue'
+import * as Vue from 'vue'
 
 export function Mixin<A>(parent: Cls<A>): Cls<A>
 export function Mixin<A, B>(parent: Cls<A>, trait: Cls<B>): Cls<A&B>

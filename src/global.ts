@@ -1,4 +1,5 @@
-import Vue, { VNode } from 'vue'
+import { VNode } from 'vue'
+import * as Vue from 'vue'
 
 declare global {
   interface NumberConstructor {
