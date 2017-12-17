@@ -110,6 +110,8 @@ function collectData(cls: VClass<Vue>, keys: string[], optionsToWrite: Component
         selfData[key] = proxy[key]
       }
     }
+    // remove closure
+    cls.prototype._init = NOOP
     return selfData
   }
 }
