@@ -3,7 +3,7 @@
 
 ![screenshot](https://raw.githubusercontent.com/HerringtonDarkholme/vue-ts-example/master/screen.png)
 
-[Try av-ts in your browser](http://plnkr.co/edit/KHhs7KDye3kwUvM8SNyZ?p=preview)!
+[Try av-ts in your browser](http://plnkr.co/edit/4wgnocQAwowmbhqfWQx0?p=preview)!
 
 ## Why:
 
