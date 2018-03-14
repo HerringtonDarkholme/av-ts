@@ -8,7 +8,7 @@ import {
 
 @Component
 export class MyMixin extends Vue {
-  public k: string
+  public k!: string
 }
 
 // extends interface option
@@ -80,11 +80,11 @@ export class MyComponent extends Vue {
   }
 
   // instance property reification
-  $parent: MyMixin
-  $refs: {
+  $parent!: MyMixin
+  $refs!: {
     mychild: Vue
   }
-  $el: HTMLDivElement
+  $el!: HTMLDivElement
 
   // lifecycle
   @Lifecycle beforeCreate() {}

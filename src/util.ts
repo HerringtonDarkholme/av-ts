@@ -23,3 +23,14 @@ export function createMap<T>(): Map<T> {
 export function hasOwn(obj: Object, key: string) {
   return Object.prototype.hasOwnProperty.call(obj, key)
 }
+
+// builtin TypedPropertyDescriptor assumes `set`
+// which causes variance check error
+// skip `set` since we don't use it
+export interface ReadonlyPropertyDescriptor<T> {
+    enumerable?: boolean;
+    configurable?: boolean;
+    writable?: boolean;
+    value?: T;
+    get?: () => T;
+}

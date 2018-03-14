@@ -163,7 +163,7 @@ describe('various decorators', () => {
     }
 
     class Comp extends Vue {
-      public member: Type;
+      public member!: Type;
 
       @Watch(['member', 'prop'])
       handler(newValue: number) {
