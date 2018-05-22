@@ -442,7 +442,7 @@ class LegendaryClass extends Mixin<GodLike>(FirstBlood, DoubleKill, KillingSpree
 
 ```typescript
 // has type
-Component.registter: (key: $$Prop, logic: DecoratorProcessor) => void
+Component.register: (key: $$Prop, logic: DecoratorProcessor) => void
 // $$Prop is a special string type that means you have to prefix the key with `$$`
 // DecoratorProcessor can access prototype, instance and options of the decorated class
 // where
