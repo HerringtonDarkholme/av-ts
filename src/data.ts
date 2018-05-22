@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import { $$Prop } from './interface'
 import {Component} from './core'
+import {ReadonlyPropertyDescriptor} from './util'
 
 const DATA_KEY = '$$data' as $$Prop
 
 export type Dict = {[k: string]: any}
-export function Data(target: Vue, key: 'data', _: TypedPropertyDescriptor<() => Dict>): void {
+export function Data(target: Vue, key: 'data', _: ReadonlyPropertyDescriptor<() => Dict>): void {
   target[DATA_KEY] = target[key]
 }
 

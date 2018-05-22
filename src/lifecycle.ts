@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import {Component} from './core'
 import {$$Prop} from './interface'
-import {createMap} from './util'
+import {createMap, ReadonlyPropertyDescriptor} from './util'
 
 const LIFECYCLE_KEY = '$$Lifecycle' as $$Prop
 
@@ -21,9 +21,9 @@ export type RouterLifecyle =
 export type NextFunc = ((vm: Vue) => void) | (() => void)
 export type RouterHandler = (to: any, from: any, next: NextFunc) => void
 
-export function Lifecycle(target: Vue, life: Lifecycles, _: TypedPropertyDescriptor<() => void>): void
-export function Lifecycle(target: Vue, life: RouterLifecyle, _: TypedPropertyDescriptor<RouterHandler>): void
-export function Lifecycle(target: Vue, life: string, _: TypedPropertyDescriptor<Function>) {
+export function Lifecycle(target: Vue, life: Lifecycles, _: ReadonlyPropertyDescriptor<() => void>): void
+export function Lifecycle(target: Vue, life: RouterLifecyle, _: ReadonlyPropertyDescriptor<RouterHandler>): void
+export function Lifecycle(target: Vue, life: string, _: ReadonlyPropertyDescriptor<(...args: any[]) => void>) {
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
   lifecycles[life] = true
 }
