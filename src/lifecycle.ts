@@ -18,7 +18,7 @@ export type RouterLifecyle =
   'beforeRouteLeave' |
   'beforeRouteUpdate'
 
-export type NextFunc = ((vm: Vue) => void) | (() => void)
+export declare type NextFunc<T extends Vue = Vue> = (next: (vm: T) => void) => void;
 export type RouterHandler = (to: any, from: any, next: NextFunc) => void
 
 export function Lifecycle(target: Vue, life: Lifecycles, _: ReadonlyPropertyDescriptor<() => void>): void
