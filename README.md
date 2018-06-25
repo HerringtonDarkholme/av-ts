@@ -312,7 +312,9 @@ mark decorated methods as special hooks in vue. Caveat: You cannot call lifecycl
 Lifecycle from `vue-router` is also supported as
 
 ```typescript
-import { Component, Lifecycle, NextFunc, NextFuncBool, NextFuncVm, p, Prop, Vue } from 'av-ts'
+import {
+  Component, Lifecycle, NextFunc, NextFuncBool, NextFuncVm, p, Prop
+} from 'av-ts'
 import { Route } from 'vue-router'
 
 @Component({
