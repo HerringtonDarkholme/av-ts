@@ -324,8 +324,8 @@ export default class MyPage extends Vue {
   @Prop id = p({ type: String, required: true })
 
   @Lifecycle
-  async beforeRouteEnter(to: Route, from: Route, next: NextFuncVm) {
-    next((vm: MyPage) => {
+  async beforeRouteEnter(to: Route, from: Route, next: NextFuncVm<MyPage>) {
+    next((vm) => {
       console.log(vm.id)
     })
   }

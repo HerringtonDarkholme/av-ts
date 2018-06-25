@@ -20,7 +20,7 @@ export type BeforeRouteEnterLifecycle = 'beforeRouteEnter'
 export declare type NextFuncVmCallback<T extends Vue> = (vm: T) => void
 export declare type NextFunc = () => void;
 export declare type NextFuncBool = (ok?: false) => void;
-export declare type NextFuncVm<T extends Vue = Vue> = (next?: NextFuncVmCallback<T>) => void;
+export declare type NextFuncVm<T extends Vue = any> = (next?: NextFuncVmCallback<T>) => void;
 export type BeforeRouteUpdateHandler = (to: any, from: any, next: NextFunc) => void
 export type BeforeRouteLeaveHandler = (to: any, from: any, next: NextFuncBool) => void
 export type BeforeRouteEnterHandler = (to: any, from: any, next: NextFuncVm) => void
