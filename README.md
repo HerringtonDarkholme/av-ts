@@ -309,6 +309,28 @@ mark decorated methods as special hooks in vue. Caveat: You cannot call lifecycl
 // @Lifecycle willNotCompile() {}
 ```
 
+Lifecycle from `vue-router` is also supported as
+
+```typescript
+import { Component, Lifecycle, NextFunc, p, Prop, Vue } from 'av-ts'
+import { Route } from 'vue-router'
+
+@Component({
+  name: 'my-page',
+})
+export default class MyPage extends Vue {
+  @Prop id = p({ type: String, required: true })
+
+  @Lifecycle
+  async beforeRouteEnter(to: Route, from: Route, next: NextFunc) {
+    next((vm: MyPage) => {
+      console.log(vm.id)
+    })
+  }
+}
+
+```
+
 ### `Transition`
 -----
 
