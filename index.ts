@@ -2,7 +2,7 @@ import Vue from 'vue'
 import './src/global'
 
 export {Component} from './src/core'
-export {Lifecycle} from './src/lifecycle'
+export {Lifecycle, NextFunc} from './src/lifecycle'
 export {Prop, p} from './src/prop'
 export {Render} from './src/render'
 export {Transition} from './src/transition'
