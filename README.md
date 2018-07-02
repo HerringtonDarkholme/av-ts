@@ -323,35 +323,32 @@ import { Route } from 'vue-router'
 export default class MyPage extends Vue {
   @Prop id = p({ type: String, required: true })
 
-  // "beforeRouteEnter" can use both "NextFunc" & "NextFuncVm<T>"
+  // "beforeRouteEnter" can use "NextFuncVm<T>"
   @Lifecycle
   async beforeRouteEnter(to: Route, from: Route, next: NextFuncVm<MyPage>) {
-    next((vm) => { console.log(vm.id) }) // OK
-    next(() => { /* ... */ }) // OK
-    next() // Error
-    next(false) // Error
- }
-
-  @Lifecycle
-  async beforeRouteEnter(to: Route, from: Route, next: NextFunc) {
-    next() // OK
-    next(false) // OK
-    next((vm) => { console.log(vm.id) }) // Error
-    next(() => { /* ... */ }) // Error
+    if (normalCase) {
+      next()
+    } else if (redirection) {
+      next({ name: 'other-page' })
+    } else if (cancel) {
+      next(false)
+    } else if (needCallback) {
+      next((vm) => {
+        console.log(vm.id)
+      })
+    }
   }
 
   // "beforeRouteUpdate" & "beforeRouteLeave" can only use "NextFunc"
   @Lifecycle
   async beforeRouteUpdate(to: Route, from: Route, next: NextFunc) {
-    next() // OK
-    next(false) // OK
-    next((vm) => { console.log(vm.id) }) // Error
-    next(() => { /* ... */ }) // Error
-  }
-
-  @Lifecycle                                      /* Error */
-  async beforeRouteUpdate(to: Route, from: Route, next: NextFuncVm<MyPage>) {
-    /* ... */
+    if (normalCase) {
+      next()
+    } else if (redirection) {
+      next({ name: 'other-page' })
+    } else if (cancel) {
+      next(false)
+    }
   }
 }
 
