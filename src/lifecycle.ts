@@ -13,22 +13,18 @@ export type Lifecycles =
   'beforeUpdate' | 'updated' |
   'activated' | 'deactivated'
 
-export type BeforeRouteUpdateLifecycle = 'beforeRouteUpdate'
-export type BeforeRouteLeaveLifecycle = 'beforeRouteLeave'
+export type RouterLifecycle = 'beforeRouteUpdate'|'beforeRouteLeave'
 export type BeforeRouteEnterLifecycle = 'beforeRouteEnter'
 
-export declare type NextFuncVmCallback<T extends Vue> = (vm: T) => void
-export declare type NextFunc = () => void;
-export declare type NextFuncBool = (ok?: false) => void;
-export declare type NextFuncVm<T extends Vue = any> = (next?: NextFuncVmCallback<T>) => void;
-export type BeforeRouteUpdateHandler = (to: any, from: any, next: NextFunc) => void
-export type BeforeRouteLeaveHandler = (to: any, from: any, next: NextFuncBool) => void
-export type BeforeRouteEnterHandler = (to: any, from: any, next: NextFuncVm) => void
+export declare type NextFunc = (ok?: false) => void;
+export declare type NextFuncVm<T extends Vue> = (next: (vm: T) => void) => void;
+export type RouteHandler = (to: any, from: any, next: NextFunc) => void
+export type BeforeRouteEnterHandler = (this: void, to: any, from: any, next: NextFunc) => void
+export type BeforeRouteEnterHandlerVm<T extends Vue> = (this: void, to: any, from: any, next: NextFuncVm<T>) => void
 
 export function Lifecycle(target: Vue, life: Lifecycles, _: ReadonlyPropertyDescriptor<() => void>): void
-export function Lifecycle(target: Vue, life: BeforeRouteUpdateLifecycle, _: ReadonlyPropertyDescriptor<BeforeRouteUpdateHandler>): void
-export function Lifecycle(target: Vue, life: BeforeRouteLeaveLifecycle, _: ReadonlyPropertyDescriptor<BeforeRouteLeaveHandler>): void
-export function Lifecycle(target: Vue, life: BeforeRouteEnterLifecycle, _: ReadonlyPropertyDescriptor<BeforeRouteEnterHandler>): void
+export function Lifecycle(target: Vue, life: RouterLifecycle, _: ReadonlyPropertyDescriptor<RouteHandler>): void
+export function Lifecycle<T extends Vue>(target: T, life: BeforeRouteEnterLifecycle, _: ReadonlyPropertyDescriptor<BeforeRouteEnterHandler|BeforeRouteEnterHandlerVm<T>>): void
 export function Lifecycle(target: Vue, life: string, _: ReadonlyPropertyDescriptor<(...args: any[]) => void>) {
   let lifecycles = target[LIFECYCLE_KEY] = target[LIFECYCLE_KEY] || createMap()
   lifecycles[life] = true
