@@ -19,8 +19,8 @@ export type BeforeRouteEnterLifecycle = 'beforeRouteEnter'
 export declare type NextFunc = (ok?: false) => void;
 export declare type NextFuncVm<T extends Vue> = (next: (vm: T) => void) => void;
 export type RouteHandler = (to: any, from: any, next: NextFunc) => void
-export type BeforeRouteEnterHandler = (this: void, to: any, from: any, next: NextFunc) => void
-export type BeforeRouteEnterHandlerVm<T extends Vue> = (this: void, to: any, from: any, next: NextFuncVm<T>) => void
+export type BeforeRouteEnterHandler = (to: any, from: any, next: NextFunc) => void
+export type BeforeRouteEnterHandlerVm<T extends Vue> = (to: any, from: any, next: NextFuncVm<T>) => void
 
 export function Lifecycle(target: Vue, life: Lifecycles, _: ReadonlyPropertyDescriptor<() => void>): void
 export function Lifecycle(target: Vue, life: RouterLifecycle, _: ReadonlyPropertyDescriptor<RouteHandler>): void
