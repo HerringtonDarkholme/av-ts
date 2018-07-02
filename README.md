@@ -313,7 +313,7 @@ Lifecycle from `vue-router` is also supported as
 
 ```typescript
 import {
-  Component, Lifecycle, NextFunc, NextFuncBool, NextFuncVm, p, Prop
+  Component, Lifecycle, NextFunc, NextFuncVm, p, Prop
 } from 'av-ts'
 import { Route } from 'vue-router'
 
