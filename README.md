@@ -87,7 +87,7 @@ export class MyComponent extends Vue { // extends Vue or your own component
   @Watch('myWatchee')
   handler(newVal, oldVal) {
     console.log(this.myWatchee + 'changed!')
-  })
+  }
 
   // lifecycle hook is speical so it is decorated
   @Lifecycle beforeCreate() {}
