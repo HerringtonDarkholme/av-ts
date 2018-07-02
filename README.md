@@ -323,32 +323,35 @@ import { Route } from 'vue-router'
 export default class MyPage extends Vue {
   @Prop id = p({ type: String, required: true })
 
-  @Lifecycle // These are OK
+  // "beforeRouteEnter" can use both "NextFunc" & "NextFuncVm<T>"
+  @Lifecycle
   async beforeRouteEnter(to: Route, from: Route, next: NextFuncVm<MyPage>) {
-    next((vm) => {
-      console.log(vm.id)
-    })
+    next((vm) => { console.log(vm.id) }) // OK
+    next(() => { /* ... */ }) // OK
+    next() // Error
+    next(false) // Error
+ }
 
-    // or
-    next(() => {
-      // ...
-    })
-  }
-
-  @Lifecycle // These are also OK
+  @Lifecycle
   async beforeRouteEnter(to: Route, from: Route, next: NextFunc) {
-    next()
-
-    // or
-    next(false)
+    next() // OK
+    next(false) // OK
+    next((vm) => { console.log(vm.id) }) // Error
+    next(() => { /* ... */ }) // Error
   }
 
-  @Lifecycle // "beforeRouteUpdate" & "beforeRouteLeave" can only use "NextFunc"
+  // "beforeRouteUpdate" & "beforeRouteLeave" can only use "NextFunc"
+  @Lifecycle
   async beforeRouteUpdate(to: Route, from: Route, next: NextFunc) {
-    next()
+    next() // OK
+    next(false) // OK
+    next((vm) => { console.log(vm.id) }) // Error
+    next(() => { /* ... */ }) // Error
+  }
 
-    // or
-    next(false)
+  @Lifecycle                                      /* Error */
+  async beforeRouteUpdate(to: Route, from: Route, next: NextFuncVm<MyPage>) {
+    /* ... */
   }
 }
 
