@@ -313,7 +313,7 @@ Lifecycle from `vue-router` is also supported as
 
 ```typescript
 import {
-  Component, Lifecycle, NextFunc, NextFuncBool, NextFuncVm, p, Prop
+  Component, Lifecycle, NextFunc, NextFuncVm, p, Prop
 } from 'av-ts'
 import { Route } from 'vue-router'
 
@@ -323,21 +323,32 @@ import { Route } from 'vue-router'
 export default class MyPage extends Vue {
   @Prop id = p({ type: String, required: true })
 
+  // "beforeRouteEnter" can use "NextFuncVm<T>"
   @Lifecycle
   async beforeRouteEnter(to: Route, from: Route, next: NextFuncVm<MyPage>) {
-    next((vm) => {
-      console.log(vm.id)
-    })
+    if (normalCase) {
+      next()
+    } else if (redirection) {
+      next({ name: 'other-page' })
+    } else if (cancel) {
+      next(false)
+    } else if (needCallback) {
+      next((vm) => {
+        console.log(vm.id)
+      })
+    }
   }
-  
+
+  // "beforeRouteUpdate" & "beforeRouteLeave" can only use "NextFunc"
   @Lifecycle
   async beforeRouteUpdate(to: Route, from: Route, next: NextFunc) {
-    next()
-  }
-  
-  @Lifecycle
-  async beforeRouteLeave(to: Route, from: Route, next: NextFuncBool) {
-    next(false)
+    if (normalCase) {
+      next()
+    } else if (redirection) {
+      next({ name: 'other-page' })
+    } else if (cancel) {
+      next(false)
+    }
   }
 }
 
