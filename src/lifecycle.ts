@@ -1,8 +1,9 @@
 import Vue from 'vue'
+import { RawLocation } from 'vue-router'
 
 import {Component} from './core'
 import {$$Prop} from './interface'
-import {createMap, Map, ReadonlyPropertyDescriptor} from './util'
+import {createMap, ReadonlyPropertyDescriptor} from './util'
 
 const LIFECYCLE_KEY = '$$Lifecycle' as $$Prop
 
@@ -13,24 +14,11 @@ export type Lifecycles =
   'beforeUpdate' | 'updated' |
   'activated' | 'deactivated'
 
-// Definitions of Location and RawLocation come from source of 'vue-router'
-export interface Location {
-  name?: string;
-  path?: string;
-  hash?: string;
-  query?: Map<string>;
-  params?: Map<string>;
-  append?: boolean;
-  replace?: boolean;
-}
-
-export type RawLocation = string | Location;
-
 export type RouterLifecycle = 'beforeRouteUpdate'|'beforeRouteLeave'
 export type BeforeRouteEnterLifecycle = 'beforeRouteEnter'
 
-export declare type NextFunc = (to?: RawLocation | false | void) => void;
-export declare type NextFuncVm<T extends Vue> = (to?: RawLocation | false | ((vm: T) => any) | void) => void;
+export declare type NextFunc = (to?: RawLocation | Error | false) => void;
+export declare type NextFuncVm<T extends Vue> = (to?: RawLocation | Error | false | ((vm: T) => any)) => void;
 export type RouteHandler = (to: any, from: any, next: NextFunc) => void
 export type RouteHandlerVm<T extends Vue> = (to: any, from: any, next: NextFuncVm<T>) => void
 
