@@ -29,8 +29,8 @@ export type RawLocation = string | Location;
 export type RouterLifecycle = 'beforeRouteUpdate'|'beforeRouteLeave'
 export type BeforeRouteEnterLifecycle = 'beforeRouteEnter'
 
-export declare type NextFunc = (to?: RawLocation | Error | false | void) => void;
-export declare type NextFuncVm<T extends Vue> = (to?: RawLocation | Error | false | ((vm: T) => any) | void) => void;
+export declare type NextFunc = (to?: RawLocation | Error | false) => void;
+export declare type NextFuncVm<T extends Vue> = (to?: RawLocation | Error | false | ((vm: T) => any)) => void;
 export type RouteHandler = (to: any, from: any, next: NextFunc) => void
 export type RouteHandlerVm<T extends Vue> = (to: any, from: any, next: NextFuncVm<T>) => void
 
