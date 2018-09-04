@@ -12,6 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "suppressImplicitAnyIndexErrors": true,
         "declaration": true,
+        "declarationDir": "dist",
         "stripInternal": true,
         "lib": ["es5", "es2015.promise", "dom"]
     },
