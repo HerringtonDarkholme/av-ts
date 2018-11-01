@@ -173,7 +173,7 @@ export function Component(target?: ComponentOptions<Vue> | VClass<Vue>): any {
   if (typeof target === 'function') {
     return Component_()(target)
   }
-  return Component_(target)
+  return Component_(target as ComponentOptions<Vue>)
 }
 
 export namespace Component {
