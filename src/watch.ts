@@ -23,7 +23,7 @@ export function Watch<K1 extends string, K2 extends string, K3 extends string, K
 export function Watch<K1 extends string, K2 extends string, K3 extends string>(keys: [K1, K2, K3], opt?: WatchOptions): WatchDecorator3<K1, K2, K3>
 export function Watch<K1 extends string, K2 extends string>(keys: [K1, K2], opt?: WatchOptions): WatchDecorator2<K1, K2>
 export function Watch<K extends string>(key: K, opt?: WatchOptions): WatchDecorator<K>
-export function Watch(keyOrPath: string | string[], opt: WatchOptions = {}): WatchDecorator<string> {
+export function Watch(keyOrPath: string | string[], opt: WatchOptions = {}): any {
   let key = Array.isArray(keyOrPath) ? keyOrPath.join('.') : keyOrPath
   return function(target: any, method: string) {
     let watchedProps = target[WATCH_PROP] = target[WATCH_PROP] || createMap()
